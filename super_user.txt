@@ -1,2 +1,2 @@
-superuser: administrator
+superuser: admin
 password: administrator123
