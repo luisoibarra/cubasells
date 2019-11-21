@@ -14,6 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,include
+from project.views import *
+from django.urls import reverse_lazy
+from django.contrib.auth.views import login_required
 
 urlpatterns = [
+    path('',index),
+    path('login/',MyLoginView.as_view(),name='login'),
+    path('logout/',MyLogoutView.as_view(),name='logout'),
+    path('user/',login_required( index_user,login_url=reverse_lazy('cubasells:login')),name='user_index'),
+    path('create/user/',UserCreateView.as_view(),name='user_create'),
 ]
