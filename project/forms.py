@@ -2,29 +2,16 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from project.models import *
 
-class UserCreateForm(UserCreationForm):
-    
-    first_name =  forms.CharField(max_length=50,required=False)
-    
-    last_name =  forms.CharField(max_length=50,required=False)
-    
-    email = forms.EmailField(required=True)
-    
-    def save(self,commit=True):
-        instance = super().save(commit)
-        instance.first_name = self.cleaned_data['first_name']
-        instance.last_name = self.cleaned_data['last_name']
-        instance.email = self.cleaned_data['email']
-        if commit:
-            instance.save()
-        return instance
-
-class MyUserCreateForm(forms.ModelForm):
+class MyUserCreateForm(UserCreationForm):
     
     class Meta:
         model = MyUser
 
         fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
             'Phone',
             'Description',
             'Images',
@@ -33,6 +20,10 @@ class MyUserCreateForm(forms.ModelForm):
         ]
 
         labels = {
+            'Username':'Username',
+            'First_Name':'First_Name',
+            'Last_Name':'Last_Name',
+            'Email':'Email',
             'Phone':'Phone',
             'Description':'Description',
             'Images':'Images',
@@ -41,6 +32,10 @@ class MyUserCreateForm(forms.ModelForm):
         }
 
         widgets = {
+            'Username': forms.TextInput(attrs={'class':'form-control'}),
+            'First_Name': forms.TextInput(attrs={'class':'form-control'}),
+            'Last_Name': forms.TextInput(attrs={'class':'form-control'}),
+            'Email': forms.EmailInput(attrs={'class':'form-control'}),
             'Phone':forms.NumberInput(attrs={'class':'form-control'}),
             'Description':forms.TextInput(attrs={'class':'form-control'}),
             'Images':forms.SelectMultiple(attrs={'class':'form-control'}),

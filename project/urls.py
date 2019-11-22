@@ -22,6 +22,9 @@ urlpatterns = [
     path('',index),
     path('login/',MyLoginView.as_view(),name='login'),
     path('logout/',MyLogoutView.as_view(),name='logout'),
-    path('user/',login_required( index_user,login_url=reverse_lazy('cubasells:login')),name='user_index'),
+    path('user/',login_required(user_index,login_url=reverse_lazy('cubasells:login')),name='user_index'),
     path('create/user/',UserCreateView.as_view(),name='user_create'),
+    path('store/<int:store_id>',store_view,name='store_view'),
+    path('store/',store_index,name='store_index'),
+    
 ]

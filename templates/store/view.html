@@ -1,11 +1,10 @@
 {% extends "base/base.html" %} {% block header %}
-<h1>User Index</h1>
+<h1>Store Index</h1>
 {% endblock header %} {% block body %}
-<h1>User Index Body</h1>
-<h1>User: {{ user.username }}</h1>
+<h1>Store Index Body</h1>
 <ul>
     <p>Tags</p>
-    {% if tags %} {% for tag in tags %}
+    {% if store.Tags %} {% for tag in store.Tags.all %}
     <li>{{ tag }}</li>
     {% endfor %} {% else %}
     <h1>No tags</h1>
@@ -13,18 +12,15 @@
 </ul>
 <ul>
     <p>Images</p>
-    {% if images %} {% for tag in images %}
+    {% if store.Images %} {% for tag in store.Images.all %}
     <li><img src="/{{ tag.Image.name }}" alt="Imagen"></li>
     <p>{{ tag.Image.name }}</p> {% endfor %} {% else %}
     <h1>No images</h1>
     {% endif %}
 </ul>
-<p>Accounts</p>
-{% if accounts %} {% for tag in accounts %}
-<li>{{ tag }}</li>
-{% endfor %} {% else %}
-<h1>No accounts</h1>
-{% endif %}
-</ul>
-
-<a href="{% url 'cubasells:logout' %}">logout</a> {% endblock body %}
+<p>Store</p>
+{% if store %}
+<p>Name: {{store.Name}}</p>
+{% else %} {% for error in errors %}
+<h1>{{error}}</h1>
+{% endfor %} {% endif %} {%endblock%}

@@ -1,8 +1,7 @@
 {% extends "base/base.html" %} {% block header %}
-<h1>User Index</h1>
+<h1>Store Index</h1>
 {% endblock header %} {% block body %}
-<h1>User Index Body</h1>
-<h1>User: {{ user.username }}</h1>
+<h1>Store Index Body</h1>
 <ul>
     <p>Tags</p>
     {% if tags %} {% for tag in tags %}
@@ -19,12 +18,9 @@
     <h1>No images</h1>
     {% endif %}
 </ul>
-<p>Accounts</p>
-{% if accounts %} {% for tag in accounts %}
-<li>{{ tag }}</li>
-{% endfor %} {% else %}
-<h1>No accounts</h1>
-{% endif %}
-</ul>
+<ul>
+    {% for store in stores %}
+    <li><a href="{% url 'cubasells:store_view' store.id %}">{{store.Name}}</a></li>
 
-<a href="{% url 'cubasells:logout' %}">logout</a> {% endblock body %}
+    {% endfor %} {%endblock%}
+</ul>
