@@ -1,9 +1,14 @@
 {% extends "base/base.html" %} {% block header %}
-<h1>Store Index</h1>
+<h1>Current Store Index</h1>
 {% endblock header %} {% block body %}
-<h1>Store Index Body</h1>
+<h1>Current Store Index Body</h1>
+{% if store %}
+<p>Name: {{store.Name}}</p>
+{% else %} {% for error in errors %}
+<h1>{{error}}</h1>
+{% endfor %} {% endif %}
 <ul>
-    <p>Tags</p>
+    <p>Tags:</p>
     {% if store.Tags %} {% for tag in store.Tags.all %}
     <li>{{ tag }}</li>
     {% endfor %} {% else %}
@@ -11,16 +16,14 @@
     {% endif %}
 </ul>
 <ul>
-    <p>Images</p>
+    <p>Images:</p>
     {% if store.Images %} {% for tag in store.Images.all %}
     <li><img src="/{{ tag.Image.name }}" alt="Imagen"></li>
     <p>{{ tag.Image.name }}</p> {% endfor %} {% else %}
     <h1>No images</h1>
     {% endif %}
 </ul>
-<p>Store</p>
-{% if store %}
-<p>Name: {{store.Name}}</p>
-{% else %} {% for error in errors %}
-<h1>{{error}}</h1>
-{% endfor %} {% endif %} {%endblock%}
+<p>See products: <a href="{% url 'cubasells:store_product_list' store.id %}">Products</a></p>
+{% ifequal user.id store.Owner.id %}
+<p>Add product: <a href="{% url 'cubasells:store_product_create' store.id %}">Add</a></p>
+{% endifequal %} {%endblock%}

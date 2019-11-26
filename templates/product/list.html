@@ -1,0 +1,53 @@
+{% extends 'base/list.html' %} {% block title %}
+<h1>Productos:</h1>
+{% endblock %} {% block header %}
+<h1></h1>
+<div class="container">
+    <h1>Productos:</h1>
+</div>
+{% endblock %} {% block body %}
+<div class="container">
+
+    <table class="table table-bordered">
+        {% if object_list %}
+        <thead>
+            <tr>
+                {% block table_head %}
+                <td>Name</td>
+                <td>Stored</td>
+                <td></td>
+                {% endblock %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in object_list %}
+
+            <tr>
+                {% block table_row %}
+
+                <td>{{m.Name}}</td>
+                <td>{{m.Store_Amount}}</td>
+                <td>
+                    <a class="btn btn-primary" href="{% url 'cubasells:product_view' m.id %}">More info</a>
+                </td>
+                {% endblock %}
+
+            </tr>
+
+            {% endfor %} {% else %} {% block else_message %}
+            <h2>No products</h2>
+            {% endblock %}
+
+        </tbody>
+        {% endif %}
+    </table>
+    <h3>
+        {% if page_obj.has_previous %}
+        <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a> {% else %}
+        <a class="btn btn-inverse" href="">Previous</a> {% endif %} {% if page_obj.has_next %}
+        <a class="btn btn-danger" href="?page={{ page_obj.next_page_number }}">Next</a> {% else %}
+        <a class="btn btn-inverse" href="">Next</a> {% endif %}
+    </h3>
+
+</div>
+{% endblock %}

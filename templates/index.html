@@ -2,4 +2,8 @@
 <h1>Index</h1>
 {% endblock header %} {% block body %}
 <h1>Index Body</h1>
-<a href="{% url 'cubasells:login' %}">login</a> {% endblock body %}
+<a href="{% url 'cubasells:login' %}">login</a>
+<a href="{% url 'cubasells:store_list' %}">Stores</a>
+<a href="{% url 'cubasells:product_list' %}">Products</a>
+<a href="{% url 'cubasells:offer_list' %}">Offer</a>
+<a href="{% url 'cubasells:suboffer_list' %}">Offer</a> {% endblock body %}

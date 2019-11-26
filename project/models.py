@@ -92,15 +92,15 @@ class Store(models.Model):
 
 class Product(models.Model):
     
-    unit_price = models.FloatField(name='Price_per_unit',validators=(validate_positive,))
+    # unit_price = models.FloatField(name='Price_per_unit',validators=(validate_positive,))
     
     store_amount = models.IntegerField(name = "Store_Amount",validators=(validate_positive,))
     
     store = models.ForeignKey(Store,name = 'Store',default=-1, on_delete=models.CASCADE)
     
-    buy_product = models.ManyToManyField(Buyer, through='Buy', through_fields=('Selled Product','Buyer'))
+    # buy_product = models.ManyToManyField(Buyer, through='Buy', through_fields=('Selled Product','Buyer'))
     
-    visible = models.BooleanField(name='Visible',default=True)
+    # visible = models.BooleanField(name='Visible',default=True)
     
     name = models.CharField(name='Name',max_length=150)
         
@@ -111,20 +111,20 @@ class Product(models.Model):
     tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_Product',blank=True)
     
     def __str__(self):
-        return f'{self.Name}: {self.Price_per_unit}'
+        return f'{self.Name} in {self.Store.Name}'
     
-class Buy(models.Model):
+# class Buy(models.Model):
 
-    selled_product = models.ForeignKey(Product, name='Selled Product', on_delete=models.CASCADE)
+#     selled_product = models.ForeignKey(Product, name='Selled Product', on_delete=models.CASCADE)
 
-    buyer = models.ForeignKey(Buyer, name='Buyer', on_delete=models.CASCADE)
+#     buyer = models.ForeignKey(Buyer, name='Buyer', on_delete=models.CASCADE)
     
-    buy_date = models.DateTimeField(name= 'Buy Date', auto_now=False, auto_now_add=True)
+#     buy_date = models.DateTimeField(name= 'Buy Date', auto_now=False, auto_now_add=True)
 
-    amount = models.IntegerField(name = 'Amount',validators=(validate_positive,))
+#     amount = models.IntegerField(name = 'Amount',validators=(validate_positive,))
     
-    def __str__(self):
-        return self.Buyer.Name
+#     def __str__(self):
+#         return self.Buyer.Name
 
 class Chat(models.Model):
     
@@ -141,6 +141,16 @@ class Chat(models.Model):
     def __str__(self):
         return f'{self.sender_user.username} -> {self.reciever_user.username}; {self.Date}'
     
+
+class SubOffer(models.Model):
+    
+    product_offer = models.ForeignKey(Product, name = 'Product_offer',on_delete=models.CASCADE)
+    
+    amount = models.IntegerField(name='Amount', validators=(validate_positive,))
+    
+    def __str__(self):
+        return f'{self.Product_offer.Name}:{self.Amount}'
+
 class Offer(models.Model):
 
     price = models.FloatField(name='Price',validators=(validate_positive,))
@@ -149,21 +159,18 @@ class Offer(models.Model):
     
     description = models.CharField(name='Offer_description', max_length=150)
     
+    store = models.ForeignKey(Store,name = 'Store', default = -1, on_delete=models.CASCADE)
+    
     buy_offer = models.ManyToManyField(Buyer,through='BuyOffer',through_fields=('Offer','Buyer'))
+    
+    images = models.ManyToManyField(Image, name='Images',related_name='Images_Offer',blank=True)
+    
+    tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_Offer',blank=True)
+
+    suboffer = models.ManyToManyField(SubOffer,name='Suboffer',related_name='Suboffer_offer')
     
     def __str__(self):
         return f'{self.Offer_name}'
-
-class SubOffer(models.Model):
-    
-    product_offer = models.ForeignKey(Product, name = 'Product offer',on_delete=models.CASCADE)
-    
-    amount = models.IntegerField(name='Amount', validators=(validate_positive,))
-    
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return f'{self.product_offer.name}:{self.amount}'
 
 class BuyOffer(models.Model):
     
@@ -172,6 +179,8 @@ class BuyOffer(models.Model):
     offer = models.ForeignKey(Offer,name='Offer', on_delete=models.CASCADE)
     
     buy_date = models.DateTimeField(name='Buy_Date', auto_now=False, auto_now_add=True)
+    
+    amount = models.IntegerField(name='Amount',validators=(validate_positive,))
     
     def __str__(self):
         return f'{self.Buyer.MyUser.username} -> {self.Offer.Offer_name}; {self.Buy_Date}'

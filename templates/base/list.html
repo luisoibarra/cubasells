@@ -1,0 +1,20 @@
+<!DOCTYPE html> {% extends 'base/base.html' %} {% block body %}
+<table class="table table-bordered">
+    {% if object_list %}
+    <thead>
+        <tr>
+            {% block table_head %} {% endblock %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in object_list %}
+        <tr>
+            {% block table_row %} {% endblock %}
+
+        </tr>
+        {% endfor %} {% else %} {% block else_message %} {% endblock %}
+
+    </tbody>
+    {% endif %}
+</table>
+{% endblock %}

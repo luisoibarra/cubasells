@@ -123,6 +123,6 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
-LOGIN_REDIRECT_URL = reverse_lazy('cubasells:user_index')
+LOGIN_REDIRECT_URL = reverse_lazy('cubasells:index')
 
 LOGOUT_REDIRECT_URL = reverse_lazy('cubasells:login')

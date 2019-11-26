@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %} Document {% endblock title %} </title>
+    <title>{% block title %} Cubasells {% endblock title %} </title>
 </head>
 
 <body>
     {% block header %}
     <h1>Header</h1>
-    {% endblock header %} {% block body %}
+    {% endblock header %} {% if user %}
+    <a href="{% url 'cubasells:user_index' %}">{{user.username}}</a> {% endif %} {% block logout %}
+    <a href="{% url 'cubasells:logout' %}">logout</a> {% endblock logout %} {% block body %}
     <h1>Body</h1>
     {% endblock body %} {% block footer %}
     <h1>Footer</h1>

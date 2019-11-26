@@ -1,0 +1,16 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Store List</h1>
+{% endblock header %} {% block body %}
+<h1>Store List Body</h1>
+<ul>
+    {% for store in object_list %}
+    <li>
+        <a href="{% url 'cubasells:store_view' store.id %}">{{store.Name}}</a> {% ifequal user.id store.Owner.id %}
+        <a href="{% url 'cubasells:store_product_create' store.id %}">Add product</a>
+        <a href="{% url 'cubasells:store_offer_create' store.id %}">Add Offer</a> {% endifequal %}
+    </li>
+
+    {% endfor %}
+
+</ul>
+{%endblock%}

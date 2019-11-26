@@ -19,26 +19,34 @@ class MyUserCreateForm(UserCreationForm):
             'Accounts',
         ]
 
-        labels = {
-            'Username':'Username',
-            'First_Name':'First_Name',
-            'Last_Name':'Last_Name',
-            'Email':'Email',
-            'Phone':'Phone',
-            'Description':'Description',
-            'Images':'Images',
-            'Tags':'Tags',
-            'Accounts':'Accounts',
-        }
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+            self.save_m2m()
+        return user
 
-        widgets = {
-            'Username': forms.TextInput(attrs={'class':'form-control'}),
-            'First_Name': forms.TextInput(attrs={'class':'form-control'}),
-            'Last_Name': forms.TextInput(attrs={'class':'form-control'}),
-            'Email': forms.EmailInput(attrs={'class':'form-control'}),
-            'Phone':forms.NumberInput(attrs={'class':'form-control'}),
-            'Description':forms.TextInput(attrs={'class':'form-control'}),
-            'Images':forms.SelectMultiple(attrs={'class':'form-control'}),
-            'Tags':forms.SelectMultiple(attrs={'class':'form-control'}),
-            'Accounts':forms.SelectMultiple(attrs={'class':'form-control'}),
-        }
+class StoreCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Store
+        exclude=['Owner',]
+
+class ProductCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Product
+        exclude = ['Store']
+
+class OfferCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Offer
+        exclude=['Store','buy_offer']
+
+class SubOfferCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = SubOffer
+        fields = '__all__'

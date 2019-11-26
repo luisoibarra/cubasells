@@ -2,25 +2,6 @@
 <h1>Store Index</h1>
 {% endblock header %} {% block body %}
 <h1>Store Index Body</h1>
-<ul>
-    <p>Tags</p>
-    {% if tags %} {% for tag in tags %}
-    <li>{{ tag }}</li>
-    {% endfor %} {% else %}
-    <h1>No tags</h1>
-    {% endif %}
-</ul>
-<ul>
-    <p>Images</p>
-    {% if images %} {% for tag in images %}
-    <li><img src="/{{ tag.Image.name }}" alt="Imagen"></li>
-    <p>{{ tag.Image.name }}</p> {% endfor %} {% else %}
-    <h1>No images</h1>
-    {% endif %}
-</ul>
-<ul>
-    {% for store in stores %}
-    <li><a href="{% url 'cubasells:store_view' store.id %}">{{store.Name}}</a></li>
 
-    {% endfor %} {%endblock%}
-</ul>
+<li><a href="{% url 'cubasells:store_list' %}">Store list</a></li>
+<a href="{% url 'cubasells:store_create' %}">Create store</a> {%endblock%}

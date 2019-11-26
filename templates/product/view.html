@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %} {% block title %}
+<h1>Producto:</h1>
+{% endblock %} {% block header %}
+<h1>Producto:</h1>
+{% endblock %} {% block body %} {% if object %}
+<p>Name: {{object.Name}}</p>
+<p>Description: {{object.Description}}</p>
+<p>Store: <a href="{% url 'cubasells:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
+<p>Store amount: {{object.Store_Amount}}</p>
+<p>Tags:</p>
+<ul>
+    {% for tag in object.Tags.all %}
+    <li>{{tag.Tag}}</li>
+    {% endfor %}
+</ul>
+<p>Images:</p>
+<ul>
+    {% for ima in object.Images.all %}
+    <li><img src="/{{ ima.Image.name }}" alt="Imagen"></li>
+    {% endfor %}
+</ul>
+{% endif %} {% endblock %}
