@@ -7,25 +7,40 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 from project.forms import *
 from project.models import *
+from project.custom.views import *
 
 # Create your views here.
 
 def index(request):
     return render(request,'index.html')
 
+def success_view(request):
+    return render(request,'success.html')
 
-class UserCreateView(CreateView):
+class UserCreateView(AuthenticateCreateView):
     model = MyUser
     template_name = "user/create.html"
     form_class = MyUserCreateForm
     success_url = reverse_lazy('cubasells:login')
+    permission = 'project.add_user'
+    
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        p_return = super().post(request, *args, **kwargs)
+        if self.object:
+            group = Group.objects.get(name='User Group')
+            group.user_set.add(self.object)
+        return p_return
 
 
-class SubOfferCreateView(CreateView):
+
+class SubOfferCreateView(AuthenticateCreateView):
     model = SubOffer
     template_name = "suboffer/create.html"
     form_class = SubOfferCreateForm
     success_url = reverse_lazy('cubasells:offer_list')
+    permission = 'project.add_suboffer'
+
 
     def update_extra_context(self,extra):
         if self.extra_context is None:
@@ -33,16 +48,13 @@ class SubOfferCreateView(CreateView):
         else:
             self.extra_context.update(extra)
     
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests: instantiate a blank version of the form."""
-        self.object = None
-        context = self.get_context_data()
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data()
         try:
             self.form_class.base_fields['Product_offer'].queryset = Product.objects.filter(Store__id = self.kwargs['store_id'])#forms.ModelMultipleChoiceField(queryset=Product.objects.filter(Store__id = self.kwargs['store_id']))
         except KeyError:
             context.update({'error':'Missing parameter store_id in url'})
-        return self.render_to_response(context)
-
+        return context
     
     def post(self, request, *args, **kwargs):
         """
@@ -70,10 +82,11 @@ class SubOfferCreateView(CreateView):
         else:
             return self.form_invalid(form)
 
-class SubOfferListView(ListView):
+class SubOfferListView(AuthenticateListView):
     model = SubOffer
     template_name='suboffer/list.html'
     paginate_by = 5
+    permission = 'project.view_suboffer'
 
     def get_queryset(self):
         """
@@ -107,24 +120,33 @@ class SubOfferListView(ListView):
 
         return queryset
 
+class SubOfferDeleteView(AuthenticateDeleteView):
+    model = SubOffer
+    template_name = "delete.html"
+    success_url = reverse_lazy('app:success')
+    permission = 'app.delete_suboffer'
     
-class OfferCreateView(CreateView):
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        suboffer = SubOffer.objects.get(id=kwargs['pk'])
+        return suboffer.Product_offer.Store.Owner.id == user.id
+
+    
+class OfferCreateView(AuthenticateCreateView):
     model = Offer
     template_name = "offer/create.html"
     form_class = OfferCreateForm
     success_url = reverse_lazy('cubasells:store_index') # idealmente quiero que te deje en la tienda q le vas a agregar el producto
-
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests: instantiate a blank version of the form."""
-        self.object = None
-        context = self.get_context_data()
+    permission = 'project.add_offer'
+ 
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data()
         try:
             self.form_class.base_fields['Suboffer'].queryset = SubOffer.objects.filter(Product_offer__Store__id = self.kwargs['store_id'])#forms.ModelMultipleChoiceField(queryset=Product.objects.filter(Store__id = self.kwargs['store_id']))
         except KeyError:
             context.update({'error':'Missing parameter store_id in url'})
-        return self.render_to_response(context)
-
-
+        return context
+    
     def update_extra_context(self,extra):
         if self.extra_context is None:
             self.extra_context = extra
@@ -158,10 +180,11 @@ class OfferCreateView(CreateView):
         else:
             return self.form_invalid(form)
 
-class OfferListView(ListView):
+class OfferListView(AuthenticateListView):
     model = Offer
     template_name = "offer/list.html"
     paginate_by = 5
+    permission = 'project.view_offer'
 
     def get_queryset(self):
         """
@@ -195,16 +218,29 @@ class OfferListView(ListView):
 
         return queryset
 
-class OfferDetailView(DetailView):
+class OfferDetailView(AuthenticateDetailView):
     model = Offer
     template_name = "offer/view.html"
+    permission = 'project.view_offer'
+
+class OfferDeleteView(AuthenticateDeleteView):
+    model = Offer
+    template_name = "delete.html"
+    success_url = reverse_lazy('app:success')
+    permission = 'app.delete_offer'
+    
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        offer = Offer.objects.get(id=kwargs['pk'])
+        return offer.Store.Owner.id == user.id
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(AuthenticateCreateView):
     model = Product
     template_name = "product/create.html"
     form_class = ProductCreateForm
-    success_url = reverse_lazy('cubasells:store_index') # idealmente quiero que te deje en la tienda q le vas a agregar el producto
+    success_url = reverse_lazy('cubasells:store_index') 
+    permission = 'project.add_product'
 
     def update_extra_context(self,extra):
         if self.extra_context is None:
@@ -239,10 +275,11 @@ class ProductCreateView(CreateView):
         else:
             return self.form_invalid(form)
 
-class ProductListView(ListView):
+class ProductListView(AuthenticateListView):
     model = Product
     template_name='product/list.html'
     paginate_by = 5
+    permission = 'project.view_product'
     
     def get_queryset(self):
         """
@@ -276,30 +313,38 @@ class ProductListView(ListView):
 
         return queryset
     
-class ProductDetailView(DetailView):
+class ProductDetailView(AuthenticateDetailView):
     model = Product
     template_name = "product/view.html"
+    permission = 'project.view_product'
 
-
-def store_view(request,store_id = -1):
-    context = {'store_id':store_id}
+class ProductDeleteView(AuthenticateDeleteView):
+    model = Product
+    template_name = "delete.html"
+    success_url = reverse_lazy('app:success')
+    permission = 'app.delete_product'
     
-    try:
-        context.update({'store':Store.objects.get(id = store_id)})
-    except ObjectDoesNotExist:
-        context.update({'errors':['Store id doesnt exist']})
-        
-    return render(request,'store/view.html',context=context)
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        product = Product.objects.get(id=kwargs['pk'])
+        return product.Store.Owner.id == user.id
+
 
 def store_index(request):
     context = {'stores':Store.objects.all()}
     return render(request,'store/index.html',context=context)
 
-class StoreCreateView(CreateView):
+class StoreDetailView(AuthenticateDetailView):
+    model = Store
+    template_name = 'store/view.html'
+    permission = 'project.view_store'
+
+class StoreCreateView(AuthenticateCreateView):
     model = MyUser
     template_name = "store/create.html"
     form_class = StoreCreateForm
     success_url = reverse_lazy('cubasells:store_list')
+    permission = 'project.add_store'
     
     def post(self, request, *args, **kwargs):
         """
@@ -315,11 +360,22 @@ class StoreCreateView(CreateView):
         else:
             return self.form_invalid(form)
         
-class StoreListView(ListView):
+class StoreListView(AuthenticateListView):
     model = Store
     template_name = "store/list.html"
     paginate_by = 5
+    permission = 'project.view_store'
 
+class StoreDeleteView(AuthenticateDeleteView):
+    model = Store
+    template_name = "delete.html"
+    success_url = reverse_lazy('app:success')
+    permission = 'app.delete_store'
+    
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        store = Store.objects.get(id=kwargs['pk'])
+        return store.Owner.id == user.id
 
 class MyLoginView(LoginView):
     template_name ='login.html'

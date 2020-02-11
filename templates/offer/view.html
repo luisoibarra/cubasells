@@ -28,4 +28,11 @@
     </li>
     {% endfor %}
 </ul>
-{% endif %} {% endblock %}
+{% ifequal object.Store.Owner.id user.id %}
+<a class="btn-danger" href="{% url 'cubasells:offer_delete' object.id %}">Delete</a>
+<!-- sep -->
+{% endifequal %}
+<!-- sep -->
+{% endif %}
+<!-- sep -->
+{% endblock %}

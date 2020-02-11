@@ -19,4 +19,13 @@
     <li><img src="/{{ ima.Image.name }}" alt="Imagen"></li>
     {% endfor %}
 </ul>
-{% endif %} {% endblock %}
+
+{% ifequal object.Store.Owner.id user.id %}
+<a class="btn-danger" href="{% url 'cubasells:product_delete' object.id %}">Delete</a>
+<!-- sep     -->
+{% endifequal %}
+<!-- sep     -->
+{% endif %}
+<!-- sep     -->
+
+{% endblock %}

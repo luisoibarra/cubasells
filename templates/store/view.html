@@ -26,4 +26,8 @@
 <p>See products: <a href="{% url 'cubasells:store_product_list' store.id %}">Products</a></p>
 {% ifequal user.id store.Owner.id %}
 <p>Add product: <a href="{% url 'cubasells:store_product_create' store.id %}">Add</a></p>
-{% endifequal %} {%endblock%}
+<a class="btn-danger" href="{% url 'cubasells:store_delete' store.id %}">Delete</a>
+<!-- sep     -->
+{% endifequal %}
+<!-- sep     -->
+{%endblock%}
