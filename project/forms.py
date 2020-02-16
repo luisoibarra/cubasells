@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from project.models import *
+from project.custom.forms import OrderForm
 
 class MyUserCreateForm(UserCreationForm):
     
@@ -50,3 +51,37 @@ class SubOfferCreateForm(forms.ModelForm):
     class Meta:
         model = SubOffer
         fields = '__all__'
+
+class TagCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+class ImageCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+class AuctionCreateForm(forms.ModelForm):
+    auction_minim_time = 30 # In minutes
+    auction_aticipation = 60 # In minutes
+    class Meta:
+        model = Auction
+        exclude = ['winner',]
+    
+    def clean_duration(self):
+        data = self.cleaned_data["duration"]
+        data /= 60
+        if data < self.auction_minim_time:
+            raise ValidationError('The minimun time of an auction is %(minutes) minutes',code='invalid duration',params={'minutes':self.auction_minim_time})
+        return data
+    
+    def clean_initial_date(self):
+        data = self.cleaned_data["initial_date"]
+        import datetime as dt
+        if data < dt.datetime.now() + dt.datetime(minute=self.auction_aticipation):
+            raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_aticipation})
+        return data
+    

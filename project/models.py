@@ -9,11 +9,13 @@ from django.dispatch import receiver
 # Create your models here.
 def validate_positive(number):
     if number < 0:
-        raise ValidationError(f'{number} must be a positive number')
+        raise ValidationError('%(number) must be a positive number',code='invalid number',params={'number':number,})
 
 class Image(models.Model):
     
-    image = models.ImageField(name = 'Image', upload_to='static/images', default='static/images/default/defaut.png')
+    name = models.CharField(name='Name',max_length=200)
+    
+    image = models.ImageField(name = 'Image', upload_to='static/images')
 
 class Tag(models.Model):
     

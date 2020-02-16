@@ -1,0 +1,12 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Tag Create</h1>
+{% endblock header %} {% block body %}
+<h1>Tag Create Body</h1>
+
+<form method="post">
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %} {% csrf_token %} {{form.as_p}}
+    <button type="submit">Guardar</button>
+</form>
+{% endblock body %}

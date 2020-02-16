@@ -4,7 +4,8 @@
 <h1>Current Store Index Body</h1>
 {% if store %}
 <p>Name: {{store.Name}}</p>
-{% else %} {% for error in errors %}
+{% else %} 
+{% for error in errors %}
 <h1>{{error}}</h1>
 {% endfor %} {% endif %}
 <ul>
@@ -23,10 +24,14 @@
     <h1>No images</h1>
     {% endif %}
 </ul>
-<p>See products: <a href="{% url 'cubasells:store_product_list' store.id %}">Products</a></p>
+<p><a href="{% url 'cubasells:store_product_list' store.id %}">See Products</a></p>
 {% ifequal user.id store.Owner.id %}
-<p>Add product: <a href="{% url 'cubasells:store_product_create' store.id %}">Add</a></p>
+<a href="{% url 'cubasells:store_product_create' store.id %}">Add Product</a>
+<a href="{% url 'cubasells:store_offer_create' store.id %}">Add Offer</a>
+<a href="{% url 'cubasells:store_suboffer_create' store.id %}">Add Suboffer</a>
+<br>
 <a class="btn-danger" href="{% url 'cubasells:store_delete' store.id %}">Delete</a>
+<a class="btn" href="{% url 'cubasells:store_update' store.id %}">Update</a>
 <!-- sep     -->
 {% endifequal %}
 <!-- sep     -->

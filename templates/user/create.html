@@ -5,6 +5,8 @@
 
 <form method="post">
     {% csrf_token %} {{form.as_p}}
+    <a href="{% url 'cubasells:image_create' %}">Create Image</a>
+    <a href="{% url 'cubasells:tag_create' %}">Create Tag</a>
     <button type="submit">Guardar</button>
 </form>
 {% endblock body %}

@@ -1,0 +1,15 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Current Image Index</h1>
+{% endblock header %} 
+{% block body %}
+<h1>Current Image Index Body</h1>
+
+<p>Name: {{object.Name}}</p>
+<td><img src="/{{ m.Image.name }}" alt="{{m.Name}}"></td>
+
+
+<h1>Hay que ver lo que se pude hacer con los images</h1>
+<a class="btn-danger" href="{% url 'cubasells:image_delete' object.id %}">Delete</a>
+<a class="btn" href="{% url 'cubasells:image_update' object.id %}">Update</a>
+<!-- sep     -->
+{% endblock %}

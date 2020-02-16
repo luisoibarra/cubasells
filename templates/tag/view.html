@@ -1,0 +1,13 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Current Tag Index</h1>
+{% endblock header %} 
+{% block body %}
+<h1>Current Tag Index Body</h1>
+
+<p>Name: {{object.Tag}}</p>
+
+<h1>Hay que ver lo que se pude hacer con los tags</h1>
+<a class="btn-danger" href="{% url 'cubasells:tag_delete' object.id %}">Delete</a>
+<a class="btn" href="{% url 'cubasells:tag_update' object.id %}">Update</a>
+<!-- sep     -->
+{% endblock %}

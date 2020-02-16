@@ -14,6 +14,7 @@
                 <td>Product</td>
                 <td>Amount per offert</td>
                 <td>Stored Amount</td>
+                <td></td>
                 {% endblock %}
             </tr>
         </thead>
@@ -28,11 +29,16 @@
                 <td>
                     {{m.Product_offer.Store_Amount}}
                 </td>
+                <td>
+                    <a href="{% url 'cubasells:suboffer_view' m.id %}">More Info</a>
+                </td>
                 {% endblock %}
 
             </tr>
 
-            {% endfor %} {% else %} {% block else_message %}
+            {% endfor %} 
+            {% else %} 
+            {% block else_message %}
             <h2>No suboffers</h2>
             {% endblock %}
 

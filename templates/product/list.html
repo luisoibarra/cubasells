@@ -34,7 +34,9 @@
 
             </tr>
 
-            {% endfor %} {% else %} {% block else_message %}
+            {% endfor %} 
+            {% else %} 
+            {% block else_message %}
             <h2>No products</h2>
             {% endblock %}
 
@@ -50,4 +52,14 @@
     </h3>
 
 </div>
+
+{% if store_id %}
+<!-- sep -->
+{% ifequal store.Owner.id user.id %}
+<a class="btn btn-primary" href="{% url 'cubasells:store_product_create' store_id %}">Create product</a>
+<!-- sep -->
+{% endifequal %}
+<!-- sep -->
+{% endif %}
+<!-- sep -->
 {% endblock %}

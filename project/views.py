@@ -8,6 +8,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 from project.forms import *
 from project.models import *
 from project.custom.views import *
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -17,21 +18,97 @@ def index(request):
 def success_view(request):
     return render(request,'success.html')
 
-class UserCreateView(AuthenticateCreateView):
+class MyLoginView(LoginView):
+    template_name ='login.html'
+
+class MyLogoutView(LogoutView):
+    template_name = 'login.html'
+
+def user_index(request):
+    context = {'user': request.user}
+    context.update({'tags':request.user.myuser.Tags.all()})
+    context.update({'images':request.user.myuser.Images.all()})
+    context.update({'accounts':request.user.myuser.Accounts.all()})
+
+    return render(request,'user/index.html',context=context)
+
+class UserCreateView(CreateView):
     model = MyUser
     template_name = "user/create.html"
     form_class = MyUserCreateForm
     success_url = reverse_lazy('cubasells:login')
-    permission = 'project.add_user'
     
     def post(self, request, *args, **kwargs):
         self.object = None
         p_return = super().post(request, *args, **kwargs)
         if self.object:
-            group = Group.objects.get(name='User Group')
+            group = Group.objects.get(name='UserGroup')
             group.user_set.add(self.object)
         return p_return
 
+
+class TagCreateView(AuthenticateCreateView):
+    model = Tag
+    template_name = "tag/create.html"
+    form_class = TagCreateForm
+    success_url = reverse_lazy('cubasells:tag_list')
+    permission = 'project.add_tag'
+
+class TagListView(AuthenticateListView):
+    model = Tag
+    template_name='tag/list.html'
+    paginate_by = 5
+    permission = 'project.view_tag'
+
+class TagDetailView(AuthenticateDetailView):
+    model = Tag
+    template_name = "tag/view.html"
+    permission = 'project.view_tag'
+
+class TagDeleteView(AuthenticateDeleteView):
+    model = Tag
+    template_name = "delete.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_tag'
+    
+class TagUpdateView(AuthenticateUpdateView):
+    model = Tag
+    form_class = TagCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_tag'
+
+
+class ImageCreateView(AuthenticateCreateView):
+    model = Image
+    template_name = "image/create.html"
+    form_class = ImageCreateForm
+    success_url = reverse_lazy('cubasells:image_list')
+    permission = 'project.add_image'
+
+class ImageListView(AuthenticateListView):
+    model = Image
+    template_name='image/list.html'
+    paginate_by = 5
+    permission = 'project.view_image'
+
+class ImageDetailView(AuthenticateDetailView):
+    model = Image
+    template_name = "image/view.html"
+    permission = 'project.view_image'
+
+class ImageDeleteView(AuthenticateDeleteView):
+    model = Image
+    template_name = "delete.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_image'
+    
+class ImageUpdateView(AuthenticateUpdateView):
+    model = Image
+    form_class = ImageCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_image'
 
 
 class SubOfferCreateView(AuthenticateCreateView):
@@ -62,25 +139,27 @@ class SubOfferCreateView(AuthenticateCreateView):
         POST variables and then check if it's valid.
         """
         self.object = None
-        
-        form = self.get_form()
-        try:
-            store = Store.objects.get(id=kwargs['store_id'])
-            if store.Owner.id == request.user.id:
-                self.success_url = reverse_lazy('cubasells:store_suboffer_list',kwargs={'store_id':store.id})
-            else:
-                extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
+            form = self.get_form()
+            try:
+                store = Store.objects.get(id=kwargs['store_id'])
+                if store.Owner.id == request.user.id:
+                    self.success_url = reverse_lazy('cubasells:store_suboffer_list',kwargs={'store_id':store.id})
+                else:
+                    extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
+                    self.update_extra_context(extra)
+                    return self.form_invalid(form)
+            except ObjectDoesNotExist:
+                extra = {'error':'Store doesnt exist'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-        except ObjectDoesNotExist:
-            extra = {'error':'Store doesnt exist'}
-            self.update_extra_context(extra)
-            return self.form_invalid(form)
-        
-        if form.is_valid():
-            return self.form_valid(form)
+            
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
         else:
-            return self.form_invalid(form)
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 class SubOfferListView(AuthenticateListView):
     model = SubOffer
@@ -120,18 +199,35 @@ class SubOfferListView(AuthenticateListView):
 
         return queryset
 
+class SubOfferDetailView(AuthenticateDetailView):
+    model = SubOffer
+    template_name = "suboffer/view.html"
+    permission = 'project.view_suboffer'
+
 class SubOfferDeleteView(AuthenticateDeleteView):
     model = SubOffer
     template_name = "delete.html"
-    success_url = reverse_lazy('app:success')
-    permission = 'app.delete_suboffer'
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_suboffer'
     
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         suboffer = SubOffer.objects.get(id=kwargs['pk'])
         return suboffer.Product_offer.Store.Owner.id == user.id
 
-    
+class SubOfferUpdateView(AuthenticateUpdateView):
+    model = SubOffer
+    form_class = SubOfferCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_suboffer'
+
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        suboffer = SubOffer.objects.get(id=kwargs['pk'])
+        return suboffer.Product_offer.Store.Owner.id == user.id
+
+
 class OfferCreateView(AuthenticateCreateView):
     model = Offer
     template_name = "offer/create.html"
@@ -159,21 +255,24 @@ class OfferCreateView(AuthenticateCreateView):
         POST variables and then check if it's valid.
         """
         self.object = None
-        
-        form = self.get_form()
-        try:
-            store = Store.objects.get(id=kwargs['store_id'])
-            if store.Owner.id == request.user.id:
-                form.instance.Store = store
-                self.success_url = reverse_lazy('cubasells:store_offer_list',kwargs={'store_id':store.id})
-            else:
-                extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
+            form = self.get_form()
+            try:
+                store = Store.objects.get(id=kwargs['store_id'])
+                if store.Owner.id == request.user.id:
+                    form.instance.Store = store
+                    self.success_url = reverse_lazy('cubasells:store_offer_list',kwargs={'store_id':store.id})
+                else:
+                    extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
+                    self.update_extra_context(extra)
+                    return self.form_invalid(form)
+            except ObjectDoesNotExist:
+                extra = {'error':'Store doesnt exist'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-        except ObjectDoesNotExist:
-            extra = {'error':'Store doesnt exist'}
-            self.update_extra_context(extra)
-            return self.form_invalid(form)
+        else:
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+
         
         if form.is_valid():
             return self.form_valid(form)
@@ -226,9 +325,21 @@ class OfferDetailView(AuthenticateDetailView):
 class OfferDeleteView(AuthenticateDeleteView):
     model = Offer
     template_name = "delete.html"
-    success_url = reverse_lazy('app:success')
-    permission = 'app.delete_offer'
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_offer'
     
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        offer = Offer.objects.get(id=kwargs['pk'])
+        return offer.Store.Owner.id == user.id
+
+class OfferUpdateView(AuthenticateUpdateView):
+    model = Offer
+    form_class = OfferCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_offer'
+
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         offer = Offer.objects.get(id=kwargs['pk'])
@@ -254,26 +365,28 @@ class ProductCreateView(AuthenticateCreateView):
         POST variables and then check if it's valid.
         """
         self.object = None
-        
-        form = self.get_form()
-        try:
-            store = Store.objects.get(id=kwargs['store_id'])
-            if store.Owner.id == request.user.id:
-                form.instance.Store = store
-                self.success_url = reverse_lazy('cubasells:store_product_list',kwargs={'store_id':store.id})
-            else:
-                extra = {'error':'User not authorized to create a product in this store, must be its owner'}
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
+            form = self.get_form()
+            try:
+                store = Store.objects.get(id=kwargs['store_id'])
+                if store.Owner.id == request.user.id:
+                    form.instance.Store = store
+                    self.success_url = reverse_lazy('cubasells:store_product_list',kwargs={'store_id':store.id})
+                else:
+                    extra = {'error':'User not authorized to create a product in this store, must be its owner'}
+                    self.update_extra_context(extra)
+                    return self.form_invalid(form)
+            except ObjectDoesNotExist:
+                extra = {'error':'Store doesnt exist'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-        except ObjectDoesNotExist:
-            extra = {'error':'Store doesnt exist'}
-            self.update_extra_context(extra)
-            return self.form_invalid(form)
-        
-        if form.is_valid():
-            return self.form_valid(form)
+            
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
         else:
-            return self.form_invalid(form)
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 class ProductListView(AuthenticateListView):
     model = Product
@@ -321,9 +434,21 @@ class ProductDetailView(AuthenticateDetailView):
 class ProductDeleteView(AuthenticateDeleteView):
     model = Product
     template_name = "delete.html"
-    success_url = reverse_lazy('app:success')
-    permission = 'app.delete_product'
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_product'
     
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        product = Product.objects.get(id=kwargs['pk'])
+        return product.Store.Owner.id == user.id
+
+class ProductUpdateView(AuthenticateUpdateView):
+    model = Product
+    form_class = ProductCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_product'
+
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         product = Product.objects.get(id=kwargs['pk'])
@@ -352,14 +477,16 @@ class StoreCreateView(AuthenticateCreateView):
         POST variables and then check if it's valid.
         """
         self.object = None
-        
-        form = self.get_form()
-        form.instance.Owner = MyUser.objects.get(id=request.user.id) 
-        if form.is_valid():
-            return self.form_valid(form)
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
+            form = self.get_form()
+            form.instance.Owner = MyUser.objects.get(id=request.user.id) 
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
         else:
-            return self.form_invalid(form)
-        
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+
 class StoreListView(AuthenticateListView):
     model = Store
     template_name = "store/list.html"
@@ -369,24 +496,22 @@ class StoreListView(AuthenticateListView):
 class StoreDeleteView(AuthenticateDeleteView):
     model = Store
     template_name = "delete.html"
-    success_url = reverse_lazy('app:success')
-    permission = 'app.delete_store'
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_store'
     
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         store = Store.objects.get(id=kwargs['pk'])
         return store.Owner.id == user.id
 
-class MyLoginView(LoginView):
-    template_name ='login.html'
+class StoreUpdateView(AuthenticateUpdateView):
+    model = Store
+    form_class = StoreCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_store'
 
-class MyLogoutView(LogoutView):
-    template_name = 'login.html'
-
-def user_index(request):
-    context = {'user': request.user}
-    context.update({'tags':request.user.myuser.Tags.all()})
-    context.update({'images':request.user.myuser.Images.all()})
-    context.update({'accounts':request.user.myuser.Accounts.all()})
-
-    return render(request,'user/index.html',context=context)
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        store = Store.objects.get(id=kwargs['pk'])
+        return store.Owner.id == user.id

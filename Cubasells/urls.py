@@ -20,5 +20,5 @@ from project import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('www.cubasells.cu/',include(('project.urls','project'),'cubasells'))
+    path('',include(('project.urls','project'),'cubasells'))
 ]

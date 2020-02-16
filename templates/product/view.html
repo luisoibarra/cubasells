@@ -2,7 +2,9 @@
 <h1>Producto:</h1>
 {% endblock %} {% block header %}
 <h1>Producto:</h1>
-{% endblock %} {% block body %} {% if object %}
+{% endblock %} 
+{% block body %} 
+{% if object %}
 <p>Name: {{object.Name}}</p>
 <p>Description: {{object.Description}}</p>
 <p>Store: <a href="{% url 'cubasells:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
@@ -22,6 +24,7 @@
 
 {% ifequal object.Store.Owner.id user.id %}
 <a class="btn-danger" href="{% url 'cubasells:product_delete' object.id %}">Delete</a>
+<a class="btn" href="{% url 'cubasells:product_update' object.id %}">Update</a>
 <!-- sep     -->
 {% endifequal %}
 <!-- sep     -->
