@@ -1,20 +1,47 @@
-<!DOCTYPE html> {% extends 'base/base.html' %} {% block body %}
-<table class="table table-bordered">
-    {% if object_list %}
-    <thead>
-        <tr>
-            {% block table_head %} {% endblock %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for m in object_list %}
-        <tr>
-            {% block table_row %} {% endblock %}
-
-        </tr>
-        {% endfor %} {% else %} {% block else_message %} {% endblock %}
-
-    </tbody>
+{% extends 'base/base.html' %} 
+{% block body %}
+{% if object_list %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                {% block table_head %} 
+                {% endblock %}
+            </tr>
+            <tbody>
+        </thead>
+            {% for object in object_list %}
+            <tr>
+                {% block table_row %} 
+                {% endblock %}
+            </tr>
+            {% endfor %} 
+        </tbody>
+    </table>
+    {% block paginator %}
+    {% if page_obj.has_previous %}
+    <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% else %}
+    <a class="btn btn-inverse" href="">Previous</a> 
+    {% endif %} 
+    {% if page_obj.has_next %}
+    <a class="btn btn-danger" href="?page={{ page_obj.next_page_number }}">Next</a> 
+    {% else %}
+    <a class="btn btn-inverse" href="">Next</a> 
     {% endif %}
-</table>
-{% endblock %}
+    {% endblock paginator %}    
+{% else %} 
+    {% block else_message %} 
+    {% endblock %}
+    {% endif %}
+{% block extra_body %}
+  
+{% endblock extra_body %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <!-- sep -->
+    {% block order_filter_forms %}
+    <h2>INSERT FILTER</h2>
+    {% endblock order_filter_forms %}
+    <p><input type="submit" value="Update"></p>
+</form>
+{% endblock body %}

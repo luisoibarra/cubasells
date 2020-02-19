@@ -1,56 +1,33 @@
-{% extends 'base/list.html' %} {% block title %} Offers: {% endblock %} {% block header %}
-<h1></h1>
-<div class="container">
-    <h1>Offers:</h1>
-</div>
-{% endblock %} {% block body %}
-<div class="container">
-    <table class="table table-bordered">
-        {% if object_list %}
-        <thead>
-            <tr>
-                {% block table_head %}
-                <td>Name</td>
-                <td>Description</td>
-                <td>Price</td>
-                <td>Store</td>
-                <td></td>
-                {% endblock %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for m in object_list %}
-
-            <tr>
-                {% block table_row %}
-
-                <td>{{m.Offer_name}}</td>
-                <td>{{m.Offer_description}}</td>
-                <td>{{m.Price}}</td>
-                <td>
-                    <a href="{% url 'cubasells:store_view' m.Store.id %}">{{m.Store.Name}}</a>
-                </td>
-                <td>
-                    <a href="{% url 'cubasells:offer_view' m.id%}">More info</a>
-                </td>
-                {% endblock %}
-
-            </tr>
-
-            {% endfor %} {% else %} {% block else_message %}
-            <h2>No products</h2>
-            {% endblock %}
-
-        </tbody>
-        {% endif %}
-    </table>
-    <h3>
-        {% if page_obj.has_previous %}
-        <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a> {% else %}
-        <a class="btn btn-inverse" href="">Previous</a> {% endif %} {% if page_obj.has_next %}
-        <a class="btn btn-danger" href="?page={{ page_obj.next_page_number }}">Next</a> {% else %}
-        <a class="btn btn-inverse" href="">Next</a> {% endif %}
-    </h3>
-
-</div>
-{% endblock %}
+{% extends "base/list.html" %} 
+{% block header %}
+<h1>Offer List</h1>
+{% endblock header %} 
+{% block table_head %}
+<td>Name</td>
+<td>Description</td>
+<td>Price</td>
+<td>Store</td>
+<td></td>
+{% endblock table_head %}
+{% block table_row %}
+<td>{{object.Offer_name}}</td>
+<td>{{object.Offer_description}}</td>
+<td>{{object.Price}}</td>
+<td>
+    <a href="{% url 'cubasells:store_view' object.Store.id %}">{{object.Store.Name}}</a>
+</td>
+<td>
+    <a href="{% url 'cubasells:offer_view' object.id%}">More info</a>
+</td>
+{% endblock table_row %}
+{% block else_message %}
+<h1>No Offers</h1>
+{% endblock else_message %}
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}

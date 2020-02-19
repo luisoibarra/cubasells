@@ -141,11 +141,11 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                 self.object_list = self.get_queryset()
                 form_filter = self.form_filter(request.GET,self.object_list)
                 self.object_list = form_filter.qs
-                context = self.get_context_data(object_list=self.object_list,form=form_order,form2=form_filter)
+                context = self.get_context_data(object_list=self.object_list,form=form_order,form2=form_filter,**kwargs)
                 if not form_filter.is_valid():
                     return render(request,self.template_name,context)
             else:
-                context = self.get_context_data(form=form_order,form2=form_filter)
+                context = self.get_context_data(form=form_order,form2=form_filter,**kwargs)
                 return render(request,self.template_name,context)
             
             allow_empty = self.get_allow_empty()
@@ -175,11 +175,11 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                 self.object_list = self.get_queryset()
                 form_filter = self.form_filter(request.POST,self.object_list)
                 self.object_list = form_filter.qs
-                context = self.get_context_data(object_list=self.object_list,form=form_order,form2=form_filter)
+                context = self.get_context_data(object_list=self.object_list,form=form_order,form2=form_filter,**kwargs)
                 if not form_filter.is_valid():
                     return render(request,self.template_name,context)
             else:
-                context = self.get_context_data(form=form_order,form2=form_filter)
+                context = self.get_context_data(form=form_order,form2=form_filter,**kwargs)
                 return render(request,self.template_name,context)
             
             allow_empty = self.get_allow_empty()

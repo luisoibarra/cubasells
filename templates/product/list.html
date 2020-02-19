@@ -1,65 +1,34 @@
-{% extends 'base/list.html' %} {% block title %}
-<h1>Productos:</h1>
-{% endblock %} {% block header %}
-<h1></h1>
-<div class="container">
-    <h1>Productos:</h1>
-</div>
-{% endblock %} {% block body %}
-<div class="container">
-
-    <table class="table table-bordered">
-        {% if object_list %}
-        <thead>
-            <tr>
-                {% block table_head %}
-                <td>Name</td>
-                <td>Stored</td>
-                <td></td>
-                {% endblock %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for m in object_list %}
-
-            <tr>
-                {% block table_row %}
-
-                <td>{{m.Name}}</td>
-                <td>{{m.Store_Amount}}</td>
-                <td>
-                    <a class="btn btn-primary" href="{% url 'cubasells:product_view' m.id %}">More info</a>
-                </td>
-                {% endblock %}
-
-            </tr>
-
-            {% endfor %} 
-            {% else %} 
-            {% block else_message %}
-            <h2>No products</h2>
-            {% endblock %}
-
-        </tbody>
-        {% endif %}
-    </table>
-    <h3>
-        {% if page_obj.has_previous %}
-        <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a> {% else %}
-        <a class="btn btn-inverse" href="">Previous</a> {% endif %} {% if page_obj.has_next %}
-        <a class="btn btn-danger" href="?page={{ page_obj.next_page_number }}">Next</a> {% else %}
-        <a class="btn btn-inverse" href="">Next</a> {% endif %}
-    </h3>
-
-</div>
-
+{% extends "base/list.html" %} 
+{% block header %}
+<h1>Product List</h1>
+{% endblock header %} 
+{% block table_head %}
+<th>Name</th>
+<th>Stored</th>
+<th></th>
+{% endblock table_head %}
+{% block table_row %}
+<td>{{object.Name}}</td>
+<td>{{object.Store_Amount}}</td>
+<td>
+    <a class="btn btn-primary" href="{% url 'cubasells:product_view' object.id %}">More info</a>
+</td>
+{% endblock table_row %}
+{% block else_message %}
+<h1>No Products</h1>
+{% endblock else_message %}
+{% block extra_body %}
 {% if store_id %}
-<!-- sep -->
 {% ifequal store.Owner.id user.id %}
 <a class="btn btn-primary" href="{% url 'cubasells:store_product_create' store_id %}">Create product</a>
-<!-- sep -->
 {% endifequal %}
-<!-- sep -->
 {% endif %}
-<!-- sep -->
-{% endblock %}
+{% endblock extra_body %}
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}

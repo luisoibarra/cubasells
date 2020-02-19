@@ -15,7 +15,8 @@
     <a href="{% url 'cubasells:user_index' %}">{{user.username}}</a> {% endif %} {% block logout %}
     <a href="{% url 'cubasells:logout' %}">logout</a> {% endblock logout %} {% block body %}
     <h1>Body</h1>
-    {% endblock body %} {% block footer %}
+    {% endblock body %} 
+    {% block footer %}
     <h1>Footer</h1>
     {% endblock footer %}
 </body>

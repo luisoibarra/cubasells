@@ -17,10 +17,15 @@ class OrderForm(forms.Form):
                     setattr(self,f'{x}_decrease',forms.BooleanField(required=False,label=f'{field_dict[x].label} decrease',help_text=f'Order by {field_dict[x].label} decreasingly'))
         elif self.fields_to_order:
             for x in self.fields_to_order:
-                key = [y for y in field_dict if x.startswith(y)][0]
-                label = field_dict[key].label
-                setattr(self,x,forms.BooleanField(required=False,label=label,help_text=f'Order by  {label}'))
-                setattr(self,f'{x}_decrease',forms.BooleanField(required=False,label=f'{label} decrease',help_text=f'Order by {label} decreasingly'))
+                
+                key = [y for y in field_dict if x.startswith(y)]
+                if key:
+                    key = key[0]
+                    label = field_dict[key].label
+                    setattr(self,x,forms.BooleanField(required=False,label=label,help_text=f'Order by  {label}'))
+                    setattr(self,f'{x}_decrease',forms.BooleanField(required=False,label=f'{label} decrease',help_text=f'Order by {label} decreasingly'))
+                else:
+                    raise TypeError(f'{x} is not an atribute of {self.model}')
         else:
             for x in self.fields_name:
                 setattr(self,x,forms.BooleanField(required=False,label=field_dict[x].label,help_text=f'Order by  {field_dict[x].label}'))

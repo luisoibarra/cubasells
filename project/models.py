@@ -72,7 +72,7 @@ class Store(models.Model):
     
     name = models.CharField(name='Name',max_length=150)
     
-    create_date = models.DateTimeField(name="Create Date",auto_now=False, auto_now_add=True)
+    create_date = models.DateTimeField(name="Create_Date",auto_now=False, auto_now_add=True)
 
     email = models.EmailField(name='Email', max_length=254)
     

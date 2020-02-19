@@ -84,4 +84,27 @@ class AuctionCreateForm(forms.ModelForm):
         if data < dt.datetime.now() + dt.datetime(minute=self.auction_aticipation):
             raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_aticipation})
         return data
-    
+
+class OfferOrderForm(OrderForm):
+    model = Offer
+    fields_to_order = ['Price','Offer_name','Store__name']
+
+class StoreOrderForm(OrderForm):
+    model = Store
+    fields_to_order = ['Name']
+
+class SubOfferOrderForm(OrderForm):
+    model = SubOffer
+    fields_to_order = ['Product_offer__Name','Amount']
+
+class ProductOrderForm(OrderForm):
+    model = Product
+    fields_to_order = ['Store_Amount','Name']
+
+class TagOrderForm(OrderForm):
+    model = Tag
+    fields_to_order = ['Tag']
+
+class ImageOrderForm(OrderForm):
+    model = Image
+    fields_to_order = ['Name']

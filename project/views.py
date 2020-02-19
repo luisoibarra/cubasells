@@ -9,6 +9,7 @@ from project.forms import *
 from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
+from project.filters import *
 
 # Create your views here.
 
@@ -54,11 +55,14 @@ class TagCreateView(AuthenticateCreateView):
     success_url = reverse_lazy('cubasells:tag_list')
     permission = 'project.add_tag'
 
-class TagListView(AuthenticateListView):
+class TagListView(FilterOrderAuthenticateListView):
     model = Tag
     template_name='tag/list.html'
     paginate_by = 5
     permission = 'project.view_tag'
+    form_filter = TagFilter
+    form_order = TagOrderForm
+    
 
 class TagDetailView(AuthenticateDetailView):
     model = Tag
@@ -86,11 +90,13 @@ class ImageCreateView(AuthenticateCreateView):
     success_url = reverse_lazy('cubasells:image_list')
     permission = 'project.add_image'
 
-class ImageListView(AuthenticateListView):
+class ImageListView(FilterOrderAuthenticateListView):
     model = Image
     template_name='image/list.html'
     paginate_by = 5
     permission = 'project.view_image'
+    form_order = ImageOrderForm
+    form_filter = ImageFilter
 
 class ImageDetailView(AuthenticateDetailView):
     model = Image
@@ -161,12 +167,15 @@ class SubOfferCreateView(AuthenticateCreateView):
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
-class SubOfferListView(AuthenticateListView):
+class SubOfferListView(FilterOrderAuthenticateListView):
     model = SubOffer
     template_name='suboffer/list.html'
     paginate_by = 5
     permission = 'project.view_suboffer'
-
+    form_order = SubOfferOrderForm
+    form_filter = SubOfferFilter
+    
+    
     def get_queryset(self):
         """
         Return the list of items for this view.
@@ -279,12 +288,14 @@ class OfferCreateView(AuthenticateCreateView):
         else:
             return self.form_invalid(form)
 
-class OfferListView(AuthenticateListView):
+class OfferListView(FilterOrderAuthenticateListView):
     model = Offer
     template_name = "offer/list.html"
     paginate_by = 5
     permission = 'project.view_offer'
-
+    form_order = OfferOrderForm
+    form_filter = OfferFilter
+    
     def get_queryset(self):
         """
         Return the list of items for this view.
@@ -388,11 +399,25 @@ class ProductCreateView(AuthenticateCreateView):
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
-class ProductListView(AuthenticateListView):
+class ProductListView(FilterOrderAuthenticateListView):
     model = Product
     template_name='product/list.html'
     paginate_by = 5
     permission = 'project.view_product'
+    form_order = ProductOrderForm
+    form_filter = ProductFilter
+    
+    def get_context_data(self,object_list=None,**kwargs):
+        context = super().get_context_data(object_list,**kwargs)
+        try:
+            context['store_id'] = kwargs['store_id']
+            context['store'] = Store.objects.get(id=kwargs['store_id'])
+        except:
+            pass
+        return context
+    
+    def get(self,request,*args, **kwargs):
+        return super().get(request,*args, **kwargs)
     
     def get_queryset(self):
         """
@@ -487,12 +512,14 @@ class StoreCreateView(AuthenticateCreateView):
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
-class StoreListView(AuthenticateListView):
+class StoreListView(FilterOrderAuthenticateListView):
     model = Store
     template_name = "store/list.html"
     paginate_by = 5
     permission = 'project.view_store'
-
+    form_order = StoreOrderForm
+    form_filter = StoreFilter
+ 
 class StoreDeleteView(AuthenticateDeleteView):
     model = Store
     template_name = "delete.html"
