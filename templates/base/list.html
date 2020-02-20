@@ -20,13 +20,9 @@
     {% block paginator %}
     {% if page_obj.has_previous %}
     <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% else %}
-    <a class="btn btn-inverse" href="">Previous</a> 
     {% endif %} 
     {% if page_obj.has_next %}
     <a class="btn btn-danger" href="?page={{ page_obj.next_page_number }}">Next</a> 
-    {% else %}
-    <a class="btn btn-inverse" href="">Next</a> 
     {% endif %}
     {% endblock paginator %}    
 {% else %} 
@@ -42,6 +38,6 @@
     {% block order_filter_forms %}
     <h2>INSERT FILTER</h2>
     {% endblock order_filter_forms %}
-    <p><input type="submit" value="Update"></p>
+    <button class="btn btn-primary" type="submit">Update</button>
 </form>
 {% endblock body %}

@@ -1,12 +1,34 @@
 {% extends "base/base.html" %} {% block header %}
 <h1>User Create</h1>
-{% endblock header %} {% block body %}
-<h1>User Create Body</h1>
+{% endblock header %} 
+{% block body %}
 
-<form method="post">
-    {% csrf_token %} {{form.as_p}}
-    <a href="{% url 'cubasells:image_create' %}">Create Image</a>
-    <a href="{% url 'cubasells:tag_create' %}">Create Tag</a>
-    <button type="submit">Guardar</button>
-</form>
+
+    <!-- ======== @Region: #content ======== -->
+    <div id="content" >
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="login">
+                            Sign Up
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <form accept-charset="UTF-8" role="form" method="POST">
+                            {% csrf_token %} 
+                            {{form.as_p}}
+                            <button class="btn btn-lg btn-primary btn-block" type="submit"
+                            value="Sign Up">Sign Up</button>
+                        </form>
+                        <div class="credits">
+                            Designed by <a href="https://bootstrapmade.com/">CubaSells Team</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+
 {% endblock body %}

@@ -1,12 +1,15 @@
 {% extends 'base/base.html' %}
 <!-- sep -->
+{% block header %}
+  
+{% endblock header %}
 {% block body %}
 <!-- sep -->
 <form method="post">
     {% csrf_token %}
     <!-- sep -->
     {{ form.as_p }}
-    <button type="submit">Update</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>
 <!-- sep -->
 {% endblock body %}

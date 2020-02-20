@@ -16,8 +16,6 @@ class MyUserCreateForm(UserCreationForm):
             'Phone',
             'Description',
             'Images',
-            'Tags',
-            'Accounts',
         ]
 
     def save(self, commit=True):

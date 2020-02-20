@@ -1,30 +1,81 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>User Index</h1>
-{% endblock header %} {% block body %}
-<h1>User Index Body</h1>
-<h1>User: {{ user.username }}</h1>
-<ul>
-    <p>Tags</p>
-    {% if tags %} {% for tag in tags %}
-    <li>{{ tag }}</li>
-    {% endfor %} {% else %}
-    <h1>No tags</h1>
-    {% endif %}
-</ul>
-<ul>
-    <p>Images</p>
-    {% if images %} {% for tag in images %}
-    <li><img src="/{{ tag.Image.name }}" alt="Imagen"></li>
-    <p>{{ tag.Image.name }}</p> {% endfor %} {% else %}
-    <h1>No images</h1>
-    {% endif %}
-</ul>
-<p>Accounts</p>
-{% if accounts %} {% for tag in accounts %}
-<li>{{ tag }}</li>
-{% endfor %} {% else %}
-<h1>No accounts</h1>
-{% endif %}
-</ul>
+{% extends "base/base.html" %} 
+{% block header %}
+{% endblock header %}
+{% block body %}
+
+<!--/ Intro Single star /-->
+<section class="intro-single">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-8">
+                <div class="title-single-box">
+                    <h1 class="title-single">{{ user.username }}</h1>
+            <span class="color-text-a">{{ user.first_name }} {{user.last_name}} </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
+
+  <section class="agent-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="agent-avatar-box">
+                
+                {% if images %} 
+                {% for tag in images %}
+                <img src="/{{ tag.Image.name }}" class="agent-avatar img-fluid"alt="Imagen">
+                {% endfor %} 
+                {% else %}
+                <h1>No images</h1>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-5 section-md-t3">
+              <div class="agent-info-box">
+                <div class="agent-title">
+                  <div class="title-box-d">
+                    <h3 class="title-d">{{user.username}} </h3>
+                  </div>
+                </div>
+                <div class="agent-content mb-3">
+                  <p class="content-d color-text-a">
+                    {{user.myuser.Description}}
+                  </p>
+                  <div class="info-agents color-a">
+                    <p>
+                      <strong>Phone: </strong>
+                      <span class="color-text-a"> {{user.myuser.Phone}} </span>
+                    </p>
+                    <p>
+                      <strong>Email: </strong>
+                      <span class="color-text-a"> {{user.email}}</span>
+                    </p>
+                    <p>
+                        <strong>Accounts: </strong>
+                        {% if accounts %} 
+                        {% for tag in accounts %}
+                        <span class="color-text-a">{{ tag }}</span>
+                        {% endfor %} 
+                        {% else %}
+                        <span class="color-text-a">No accounts</span>
+                        {% endif %}
+                    </p>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+</section>
+<a class="btn btn-danger" href="{% url 'cubasells:user_delete' user.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'cubasells:user_update' user.id %}">Update</a>
 
 {% endblock body %}

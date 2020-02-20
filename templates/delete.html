@@ -1,9 +1,12 @@
  {% extends "base/base.html" %}
 <!-- sep -->
+{% block header %}
+  
+{% endblock header %}
 {% block body %}
 <form method="POST">
     {% csrf_token %}
     <h1>Are you sure to delete {{ object }}?</h1>
-    <button type="submit" class="btn btn-primary" href="{% url 'cubasells:success' %}">Delete</button>
+    <button type="submit" class="btn btn-danger" >Delete</button>
 </form>
 {% endblock body %}

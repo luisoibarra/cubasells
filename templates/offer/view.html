@@ -29,8 +29,8 @@
     {% endfor %}
 </ul>
 {% ifequal object.Store.Owner.id user.id %}
-<a class="btn-danger" href="{% url 'cubasells:offer_delete' object.id %}">Delete</a>
-<a class="btn" href="{% url 'cubasells:offer_update' object.id %}">Update</a>
+<a class="btn btn-danger" href="{% url 'cubasells:offer_delete' object.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'cubasells:offer_update' object.id %}">Update</a>
 <!-- sep -->
 {% endifequal %}
 <!-- sep -->

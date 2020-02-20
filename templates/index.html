@@ -1,9 +1,114 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Index</h1>
+{% extends "base/base.html" %} 
+{% block header %}
+<!--/ Carousel Star /-->
+<div class="intro intro-carousel">
+  <div id="carousel" class="owl-carousel owl-theme">
+    <div class="carousel-item-a intro-item bg-image" style="background-image: url(static/img/verde.jpg)">
+      <div class="overlay overlay-a"></div>
+      <div class="intro-content display-table">
+        <div class="table-cell">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8">
+                <div class="intro-body">
+                  <h1 class="intro-title-gray mb-4">
+                    Welcome to CubaSells
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--/ Carousel end /-->
 {% endblock header %} {% block body %}
-<h1>Index Body</h1>
-<a href="{% url 'cubasells:login' %}">login</a>
-<a href="{% url 'cubasells:store_list' %}">Stores</a>
-<a href="{% url 'cubasells:product_list' %}">Products</a>
-<a href="{% url 'cubasells:offer_list' %}">Offer</a>
-<a href="{% url 'cubasells:suboffer_list' %}">Suboffer</a> {% endblock body %}
+
+<!--/ Services Star /-->
+<section class="section-services section-t8">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="title-wrap d-flex justify-content-between">
+          <div class="title-box">
+            <h2 class="title-a">Our Services</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card-box-c foo">
+          <div class="card-header-c d-flex">
+            <!-- <div class="card-box-ico">
+              <span class="fa fa-usd"></span>
+            </div> -->
+            <div class="card-title-c align-self-center">
+              <h2 class="title-c"> <a href="{% url 'cubasells:store_list' %}">Stores</a> </h2>
+            </div>
+          </div>
+          <div class="card-body-c">
+            <p class="content-c">
+              Create your own shop with all your products and offers
+            </p>
+          </div>
+          <div class="card-footer-c">
+            <a href="#" class="link-c link-icon">Read more
+              <span class="ion-ios-arrow-forward"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-box-c foo">
+          <div class="card-header-c d-flex">
+            <!-- <div class="card-box-ico">
+              <span class="fa fa-usd"></span>
+            </div> -->
+            <div class="card-title-c align-self-center">
+              <h2 class="title-c">Auction</h2>
+            </div>
+          </div>
+          <div class="card-body-c">
+            <p class="content-c">
+              Auction your products.
+            </p>
+          </div>
+          <div class="card-footer-c">
+            <a href="#" class="link-c link-icon">Read more
+              <span class="ion-ios-arrow-forward"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-box-c foo">
+          <div class="card-header-c d-flex">
+            <!-- <div class="card-box-ico">
+              <span class="fa fa-usd"></span>
+            </div> -->
+            <div class="card-title-c align-self-center">
+              <h2 class="title-c"><a href="{% url 'cubasells:offer_list' %}">Announcement</a></h2>
+            </div>
+          </div>
+          <div class="card-body-c">
+            <p class="content-c">
+              See the selling offers of the site.
+            </p>
+          </div>
+          <div class="card-footer-c">
+            <a href="#" class="link-c link-icon">Read more
+              <span class="ion-ios-arrow-forward"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</section>
+<!--/ Services End /-->
+{% endblock body %}
+

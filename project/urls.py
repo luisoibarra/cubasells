@@ -41,7 +41,9 @@ urlpatterns = [
     # User
     path('user/',login_required(user_index,login_url=reverse_lazy('cubasells:login')),name='user_index'),
     path('user/create/',UserCreateView.as_view(),name='user_create'),
-
+    path('user/<int:pk>/delete/',login_required(UserDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='user_delete'),
+    path('user/<int:pk>/update/',login_required(UserUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='user_update'),
+    
     # Store
     path('store/',store_index,name='store_index'),
     path('store/list/',StoreListView.as_view(),name='store_list'),

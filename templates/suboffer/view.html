@@ -8,8 +8,8 @@
 
 <p>Amount subofferted:  {{object.Amount}}</p>
 {% ifequal user.id object.Product_offer.Store.Owner.id %}
-<a class="btn-danger" href="{% url 'cubasells:suboffer_delete' object.id %}">Delete</a>
-<a class="btn" href="{% url 'cubasells:suboffer_update' object.id %}">Update</a>
+<a class="btn btn-danger" href="{% url 'cubasells:suboffer_delete' object.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'cubasells:suboffer_update' object.id %}">Update</a>
 <!-- sep     -->
 {% endifequal %}
 <!-- sep     -->

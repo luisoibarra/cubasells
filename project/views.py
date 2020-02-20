@@ -47,6 +47,24 @@ class UserCreateView(CreateView):
             group.user_set.add(self.object)
         return p_return
 
+class UserDeleteView(AuthenticateDeleteView):
+    model = MyUser
+    template_name = "delete.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.delete_myuser'
+    
+    def other_condition(self, request,*args, **kwargs):
+        return self.kwargs['pk'] == request.user.id
+
+class UserUpdateView(AuthenticateUpdateView):
+    model = MyUser
+    form_class = MyUserCreateForm
+    template_name = "update.html"
+    success_url = reverse_lazy('project:success')
+    permission = 'project.change_myuser'
+    
+    def other_condition(self, request,*args, **kwargs):
+        return self.kwargs['pk'] == request.user.id
 
 class TagCreateView(AuthenticateCreateView):
     model = Tag

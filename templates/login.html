@@ -1,19 +1,120 @@
-{% extends "base/base.html" %} {% block body %} {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %} {% if next %} {% if user.is_authenticated %}
-<p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
-{% else %}
-<p>Please login to see this page.</p>
-{% endif %} {% endif %}
+{% extends "base/base.html" %} 
+{% load static %}
+{% block head %}
+<meta charset="utf-8">
+<title>Login - 
+    {% block title %}
+    Cubasells
+    {% endblock title %}
+</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
 
-<form method="post" action="{% url 'cubasells:login' %}">
-    {% csrf_token %} {{form.as_p}}
-    <input type="submit" value="login">
-    <input type="hidden" name="next" value="{{ next }}">
-</form>
+<!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
+<meta property="og:title" content="">
+<meta property="og:image" content="">
+<meta property="og:url" content="">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="">
 
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'cubasells:user_create' %}">Create user</a></p>
-<p><a href="#">Lost password?</a></p>
+<!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="">
+<meta name="twitter:title" content="">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="">
 
+<!-- Fav and touch icons -->
+<link rel="shortcut icon" href="{% static 'img/icons/favicon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'img/icons/114x114.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'img/icons/72x72.png">
+<link rel="apple-touch-icon-precomposed" href="{% static 'img/icons/default.png">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900" rel="stylesheet">
+
+<!-- Bootstrap CSS File -->
+<link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %} " rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="{% static 'lib/font-awesome/css/font-awesome.min.css' %} " rel="stylesheet">
+<link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %} " rel="stylesheet">
+<link href="{% static 'lib/owlcarousel/owl.theme.min.css' %} " rel="stylesheet">
+<link href="{% static 'lib/owlcarousel/owl.transitions.min.css' %} " rel="stylesheet">
+
+<!-- Main Stylesheet File -->
+<link href="{% static 'css/style.css' %} " rel="stylesheet">
+
+<!--Your custom colour override - predefined colours are: colour-blue.css, colour-green.css, colour-lavander.css, orange is default-->
+<link href="#" id="colour-scheme" rel="stylesheet">
+
+{% endblock head %}
+
+{% block body %} 
+<body class="fullscreen-centered page-login">
+
+<!--Change the background class to alter background image, options are: benches, boots, buildings, city, metro -->
+  <div id="background-wrapper" class="green_grass" data-stellar-background-ratio="0.8">
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %} 
+    {% if next %} 
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %} 
+    {% endif %}
+    <!-- ======== @Region: #content ======== -->
+    <div id="content">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="login">
+                  Login
+                </h3>
+            </div>
+            <div class="panel-body">
+              <form method="post" action="{% url 'cubasells:login' %}">
+                <fieldset>
+                  {% csrf_token %} {{form.as_p}}
+                  <input type="submit" value="login">
+                  <input type="hidden" name="next" value="{{ next }}">                    
+                </fieldset>
+              </form>
+              <p class="m-b-0 m-t">Not signed up? <a href="{% url 'cubasells:user_create' %} ">Sign up here</a>.</p>
+              <div class="credits">
+            Designed by <a href="https://bootstrapmade.com/">CubaSells Team</a>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /row -->
+    </div>
+  </div>
+  <!-- Required JavaScript Libraries -->
+  <script src="{% static  'lib/jquery/jquery.min.js' %} "></script>
+  <script src="{% static  'lib/bootstrap/js/bootstrap.min.js' %} "></script>
+  <script src="{% static  'lib/owlcarousel/owl.carousel.min.js' %} "></script>
+  <script src="{% static  'lib/stellar/stellar.min.js' %} "></script>
+  <script src="{% static  'lib/waypoints/waypoints.min.js' %} "></script>
+  <script src="{% static  'lib/counterup/counterup.min.js' %} "></script>
+  <script src="{% static  'contactform/contactform.js' %} "></script>
+
+  <!-- Template Specisifc Custom Javascript File -->
+  <script src="{% static  'js/custom.js' %} "></script>
+
+  <!--Custom scripts demo background & colour switcher - OPTIONAL -->
+  <script src="{% static  'js/color-switcher.js' %} "></script>
+
+  <!--Contactform script -->
+  <script src="{% static  'contactform/contactform.js' %} "></script>
+</body>
 {% endblock %}
+
+{% block footer %}
+  
+{% endblock footer %}
