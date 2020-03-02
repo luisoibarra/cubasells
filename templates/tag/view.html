@@ -7,7 +7,7 @@
 <p>Name: {{object.Tag}}</p>
 
 <h1>Hay que ver lo que se pude hacer con los tags</h1>
-<a class="btn btn-danger"  href="{% url 'cubasells:tag_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'cubasells:tag_update' object.id %}">Update</a>
+<a class="btn btn-danger"  href="{% url 'other:tag_delete' object.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'other:tag_update' object.id %}">Update</a>
 <!-- sep     -->
 {% endblock %}

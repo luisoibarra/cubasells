@@ -20,5 +20,10 @@ from project import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include(('project.urls','project'),'cubasells'))
+    path('',include(('project.urls','project'),'cubasells')),
+    path("store/",include(('project.store.urls','store'),'store')),
+    path("offer/",include(('project.offer.urls','offer'),'offer')),
+    path("suboffer/",include(('project.suboffer.urls','suboffer'),'suboffer')),
+    path("product/",include(('project.product.urls','product'),'product')),
+    path('other/',include(('project.other.urls','other'),'other')),
 ]

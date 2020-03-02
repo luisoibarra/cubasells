@@ -1,4 +1,5 @@
 {% extends "base/base.html" %} 
+{% load static %}
 {% block header %}
 {% endblock header %}
 {% block body %}
@@ -28,7 +29,7 @@
                 
                 {% if images %} 
                 {% for tag in images %}
-                <img src="/{{ tag.Image.name }}" class="agent-avatar img-fluid"alt="Imagen">
+                <img src="{% static tag.Image.url %}" class="agent-avatar img-fluid"alt="Imagen">
                 {% endfor %} 
                 {% else %}
                 <h1>No images</h1>

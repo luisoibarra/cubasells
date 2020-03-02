@@ -1,15 +1,17 @@
-{% extends "base/base.html" %} {% block header %}
+{% extends "base/base.html" %} 
+{% load static %}
+{% block header %}
 <h1>Current Image Index</h1>
 {% endblock header %} 
 {% block body %}
 <h1>Current Image Index Body</h1>
 
 <p>Name: {{object.Name}}</p>
-<td><img src="/{{ m.Image.name }}" alt="{{m.Name}}"></td>
+<td><img src="{% static object.Image.url %}" width="150" height="150" alt="{{object.Name}}"></td>
 
 
 <h1>Hay que ver lo que se pude hacer con los images</h1>
-<a class="btn btn-danger" href="{% url 'cubasells:image_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'cubasells:image_update' object.id %}">Update</a>
+<a class="btn btn-danger" href="{% url 'other:image_delete' object.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'other:image_update' object.id %}">Update</a>
 <!-- sep     -->
 {% endblock %}

@@ -15,7 +15,7 @@
     {{object.Product_offer.Store_Amount}}
 </td>
 <td>
-    <a href="{% url 'cubasells:suboffer_view' object.id %}">More Info</a>
+    <a href="{% url 'suboffer:suboffer_view' object.id %}">More Info</a>
 </td>
 {% endblock table_row %}
 {% block else_message %}

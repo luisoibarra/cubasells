@@ -15,7 +15,7 @@ class Image(models.Model):
     
     name = models.CharField(name='Name',max_length=200)
     
-    image = models.ImageField(name = 'Image', upload_to='static/images')
+    image = models.ImageField(name = 'Image', upload_to='images',default='default.jpg')
 
 class Tag(models.Model):
     
@@ -115,19 +115,7 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.Name} in {self.Store.Name}'
     
-# class Buy(models.Model):
-
-#     selled_product = models.ForeignKey(Product, name='Selled Product', on_delete=models.CASCADE)
-
-#     buyer = models.ForeignKey(Buyer, name='Buyer', on_delete=models.CASCADE)
     
-#     buy_date = models.DateTimeField(name= 'Buy Date', auto_now=False, auto_now_add=True)
-
-#     amount = models.IntegerField(name = 'Amount',validators=(validate_positive,))
-    
-#     def __str__(self):
-#         return self.Buyer.Name
-
 class Chat(models.Model):
     
     sender_user = models.ForeignKey(MyUser, related_name='sender_table', on_delete=models.CASCADE)

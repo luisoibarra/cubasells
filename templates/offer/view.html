@@ -6,7 +6,7 @@
 <p>Name: {{object.Offer_name}}</p>
 <p>Description: {{object.Offer_description}}</p>
 <p>Price: {{ object.Price }}</p>
-<p>Store: <a href="{% url 'cubasells:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
+<p>Store: <a href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
 <p>Tags:</p>
 <ul>
     {% for tag in object.Tags.all %}
@@ -16,21 +16,21 @@
 <p>Images:</p>
 <ul>
     {% for ima in object.Images.all %}
-    <li><img src="/{{ ima.Image.name }}" alt="Imagen"></li>
+    <li><img src="{% static ima.Image.url %}" alt="Imagen"></li>
     {% endfor %}
 </ul>
 <p>Products:</p>
 <ul>
     {% for pr in object.Suboffer.all %}
     <li>
-        <a href="{% url 'cubasells:product_view' pr.id %}">{{pr.Product_offer.Name}}</a>
+        <a href="{% url 'product:product_view' pr.id %}">{{pr.Product_offer.Name}}</a>
         <p> Amount: {{pr.Amount}} </p>
     </li>
     {% endfor %}
 </ul>
 {% ifequal object.Store.Owner.id user.id %}
-<a class="btn btn-danger" href="{% url 'cubasells:offer_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'cubasells:offer_update' object.id %}">Update</a>
+<a class="btn btn-danger" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
+<a class="btn btn-primary" href="{% url 'offer:offer_update' object.id %}">Update</a>
 <!-- sep -->
 {% endifequal %}
 <!-- sep -->

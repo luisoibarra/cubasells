@@ -26,42 +26,6 @@ class MyUserCreateForm(UserCreationForm):
             self.save_m2m()
         return user
 
-class StoreCreateForm(forms.ModelForm):
-    
-    class Meta:
-        model = Store
-        exclude=['Owner',]
-
-class ProductCreateForm(forms.ModelForm):
-
-    class Meta:
-        model = Product
-        exclude = ['Store']
-
-class OfferCreateForm(forms.ModelForm):
-    
-    class Meta:
-        model = Offer
-        exclude=['Store','buy_offer']
-
-class SubOfferCreateForm(forms.ModelForm):
-    
-    class Meta:
-        model = SubOffer
-        fields = '__all__'
-
-class TagCreateForm(forms.ModelForm):
-    
-    class Meta:
-        model = Tag
-        fields = '__all__'
-
-class ImageCreateForm(forms.ModelForm):
-    
-    class Meta:
-        model = Image
-        fields = '__all__'
-
 class AuctionCreateForm(forms.ModelForm):
     auction_minim_time = 30 # In minutes
     auction_aticipation = 60 # In minutes
@@ -83,26 +47,3 @@ class AuctionCreateForm(forms.ModelForm):
             raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_aticipation})
         return data
 
-class OfferOrderForm(OrderForm):
-    model = Offer
-    fields_to_order = ['Price','Offer_name','Store__name']
-
-class StoreOrderForm(OrderForm):
-    model = Store
-    fields_to_order = ['Name']
-
-class SubOfferOrderForm(OrderForm):
-    model = SubOffer
-    fields_to_order = ['Product_offer__Name','Amount']
-
-class ProductOrderForm(OrderForm):
-    model = Product
-    fields_to_order = ['Store_Amount','Name']
-
-class TagOrderForm(OrderForm):
-    model = Tag
-    fields_to_order = ['Tag']
-
-class ImageOrderForm(OrderForm):
-    model = Image
-    fields_to_order = ['Name']

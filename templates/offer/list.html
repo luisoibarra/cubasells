@@ -14,10 +14,10 @@
 <td>{{object.Offer_description}}</td>
 <td>{{object.Price}}</td>
 <td>
-    <a href="{% url 'cubasells:store_view' object.Store.id %}">{{object.Store.Name}}</a>
+    <a href="{% url 'store:store_view' object.Store.id %}">{{object.Store.Name}}</a>
 </td>
 <td>
-    <a href="{% url 'cubasells:offer_view' object.id%}">More info</a>
+    <a href="{% url 'offer:offer_view' object.id%}">More info</a>
 </td>
 {% endblock table_row %}
 {% block else_message %}

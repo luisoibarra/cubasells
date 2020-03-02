@@ -3,7 +3,7 @@
 {% endblock header %} {% block body %}
 <h1>Image Create Body</h1>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% if error %}
     <p>{{ error }}</p>
     {% endif %} 

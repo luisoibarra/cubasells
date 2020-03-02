@@ -9,6 +9,6 @@
     {% endif %} {% csrf_token %} {{form.as_p}}
     <button type="submit">Guardar</button> {% if view.kwargs.store_id %}
 </form>
-<a href="{% url 'cubasells:store_suboffer_create' view.kwargs.store_id %}" target="_blank">Add suboffer to store</a> {% else %}
+<a href="{% url 'store:store_suboffer_create' view.kwargs.store_id %}" target="_blank">Add suboffer to store</a> {% else %}
 <p>No store pointed in the url</p>
 {% endif %} {% endblock body %}

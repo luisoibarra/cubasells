@@ -1,4 +1,5 @@
-{% extends "base/list.html" %} 
+{% extends "base/list.html" %}
+{% load static %}
 {% block header %}
 <h1>Image List</h1>
 {% endblock header %} 
@@ -9,9 +10,10 @@
 {% endblock table_head %}
 {% block table_row %}
 <td>{{object.Name}}</td>
-<td><img src="/{{ object.Image.name }}" alt="{{object.Name}}"></td>
+<!-- "-->
+<td><img src="{% static object.Image.url %}" width="150" height="150" alt="{{object.Name}}" ></td>
 <td>
-    <a href="{% url 'cubasells:image_view' object.id %}">More Info</a>
+    <a href="{% url 'other:image_view' object.id %}">More Info</a>
 </td>
 {% endblock table_row %}
 {% block else_message %}

@@ -40,6 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'project',
     'django_filters',
+    'project.offer',
+    'project.suboffer',
+    'project.other',
+    'project.product',
+    'project.store',
+    'project.chat',
+    'project.buy',
 ]
 
 MIDDLEWARE = [
@@ -121,6 +128,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'static/media')
+
+MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 

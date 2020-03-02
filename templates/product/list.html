@@ -1,4 +1,5 @@
 {% extends "base/list.html" %} 
+{% load static %}
 {% block header %}
 <h1>Product List</h1>
 {% endblock header %} 
@@ -11,7 +12,7 @@
 <td>{{object.Name}}</td>
 <td>{{object.Store_Amount}}</td>
 <td>
-    <a class="btn btn-primary" href="{% url 'cubasells:product_view' object.id %}">More info</a>
+    <a class="btn btn-primary" href="{% url 'product:product_view' object.id %}">More info</a>
 </td>
 {% endblock table_row %}
 {% block else_message %}
@@ -20,7 +21,7 @@
 {% block extra_body %}
 {% if store_id %}
 {% ifequal store.Owner.id user.id %}
-<a class="btn btn-primary" href="{% url 'cubasells:store_product_create' store_id %}">Create product</a>
+<a class="btn btn-primary" href="{% url 'store:store_product_create' store_id %}">Create product</a>
 {% endifequal %}
 {% endif %}
 {% endblock extra_body %}

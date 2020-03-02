@@ -9,4 +9,4 @@
     {% endif %} {% csrf_token %} {{form.as_p}}
     <button type="submit">Guardar</button>
 </form>
-<a href="{% url 'cubasells:store_product_create' view.kwargs.store_id %}" target="_blank">Add product to store</a> {% endblock body %}
+<a href="{% url 'store:store_product_create' view.kwargs.store_id %}" target="_blank">Add product to store</a> {% endblock body %}
