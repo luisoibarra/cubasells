@@ -11,7 +11,7 @@
 <!-- sep -->
 {% ifequal user.id object.Owner.id %}
 <td><a href="{% url 'store:store_product_create' object.id %}">Add Product</a></td>
-<td><a href="{% url 'store:store_offer_create' object.id %}">Add Offer</a></td>
+<td><a href="{% url 'store:store_offer_create_user' object.id %}">Add Offer</a></td>
 <td><a href="{% url 'store:store_suboffer_create' object.id %}">Add Suboffer</a></td>
 {% endifequal %}
 {% endblock table_row %}
@@ -19,7 +19,7 @@
 <h1>No Stores</h1>
 {% endblock else_message %}
 {% block extra_body %}
-<a href="{% url 'store:store_create' %}">Create Store</a>
+<a class="btn btn-primary" href="{% url 'store:store_create' %}">Create Store</a>
 {% endblock extra_body %}
 {% block order_filter_forms %}
 <table>

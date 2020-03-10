@@ -12,6 +12,7 @@ from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.store.filters import *
+from django.db.models import QuerySet
 # Create your views here.
 
 def store_index(request):
@@ -77,11 +78,11 @@ class StoreUpdateView(AuthenticateUpdateView):
         store = Store.objects.get(id=kwargs['pk'])
         return store.Owner.id == user.id
 
-class MultiCreateView(AuthenticateView):
+class StoreUserCreateView(AuthenticateView):
     
     permission = 'project.add_offer'
     permission_denied_template = 'error.html'
-    template_name = 'test.html'
+    template_name = 'offer/user_create.html'
     
     def get(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
@@ -92,13 +93,11 @@ class MultiCreateView(AuthenticateView):
     def _get(self, request, *args, **kwargs):
         store_id = kwargs['store_id']
         store = Store.objects.all().get(id=store_id)
-        f1 = OfferCreateForm()
-        f1.fields['Suboffer'].queryset = SubOffer.objects.all().filter(Product_offer__Store__id = store_id)
+        f1 = OfferUserCreateForm()
         f2 = SubOfferCreateForm()
         f2.fields['Product_offer'].queryset = Product.objects.all().filter(Store__id = store_id)
-        # f3 = ProductCreateForm()
-        f4 = SubOfferSelectForm(SubOffer.objects.all().filter(Product_offer__Store__id=store_id))
-        context = self.get_context(form1=f1,form2=f2,form4=f4,store_id=kwargs['store_id'])
+        f3 = SubOfferSelectForm(None)
+        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
         return render(request,self.template_name,context=context)
 
     def post(self, request, *args, **kwargs):
@@ -108,30 +107,48 @@ class MultiCreateView(AuthenticateView):
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
     def _post(self, request, *args, **kwargs):
+        
         store_id = kwargs['store_id']
         store = Store.objects.all().get(id=store_id)
-        f1 = OfferCreateForm(request.POST)
-        f1.fields['Suboffer'].queryset = SubOffer.objects.all().filter(Product_offer__Store__id = store_id)
+        f1 = OfferUserCreateForm(request.POST)
         f2 = SubOfferCreateForm(request.POST)
         f2.fields['Product_offer'].queryset = Product.objects.all().filter(Store__id = store_id)
-        # f3 = ProductCreateForm(request.POST)
         
-        f4 = SubOfferSelectForm(SubOffer.objects.all().filter(Product_offer__Store__id=store_id))
+        subof2 =[x for x in request.POST.lists()]
+        subof = [x for x in subof2 if x[0] == 'suboffers']
         
-        f1.instance.Store = store
-        # f3.instance.Store = store
-        context = self.get_context(form1=f1,form2=f2,form4=f4,store_id=kwargs['store_id'])
+        default = SubOffer.objects.none()
+        if subof:
+            default = SubOffer.objects.all().filter(id__in=subof[0][1])
+        initial = {}
+        for sub in default:
+            initial[sub.id] = True
+        f3 = SubOfferSelectForm(default,{'suboffers':initial})
+        
+        if '_add_suboffer' in request.POST and f2.is_valid():
+            suboffer = f2.save(False)
+            equal_sub = SubOffer.objects.all().filter(Product_offer__id=suboffer.Product_offer.id).filter(Amount=suboffer.Amount)
+            if equal_sub:
+                f3.fields['suboffers'].queryset |= equal_sub
+                f3.data['suboffers'][equal_sub.first().id] = True
+            else:
+                suboffer.save(force_insert=True)
+                to_add = SubOffer.objects.all().filter(id=suboffer.id)
+                f3.fields['suboffers'].queryset |= to_add
+                f3.data['suboffers'][suboffer.id] = True
+                
+        if '_remove_suboffer' in request.POST:
+            pass
+            
         if '_save_offer' in request.POST and f1.is_valid():
-            f1.save()
-            context['offer_msg'] = 'Success'
-        if '_save_suboffer_new' in request.POST and f2.is_valid():
-            suboffer = f2.save(commit=False)
-            f1.fields['Suboffer'].queryset.add(suboffer)
-            context['suboffer_msg'] = 'Success'
-        if '_save_suboffer_old' in request.POST and f4.is_valid():
-            suboffer = f4.save()
-            f1.fields['Suboffer'].queryset.add(suboffer)
-            context['product_msg'] = 'Success'
+            offer = f1.save(False)
+            offer.Store = store
+            offer.save()
+            offer.Suboffer.set(f3.fields['suboffers'].queryset)
+            offer.save()
+        
+        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
+
         return render(request,self.template_name,context=context)
 
     def get_context(self,**kwargs):

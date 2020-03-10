@@ -8,6 +8,12 @@ class OfferCreateForm(forms.ModelForm):
         model = Offer
         exclude=['Store','buy_offer']
 
+class OfferUserCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Offer
+        exclude=['Store','buy_offer','Suboffer',]
+
 
 class OfferOrderForm(OrderForm):
     model = Offer

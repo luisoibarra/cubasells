@@ -1,0 +1,20 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Offer Create</h1>
+{% endblock header %} 
+{% block body %}
+<h1>Offer Create Body</h1>
+
+<form method="POST" action="{% url 'store:store_offer_create_user' store_id %}">
+    {% csrf_token %}
+    <h1>Create Offer</h1>
+    {# {{offer_msg}} #} 
+    {{form1.as_p}}
+    {{form2.as_p}} 
+    {{form3.as_p}}  
+    <input type="submit" value="Add offer" name="_save_offer">
+    <input type="submit" value="Remove suboffer" name="_remove_suboffer">
+    <input type="submit" value="Add suboffer" name="_add_suboffer">
+</form>
+
+<a href="{% url 'store:store_product_create' store_id %}" target="_blank">Add product to store</a> 
+{% endblock body %}

@@ -16,6 +16,10 @@ class SubOfferOrderForm(OrderForm):
 class SubOfferSelectForm(forms.Form):
     
     def __init__(self, queryset,*args, **kwargs):
-        setattr(self,'suboffers',forms.ModelChoiceField(queryset))
+        if not queryset is None:
+            setattr(self,'suboffers',forms.ModelMultipleChoiceField(queryset,required=False))
+        else:
+            setattr(self,'suboffers',forms.ModelMultipleChoiceField(SubOffer.objects.none(),required=False))
         super(forms.Form, self).__init__(*args, **kwargs)
         self.fields['suboffers'] = self.suboffers
+    
