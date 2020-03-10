@@ -16,6 +16,8 @@ class Image(models.Model):
     name = models.CharField(name='Name',max_length=200)
     
     image = models.ImageField(name = 'Image', upload_to='images',default='default.jpg')
+    
+    # owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
 class Tag(models.Model):
     
@@ -56,6 +58,8 @@ class MyUser(User):
     
     phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
     
+    cart = models.OneToOneField('project.ShoppingCart',name='Cart',on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.username
         
@@ -91,7 +95,6 @@ class Store(models.Model):
     def __str__(self):
         return self.Name
     
-
 class Product(models.Model):
     
     # unit_price = models.FloatField(name='Price_per_unit',validators=(validate_positive,))
@@ -115,7 +118,6 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.Name} in {self.Store.Name}'
     
-    
 class Chat(models.Model):
     
     sender_user = models.ForeignKey(MyUser, related_name='sender_table', on_delete=models.CASCADE)
@@ -131,7 +133,6 @@ class Chat(models.Model):
     def __str__(self):
         return f'{self.sender_user.username} -> {self.reciever_user.username}; {self.Date}'
     
-
 class SubOffer(models.Model):
     
     product_offer = models.ForeignKey(Product, name = 'Product_offer',on_delete=models.CASCADE)
@@ -189,3 +190,14 @@ class Auction(models.Model):
     
     def __str__(self):
         return f'{self.Offered.name} {self.Money}'
+
+class ShoppingCart(models.Model):
+    pass    
+
+class ShoppingOffer(models.Model):
+    
+    offer = models.ForeignKey(Offer,on_delete=models.CASCADE,name='Offer')
+    
+    amount = models.PositiveIntegerField(name='Amount')
+    
+    cart = models.ForeignKey(ShoppingCart, name='Cart', on_delete=models.CASCADE)

@@ -14,6 +14,9 @@
 <td>{{object.Offer_description}}</td>
 <td>{{object.Price}}</td>
 <td>
+    <a href="{% url 'cart:cart_create' object.id %}">Add to cart</a>
+</td>
+<td>
     <a href="{% url 'store:store_view' object.Store.id %}">{{object.Store.Name}}</a>
 </td>
 <td>

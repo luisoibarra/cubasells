@@ -1,0 +1,36 @@
+{% extends "base/list.html" %} 
+{% load static %}
+{% block header %}
+<h1>Shopping Cart List</h1>
+{% endblock header %} 
+
+{% block table_head %}
+<th>Offer</th>
+<th>Price</th>
+<th>Store</th>
+<th>Amount</th>
+{% endblock table_head %}
+
+{% block table_row %}
+
+<td>{{ object.Offer.Offer_name }}</td>
+<td>{{ object.Offer.Price }}</td>
+<td>{{ object.Offer.Store.Name }}</td>
+<td>{{ object.Amount }}</td>
+<td>
+    <a class="btn btn-danger" href="{% url 'cart:cart_delete' object.id %}"> Remove </a>
+</td>
+
+<!-- sep -->
+{% endblock table_row %}
+{% block else_message %}
+<h1>No Offers in cart</h1>
+{% endblock else_message %}
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}
