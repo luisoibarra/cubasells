@@ -14,6 +14,14 @@
 <td>
     <a class="btn btn-primary" href="{% url 'product:product_view' object.id %}">More info</a>
 </td>
+{% ifequal object.Store.Owner.id user.id %}
+<td>
+    <a class="btn btn-danger"  href="{% url 'product:product_delete' object.id %}">Delete</a>
+</td>
+<td>
+    <a class="btn btn-primary" href="{% url 'product:product_update' object.id %}">Update</a>
+</td>
+{% endifequal %}
 {% endblock table_row %}
 {% block else_message %}
 <h1>No Products</h1>

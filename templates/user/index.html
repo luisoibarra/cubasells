@@ -57,7 +57,7 @@
                       <span class="color-text-a"> {{user.email}}</span>
                     </p>
                     <p>
-                        <strong>Accounts: </strong>
+                        <a href="{% url 'buy:bankaccount_create'%}"><strong>Accounts: </strong></a> 
                         {% if accounts %} 
                         {% for tag in accounts %}
                         <span class="color-text-a">{{ tag }}</span>

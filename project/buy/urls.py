@@ -17,3 +17,20 @@ from django.urls import path,include
 from project.views import *
 from django.urls import reverse_lazy
 from django.contrib.auth.views import login_required
+
+
+from django.urls import path,include
+from project.buy.views import *
+from django.urls import reverse_lazy
+from django.contrib.auth.views import login_required
+
+from project.buy.buy import *
+
+
+urlpatterns = [
+    path('accounts/',login_required(BankAccountListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='bankaccount_list'),
+    path('accounts/<int:pk>/delete/',login_required(BankAccountDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='bankaccount_delete'),
+    path('accounts/<int:pk>/update/',login_required(BankAccountUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='bankaccount_update'),
+    path('accounts/create/',login_required(BankAccountCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='bankaccount_create'),
+    path('cart/',login_required(BuyCartView.as_view(),login_url=reverse_lazy('cubasells:login')),name='buy_cart'),
+]

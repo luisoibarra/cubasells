@@ -61,11 +61,6 @@ class OfferCreateView(AuthenticateCreateView):
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
         
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def other_condition(self, request,*args, **kwargs):
         if 'store_id' in kwargs:
             user = request.user

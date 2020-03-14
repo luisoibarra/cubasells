@@ -29,7 +29,7 @@ def user_index(request):
     context = {'user': request.user}
     context.update({'tags':request.user.myuser.Tags.all()})
     context.update({'images':request.user.myuser.Images.all()})
-    context.update({'accounts':request.user.myuser.Accounts.all()})
+    context.update({'accounts':BankAccount.objects.all().filter(MyUser__id=request.user.id)})
 
     return render(request,'user/index.html',context=context)
 

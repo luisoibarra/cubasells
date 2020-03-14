@@ -22,5 +22,5 @@ urlpatterns = [
     path('list/',login_required(ShoppingOfferListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='cart_list'),
     path('create/<int:offer_id>',login_required(ShoppingOfferCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='cart_create'),
     path('delete/<int:pk>',login_required(ShoppingOfferDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='cart_delete'),
-
+    path('update/<int:pk>',login_required(ShoppingOfferUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='cart_update'),
 ]

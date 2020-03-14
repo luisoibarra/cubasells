@@ -13,19 +13,35 @@
 
 {% block table_row %}
 
-<td>{{ object.Offer.Offer_name }}</td>
+<td>
+    <a href="{% url 'offer:offer_view' object.Offer.id %}"> {{ object.Offer.Offer_name }} </a>
+</td>
 <td>{{ object.Offer.Price }}</td>
 <td>{{ object.Offer.Store.Name }}</td>
 <td>{{ object.Amount }}</td>
 <td>
     <a class="btn btn-danger" href="{% url 'cart:cart_delete' object.id %}"> Remove </a>
 </td>
-
+<td>
+    <a class="btn btn-primary" href="{% url 'cart:cart_update' object.id %}"> Update </a>
+</td>
 <!-- sep -->
 {% endblock table_row %}
 {% block else_message %}
 <h1>No Offers in cart</h1>
 {% endblock else_message %}
+{% block extra_body %}
+
+{% if object_list %}
+    <form action="{% url 'buy:buy_cart' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit" >Buy Cart</button>
+    </form>
+{% endif %}
+    
+
+{% endblock extra_body %}
 {% block order_filter_forms %}
 <table>
     {{ order.as_table }}

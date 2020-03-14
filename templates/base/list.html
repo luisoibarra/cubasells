@@ -32,12 +32,16 @@
 {% block extra_body %}
   
 {% endblock extra_body %}
-<form action="" method="POST">
+
+{% if object_list %}
+    <form action="" method="POST">
     {% csrf_token %}
     <!-- sep -->
     {% block order_filter_forms %}
     <h2>INSERT FILTER</h2>
     {% endblock order_filter_forms %}
     <button class="btn btn-primary" type="submit">Update</button>
-</form>
+    </form>
+{% endif %}
+    
 {% endblock body %}

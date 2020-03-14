@@ -26,30 +26,8 @@ class Tag(models.Model):
     def __str__(self):
         return self.Tag
 
-class Entity():
-    
-    description = models.CharField(name="Description",max_length=400, default='',help_text='Description',blank=True)
-    
-    images = models.ManyToManyField(Image, name='Images',related_name='Images',blank=True)
-    
-    tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags',blank=True)
-    
-class RealEntity(Entity):
-    
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
-    
-class BankAccount(models.Model):
-    
-    bank_account = models.IntegerField(name='Bank_account',validators=(validate_positive,))
-    
-    def __str__(self):
-        return str(self.Bank_account)
-    
 class MyUser(User):
      
-    bank_accounts = models.ManyToManyField(BankAccount, name = 'Accounts', related_name='Accounts_User'\
-        ,through='Buyer',through_fields=('MyUser','Account'),blank=True)
-    
     description = models.CharField(name="Description",max_length=400, default='',help_text='Description',blank=True)
     
     images = models.ManyToManyField(Image, name='Images',related_name='Images_User',blank=True)
@@ -63,12 +41,15 @@ class MyUser(User):
     def __str__(self):
         return self.username
         
-class Buyer(models.Model):
+class BankAccount(models.Model):
     
     user = models.ForeignKey(MyUser,name = 'MyUser', on_delete=models.CASCADE)
     
-    account = models.ForeignKey(BankAccount,name = 'Account', on_delete=models.CASCADE)
+    account = models.IntegerField(name='Account',validators=(validate_positive,))
     
+    class Meta:
+        unique_together = ('MyUser','Account',)        
+  
     def __str__(self):
         return f'{self.MyUser} {self.Account}'
     
@@ -152,7 +133,7 @@ class Offer(models.Model):
     
     store = models.ForeignKey(Store,name = 'Store', default = -1, on_delete=models.CASCADE)
     
-    buy_offer = models.ManyToManyField(Buyer,through='BuyOffer',through_fields=('Offer','Buyer'))
+    buy_offer = models.ManyToManyField(BankAccount,through='BuyOffer',through_fields=('Offer','Buyer'))
     
     images = models.ManyToManyField(Image, name='Images',related_name='Images_Offer',blank=True)
     
@@ -165,7 +146,7 @@ class Offer(models.Model):
 
 class BuyOffer(models.Model):
     
-    buyer = models.ForeignKey(Buyer, name='Buyer', on_delete=models.CASCADE)
+    buyer = models.ForeignKey(BankAccount, name='Buyer', on_delete=models.CASCADE)
     
     offer = models.ForeignKey(Offer,name='Offer', on_delete=models.CASCADE)
     
@@ -178,7 +159,7 @@ class BuyOffer(models.Model):
     
 class Auction(models.Model):
     
-    winner = models.OneToOneField(Buyer, name='Winner', on_delete=models.CASCADE, blank=True,null=True)
+    winner = models.OneToOneField(BankAccount, name='Winner', on_delete=models.CASCADE, blank=True,null=True)
     
     offered = models.ForeignKey(Offer, name='Offered', on_delete=models.CASCADE)
     

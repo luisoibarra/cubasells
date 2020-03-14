@@ -12,3 +12,12 @@ class ShoppingOfferCreateForm(forms.ModelForm):
     class Meta:
         model = ShoppingOffer
         fields = ["Amount",]
+
+class SelectAccountForm(forms.Form):
+    
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    def __init__(self,queryset, *args, **kwargs):
+        setattr(self,'account',forms.ModelChoiceField(queryset))
+        super().__init__(*args, **kwargs)
+        self.fields['account'] = forms.ModelChoiceField(queryset)
