@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.contrib.auth.views import login_required
-from project import urls
+# from project import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +28,5 @@ urlpatterns = [
     path('other/',include(('project.other.urls','other'),'other')),
     path('cart/',include(('project.cart.urls','cart'),'cart')),
     path('buy/',include(('project.buy.urls','buy'),'buy')),
+    path('bank/',include(('project.bank.urls','bank'),'bank')),
 ]

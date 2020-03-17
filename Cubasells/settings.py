@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'project.chat',
     'project.buy',
     'project.cart',
+    'project.bank',
 ]
 
 MIDDLEWARE = [

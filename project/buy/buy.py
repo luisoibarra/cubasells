@@ -1,60 +1,40 @@
 from project.models import *
 from django.db.models.query import QuerySet
+from project.bank.models import BankAccount as MyBank
 
-class BankAccounts:
-    name = None
-    number = None
-    password = None
-    money = None
-    
-    def __init__(self, name, password, number,money=0, **kwargs):
-        self.name = name
-        self.password = password
-        self.money = money
-        self.number = number
-        
-    def authenticate(self,password):
-        return self.password == password
-    
-    def insert_money(self,to_insert):
-        assert to_insert > 0, 'the money to remove must be a positive number'
-        self.money += to_insert
-    
-    def remove_money(self,to_remove,password):
-        assert to_insert > 0, 'the money to remove must be a positive number'
-        assert self.authenticate(password), 'the password is wrong'
-        assert self.money >= to_remove, 'dont have enough money'
-        self.money -= to_remove
-    
 class Bank:
     
     accounts = None # List of BankAccounts
     
     def __init__(self, accounts = [], *args, **kwargs):
-        self.accounts = accounts
+        self.accounts = MyBank
     
     def __get_user(self,number):
-        user_account = [ ac for ac in self.accounts if ac.number == number ]
+        user_account = [ ac for ac in self.accounts.objects.filter(Number = number) ]
         if len(user_account) == 1:
             return user_account[0]
         else:
             assert False, 'No accounts number match with number'
     
     def add_account(self,name,number,password,money=0):
-        self.accounts.append(BankAccounts(name,password,number,money))
+        acc = self.accounts(name,number,password,money)
+        acc.save()
     
-    def get_account(self,number,password)->BankAccounts:
+    def get_account(self,number,password)->MyBank:
         user_account = self.__get_user(number)
-        assert user_account.authenticate(password), 'Wrong Password'
+        assert user_account.Password == password, 'Wrong Password'
         return user_account
     
     def insert_money(self, number, money):
         user_account = self.__get_user(number)
-        user_account.insert_money(money)
-    
+        assert money > 0, 'the money to insert must be a positive number'
+        self.accounts.objects.filter(id=user_account.id).update(Money=user_account.Money+money)
+        
     def remove_money(self, number, money, password):
-        user_account = self.__get_user(number)
-        user_account.remove_money(money,password)
+        assert money > 0, 'the money to remove must be a positive number'
+        user_account = self.get_account(number,password)
+        assert user_account.Money >= money, 'Dont have enough money to remove'
+        self.accounts.objects.filter(id=user_account.id).update(Money=user_account.Money-money)
 
 class OfferBuyer:
     
@@ -87,7 +67,7 @@ class OfferBuyer:
         except AssertionError as err:
             self.report_error('\n'.join(err.args))
             return False
-        money = bank_account.money
+        money = bank_account.Money
         if price > money:
             self.report_error(f'Not enough money to make operation, money:{money} < price:{price}')
             return False
@@ -135,14 +115,19 @@ class OfferBuyer:
     
     def buy_offers(self):
         self.clean_messages()
+        try:
+            account = self.bank.get_account(self.account.Account,self.password)
+        except AssertionError as err:
+            self.report_error(err.args[0])
+            return self.messages
+            
         if self.check_products() and self.check_price():
             self.update_products()
             for i,offer in enumerate(self.offers):
                 buyed = BuyOffer(Buyer=self.account,Offer=offer,Amount=self.amounts[i])
                 buyed.save()
-            account = self.bank.get_account(self.account.Account,self.password)
-            account.money -= self.calculate_price()
-            self.messages['success'] = ['Operation Successful',f'You have ${account.money} left']
+            self.bank.remove_money(self.account.Account,self.calculate_price(),self.password)
+            self.messages['success'] = ['Operation Successful',f'You have ${account.Money} left']
         return self.messages
     
     def clean_messages(self):
@@ -154,15 +139,7 @@ class OfferBuyer:
         self.messages['error'] = errors   
 
 bank = Bank()
-def init_bank():
-    bas = []
-    for ba in BankAccount.objects.all():
-        bas.append(ba)
-        bank.add_account(ba.MyUser.username,ba.Account,'123456789',10000.0)
-
-    # test_bank(bas)
-    
-    
+ 
 def buy_offers(account:BankAccount,password:str,shopping_offers:QuerySet)->dict:
     offers = QuerySet().none()
     amounts = []
@@ -174,16 +151,3 @@ def buy_offers(account:BankAccount,password:str,shopping_offers:QuerySet)->dict:
     buyer = OfferBuyer(offers,amounts,account,bank,password)
     return buyer.buy_offers()
 
-def test_bank(bas):
-    offers = QuerySet().none()
-    amounts = []
-    
-    for i,shop_off in enumerate(ShoppingOffer.objects.all()):
-        if i==0:
-            offers |= Offer.objects.filter(id=shop_off.Offer.id) 
-            amounts.append(shop_off.Amount)
-    
-    buy_offers(bas[0],'123456789',offers,amounts)
-        
-init_bank()
-        
