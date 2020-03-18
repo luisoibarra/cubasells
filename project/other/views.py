@@ -56,6 +56,22 @@ class ImageCreateView(AuthenticateCreateView):
     success_url = reverse_lazy('other:image_list')
     permission = 'project.add_image'
     
+    def post(self, request, *args, **kwargs):
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
+            self.object = None
+            return self._post(request, *args, **kwargs)
+        else:
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+
+    def _post(self,request,*args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            form.instance.Owner = request.user.myuser
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+        
     def other_condition(self,request,*args, **kwargs):
         return True
         

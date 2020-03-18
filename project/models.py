@@ -17,7 +17,7 @@ class Image(models.Model):
     
     image = models.ImageField(name = 'Image', upload_to='images',default='default.jpg')
     
-    # owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
+    owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
 class Tag(models.Model):
     

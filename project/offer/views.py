@@ -21,10 +21,11 @@ class OfferCreateView(AuthenticateCreateView):
     form_class = OfferCreateForm
     success_url = reverse_lazy('store:store_index') # idealmente quiero que te deje en la tienda q le vas a agregar el producto
     permission = 'project.add_offer'
- 
+    
     def get_context_data(self,**kwargs):
         context = super().get_context_data()
         try:
+            context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
             self.form_class.base_fields['Suboffer'].queryset = SubOffer.objects.filter(Product_offer__Store__id = self.kwargs['store_id'])#forms.ModelMultipleChoiceField(queryset=Product.objects.filter(Store__id = self.kwargs['store_id']))
         except KeyError:
             context.update({'error':'Missing parameter store_id in url'})
@@ -131,6 +132,13 @@ class OfferUpdateView(AuthenticateUpdateView):
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_offer'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+ 
+
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user

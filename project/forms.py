@@ -15,6 +15,31 @@ class MyUserCreateForm(UserCreationForm):
             'email',
             'Phone',
             'Description',
+        ]
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        user.Cart = ShoppingCart()
+        user.Cart.save()
+        user.Cart_id = user.Cart.id
+        if commit:
+            user.save()
+            self.save_m2m()
+        return user
+
+class MyUserUpdateForm(UserCreationForm):
+    
+    class Meta:
+        model = MyUser
+
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'Phone',
+            'Description',
             'Images',
         ]
 

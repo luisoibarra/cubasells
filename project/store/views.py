@@ -32,19 +32,13 @@ class StoreCreateView(AuthenticateCreateView):
     permission = 'project.add_store'
     
     
-    def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return self._get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-   
-    def _get(self, request, *args, **kwargs):
-        """Handle GET requests: instantiate a blank version of the form."""
-        context = self.get_context_data()
-        context['form'].fields['Bank_Account'].queryset = BankAccount.objects.filter(MyUser__id=request.user.id)
-        return self.render_to_response(context)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Bank_Account'].queryset = BankAccount.objects.filter(MyUser__id=self.request.user.id)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+    
+    
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
@@ -86,6 +80,11 @@ class StoreUpdateView(AuthenticateUpdateView):
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_store'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user

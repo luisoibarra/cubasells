@@ -58,7 +58,7 @@ class UserDeleteView(AuthenticateDeleteView):
 
 class UserUpdateView(AuthenticateUpdateView):
     model = MyUser
-    form_class = MyUserCreateForm
+    form_class = MyUserUpdateForm
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_myuser'

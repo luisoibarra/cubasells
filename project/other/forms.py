@@ -12,7 +12,7 @@ class ImageCreateForm(forms.ModelForm):
     
     class Meta:
         model = Image
-        fields = '__all__'
+        exclude = ['Owner']
 
 
 

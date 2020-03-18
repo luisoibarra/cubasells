@@ -27,6 +27,13 @@ class ProductCreateView(AuthenticateCreateView):
         else:
             self.extra_context.update(extra)
     
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+    
+    
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
@@ -138,6 +145,12 @@ class ProductUpdateView(AuthenticateUpdateView):
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+ 
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user
