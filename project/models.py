@@ -71,7 +71,7 @@ class Store(models.Model):
     
     phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
     
-    bank_account = models.ForeignKey(BankAccount,name = 'Bank account', on_delete=models.CASCADE) 
+    bank_account = models.ForeignKey(BankAccount,name = 'Bank_Account', on_delete=models.CASCADE) 
     
     def __str__(self):
         return self.Name

@@ -38,13 +38,14 @@ class Bank:
 
 class OfferBuyer:
     
-    def __init__(self, offers, amounts, account, bank:Bank, password, *args, **kwargs):
+    def __init__(self, offers, amounts, account, bank:Bank, password, deposit_account, *args, **kwargs):
         self.account = account
         self.amounts = amounts
         self.bank = bank
         self.password = password
         self.offers = offers
         self.messages = dict()
+        self.deposit_account = deposit_account
         self._products_to_buy_amount = None
         self._products = None
         self._price = None
@@ -127,6 +128,7 @@ class OfferBuyer:
                 buyed = BuyOffer(Buyer=self.account,Offer=offer,Amount=self.amounts[i])
                 buyed.save()
             self.bank.remove_money(self.account.Account,self.calculate_price(),self.password)
+            self.bank.insert_money(self.deposit_account,self.calculate_price())
             self.messages['success'] = ['Operation Successful',f'You have ${account.Money} left']
         return self.messages
     
@@ -141,13 +143,20 @@ class OfferBuyer:
 bank = Bank()
  
 def buy_offers(account:BankAccount,password:str,shopping_offers:QuerySet)->dict:
-    offers = QuerySet().none()
-    amounts = []
-    
-    for i,shop_off in enumerate(shopping_offers):
-        offers |= Offer.objects.filter(id=shop_off.Offer.id) 
-        amounts.append(shop_off.Amount)
-            
-    buyer = OfferBuyer(offers,amounts,account,bank,password)
-    return buyer.buy_offers()
+    global_message = {}
+    for shop_id in set(x['Offer__Store__id'] for x in shopping_offers.values('Offer__Store__id')):
+        shop_offers = shopping_offers.filter(Offer__Store__id=shop_id)
+        offers = Offer.objects.none()
+        amounts = []
+        for i,shop_off in enumerate(shop_offers):
+            amounts.append(shop_off.Amount)
+            offers |= Offer.objects.filter(id=shop_off.Offer.id)
+        buyer = OfferBuyer(offers,amounts,account,bank,password,offers.first().Store.Bank_Account.Account)
+        message = buyer.buy_offers()
+        for x in message:
+            if x in global_message:
+                global_message[x].extend(message[x])
+            else:
+                global_message[x] = message[x]
+    return global_message
 
