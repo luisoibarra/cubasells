@@ -173,3 +173,12 @@ class StoreUserCreateView(AuthenticateView):
         user = request.user
         store = Store.objects.get(id=kwargs['store_id'])
         return store.Owner.id == user.id
+
+class StoreTagFilterView(TagFilterView):
+    model = Store
+    template_name = 'store/list.html'
+    paginate_by = 5
+    permission = 'project.view_store'
+    form_order = StoreOrderForm
+    form_filter = StoreFilter
+    

@@ -21,6 +21,18 @@
 {% block extra_body %}
 <a class="btn btn-primary" href="{% url 'store:store_create' %}">Create Store</a>
 {% endblock extra_body %}
+
+{% block tag_filter_form %}
+    
+    {% if form1 %}
+    <table> 
+        {{form1.as_table}} 
+    </table>
+    {% endif %}
+        
+{% endblock tag_filter_form %}
+
+
 {% block order_filter_forms %}
 <table>
     {{ order.as_table }}

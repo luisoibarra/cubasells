@@ -58,6 +58,10 @@ class OfferCreateView(AuthenticateCreateView):
                 extra = {'error':'Store doesnt exist'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
@@ -144,3 +148,12 @@ class OfferUpdateView(AuthenticateUpdateView):
         user = request.user
         offer = Offer.objects.get(id=kwargs['pk'])
         return offer.Store.Owner.id == user.id
+
+class OfferTagFilterView(TagFilterView):
+    model = Offer
+    template_name = 'offer/list.html'
+    paginate_by = 5
+    permission = 'project.view_offer'
+    form_order = OfferOrderForm
+    form_filter = OfferFilter
+    

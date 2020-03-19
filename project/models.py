@@ -34,7 +34,7 @@ class MyUser(User):
     
     tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_User',blank=True)
     
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
+    phone = models.PositiveIntegerField(name='Phone',null=True,blank=True)
     
     cart = models.OneToOneField('project.ShoppingCart',name='Cart',on_delete=models.CASCADE)
     
@@ -45,7 +45,7 @@ class BankAccount(models.Model):
     
     user = models.ForeignKey(MyUser,name = 'MyUser', on_delete=models.CASCADE)
     
-    account = models.IntegerField(name='Account',validators=(validate_positive,))
+    account = models.PositiveIntegerField(name='Account')
     
     class Meta:
         unique_together = ('MyUser','Account',)        
@@ -69,7 +69,7 @@ class Store(models.Model):
     
     tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_Store',blank=True)
     
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
+    phone = models.PositiveIntegerField(name='Phone',null=True,blank=True)
     
     bank_account = models.ForeignKey(BankAccount,name = 'Bank_Account', on_delete=models.CASCADE) 
     
@@ -78,15 +78,9 @@ class Store(models.Model):
     
 class Product(models.Model):
     
-    # unit_price = models.FloatField(name='Price_per_unit',validators=(validate_positive,))
-    
-    store_amount = models.IntegerField(name = "Store_Amount",validators=(validate_positive,))
+    store_amount = models.PositiveIntegerField(name = "Store_Amount")
     
     store = models.ForeignKey(Store,name = 'Store',default=-1, on_delete=models.CASCADE)
-    
-    # buy_product = models.ManyToManyField(Buyer, through='Buy', through_fields=('Selled Product','Buyer'))
-    
-    # visible = models.BooleanField(name='Visible',default=True)
     
     name = models.CharField(name='Name',max_length=150)
         
@@ -118,7 +112,7 @@ class SubOffer(models.Model):
     
     product_offer = models.ForeignKey(Product, name = 'Product_offer',on_delete=models.CASCADE)
     
-    amount = models.IntegerField(name='Amount', validators=(validate_positive,))
+    amount = models.PositiveIntegerField(name='Amount')
     
     def __str__(self):
         return f'{self.Product_offer.Name}:{self.Amount}'
@@ -152,7 +146,7 @@ class BuyOffer(models.Model):
     
     buy_date = models.DateTimeField(name='Buy_Date', auto_now=False, auto_now_add=True)
     
-    amount = models.IntegerField(name='Amount',validators=(validate_positive,))
+    amount = models.PositiveIntegerField(name='Amount')
     
     def __str__(self):
         return f'{self.Buyer.MyUser.username} -> {self.Offer.Offer_name}; {self.Buy_Date}'
@@ -165,9 +159,9 @@ class Auction(models.Model):
     
     initial_date = models.DateTimeField(name='Initial_Date', auto_now=False, auto_now_add=False)
     
-    duration = models.IntegerField(name='Duration_in_sec',validators=(validate_positive,))
+    duration = models.PositiveIntegerField(name='Duration_in_sec')
     
-    money_pool = models.IntegerField(name='Money',validators=(validate_positive,))
+    money_pool = models.PositiveIntegerField(name='Money')
     
     def __str__(self):
         return f'{self.Offered.name} {self.Money}'

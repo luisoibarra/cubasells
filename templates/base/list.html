@@ -36,10 +36,13 @@
 {% if object_list %}
     <form action="" method="POST">
     {% csrf_token %}
+    {% block tag_filter_form %}
     <!-- sep -->
+    {% endblock tag_filter_form %}
     {% block order_filter_forms %}
     <h2>INSERT FILTER</h2>
     {% endblock order_filter_forms %}
+      
     <button class="btn btn-primary" type="submit">Update</button>
     </form>
 {% endif %}
