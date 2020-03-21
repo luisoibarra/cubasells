@@ -14,6 +14,9 @@
 <td>{{object.Offer_description}}</td>
 <td>{{object.Price}}</td>
 <td>
+    <a href="{% url 'cart:cart_create' object.id %}">Add to cart</a>
+</td>
+<td>
     <a href="{% url 'store:store_view' object.Store.id %}">{{object.Store.Name}}</a>
 </td>
 <td>
@@ -23,6 +26,17 @@
 {% block else_message %}
 <h1>No Offers</h1>
 {% endblock else_message %}
+
+{% block tag_filter_form %}
+    
+    {% if form1 %}
+    <table> 
+        {{form1.as_table}} 
+    </table>
+    {% endif %}
+        
+{% endblock tag_filter_form %}
+
 {% block order_filter_forms %}
 <table>
     {{ order.as_table }}

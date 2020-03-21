@@ -55,15 +55,18 @@
                 <ul class="navbar-nav">
                     {% block navbar_labels %} {% if user %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
+                        <a class="nav-link" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart:cart_list' %}">Shopping cart</a>
                     </li>
                     {% endif %} {% block logout %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'cubasells:logout' %}">logout</a>
+                        <a class="nav-link" href="{% url 'cubasells:logout' %}">logout</a>
                     </li>
                     {% endblock logout %}
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'cubasells:index' %} ">Home</a>
+                        <a class="nav-link" href="{% url 'cubasells:index' %} ">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cubasells:login' %} ">Login</a>

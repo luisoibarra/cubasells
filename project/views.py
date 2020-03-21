@@ -29,7 +29,7 @@ def user_index(request):
     context = {'user': request.user}
     context.update({'tags':request.user.myuser.Tags.all()})
     context.update({'images':request.user.myuser.Images.all()})
-    context.update({'accounts':request.user.myuser.Accounts.all()})
+    context.update({'accounts':BankAccount.objects.all().filter(MyUser__id=request.user.id)})
 
     return render(request,'user/index.html',context=context)
 
@@ -58,7 +58,7 @@ class UserDeleteView(AuthenticateDeleteView):
 
 class UserUpdateView(AuthenticateUpdateView):
     model = MyUser
-    form_class = MyUserCreateForm
+    form_class = MyUserUpdateForm
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_myuser'

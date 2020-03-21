@@ -24,11 +24,7 @@
     {% endfor %}
 </ul>
 
-{% ifequal object.Store.Owner.id user.id %}
-<a class="btn btn-danger"  href="{% url 'product:product_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'product:product_update' object.id %}">Update</a>
-<!-- sep     -->
-{% endifequal %}
+
 <!-- sep     -->
 {% endif %}
 <!-- sep     -->

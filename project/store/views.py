@@ -31,6 +31,14 @@ class StoreCreateView(AuthenticateCreateView):
     success_url = reverse_lazy('store:store_list')
     permission = 'project.add_store'
     
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Bank_Account'].queryset = BankAccount.objects.filter(MyUser__id=self.request.user.id)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+    
+    
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
@@ -72,6 +80,11 @@ class StoreUpdateView(AuthenticateUpdateView):
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_store'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user
@@ -160,3 +173,12 @@ class StoreUserCreateView(AuthenticateView):
         user = request.user
         store = Store.objects.get(id=kwargs['store_id'])
         return store.Owner.id == user.id
+
+class StoreTagFilterView(TagFilterView):
+    model = Store
+    template_name = 'store/list.html'
+    paginate_by = 5
+    permission = 'project.view_store'
+    form_order = StoreOrderForm
+    form_filter = StoreFilter
+    

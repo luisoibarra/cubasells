@@ -24,5 +24,6 @@ urlpatterns = [
     path('<int:pk>/view/',OfferDetailView.as_view(),name='offer_view'),
     path('<int:pk>/delete/',login_required(OfferDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='offer_delete'),
     path('<int:pk>/update/',login_required(OfferUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='offer_update'),
+    path('tags/', OfferTagFilterView.as_view(),name='offer_tags_view'),
     
 ]

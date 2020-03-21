@@ -41,6 +41,7 @@ urlpatterns = [
     path('<int:store_id>/suboffer/adm_create/',login_required(SubOfferCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_create'),
     
     # Test
-    path('<int:store_id>/offer/create',StoreUserCreateView.as_view(),name='store_offer_create_user'),
-
+    path('<int:store_id>/offer/create',login_required(StoreUserCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_offer_create_user'),
+    path('tags/', StoreTagFilterView.as_view(),name='store_tags_view'),
+    
 ]

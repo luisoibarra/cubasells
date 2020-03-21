@@ -16,6 +16,8 @@ class Image(models.Model):
     name = models.CharField(name='Name',max_length=200)
     
     image = models.ImageField(name = 'Image', upload_to='images',default='default.jpg')
+    
+    owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
 class Tag(models.Model):
     
@@ -24,47 +26,30 @@ class Tag(models.Model):
     def __str__(self):
         return self.Tag
 
-class Entity():
-    
-    description = models.CharField(name="Description",max_length=400, default='',help_text='Description',blank=True)
-    
-    images = models.ManyToManyField(Image, name='Images',related_name='Images',blank=True)
-    
-    tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags',blank=True)
-    
-class RealEntity(Entity):
-    
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
-    
-class BankAccount(models.Model):
-    
-    bank_account = models.IntegerField(name='Bank_account',validators=(validate_positive,))
-    
-    def __str__(self):
-        return str(self.Bank_account)
-    
 class MyUser(User):
      
-    bank_accounts = models.ManyToManyField(BankAccount, name = 'Accounts', related_name='Accounts_User'\
-        ,through='Buyer',through_fields=('MyUser','Account'),blank=True)
-    
     description = models.CharField(name="Description",max_length=400, default='',help_text='Description',blank=True)
     
     images = models.ManyToManyField(Image, name='Images',related_name='Images_User',blank=True)
     
     tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_User',blank=True)
     
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
+    phone = models.PositiveIntegerField(name='Phone',null=True,blank=True)
+    
+    cart = models.OneToOneField('project.ShoppingCart',name='Cart',on_delete=models.CASCADE)
     
     def __str__(self):
         return self.username
         
-class Buyer(models.Model):
+class BankAccount(models.Model):
     
     user = models.ForeignKey(MyUser,name = 'MyUser', on_delete=models.CASCADE)
     
-    account = models.ForeignKey(BankAccount,name = 'Account', on_delete=models.CASCADE)
+    account = models.PositiveIntegerField(name='Account')
     
+    class Meta:
+        unique_together = ('MyUser','Account',)        
+  
     def __str__(self):
         return f'{self.MyUser} {self.Account}'
     
@@ -84,25 +69,18 @@ class Store(models.Model):
     
     tags = models.ManyToManyField(Tag, name='Tags',related_name='Tags_Store',blank=True)
     
-    phone = models.IntegerField(name='Phone',null=True,validators=(validate_positive,),blank=True)
+    phone = models.PositiveIntegerField(name='Phone',null=True,blank=True)
     
-    bank_account = models.ForeignKey(BankAccount,name = 'Bank account', on_delete=models.CASCADE) 
+    bank_account = models.ForeignKey(BankAccount,name = 'Bank_Account', on_delete=models.CASCADE) 
     
     def __str__(self):
         return self.Name
     
-
 class Product(models.Model):
     
-    # unit_price = models.FloatField(name='Price_per_unit',validators=(validate_positive,))
-    
-    store_amount = models.IntegerField(name = "Store_Amount",validators=(validate_positive,))
+    store_amount = models.PositiveIntegerField(name = "Store_Amount")
     
     store = models.ForeignKey(Store,name = 'Store',default=-1, on_delete=models.CASCADE)
-    
-    # buy_product = models.ManyToManyField(Buyer, through='Buy', through_fields=('Selled Product','Buyer'))
-    
-    # visible = models.BooleanField(name='Visible',default=True)
     
     name = models.CharField(name='Name',max_length=150)
         
@@ -114,7 +92,6 @@ class Product(models.Model):
     
     def __str__(self):
         return f'{self.Name} in {self.Store.Name}'
-    
     
 class Chat(models.Model):
     
@@ -131,12 +108,11 @@ class Chat(models.Model):
     def __str__(self):
         return f'{self.sender_user.username} -> {self.reciever_user.username}; {self.Date}'
     
-
 class SubOffer(models.Model):
     
     product_offer = models.ForeignKey(Product, name = 'Product_offer',on_delete=models.CASCADE)
     
-    amount = models.IntegerField(name='Amount', validators=(validate_positive,))
+    amount = models.PositiveIntegerField(name='Amount')
     
     def __str__(self):
         return f'{self.Product_offer.Name}:{self.Amount}'
@@ -151,7 +127,7 @@ class Offer(models.Model):
     
     store = models.ForeignKey(Store,name = 'Store', default = -1, on_delete=models.CASCADE)
     
-    buy_offer = models.ManyToManyField(Buyer,through='BuyOffer',through_fields=('Offer','Buyer'))
+    buy_offer = models.ManyToManyField(BankAccount,through='BuyOffer',through_fields=('Offer','Buyer'))
     
     images = models.ManyToManyField(Image, name='Images',related_name='Images_Offer',blank=True)
     
@@ -164,28 +140,39 @@ class Offer(models.Model):
 
 class BuyOffer(models.Model):
     
-    buyer = models.ForeignKey(Buyer, name='Buyer', on_delete=models.CASCADE)
+    buyer = models.ForeignKey(BankAccount, name='Buyer', on_delete=models.CASCADE)
     
     offer = models.ForeignKey(Offer,name='Offer', on_delete=models.CASCADE)
     
     buy_date = models.DateTimeField(name='Buy_Date', auto_now=False, auto_now_add=True)
     
-    amount = models.IntegerField(name='Amount',validators=(validate_positive,))
+    amount = models.PositiveIntegerField(name='Amount')
     
     def __str__(self):
         return f'{self.Buyer.MyUser.username} -> {self.Offer.Offer_name}; {self.Buy_Date}'
     
 class Auction(models.Model):
     
-    winner = models.OneToOneField(Buyer, name='Winner', on_delete=models.CASCADE, blank=True,null=True)
+    winner = models.OneToOneField(BankAccount, name='Winner', on_delete=models.CASCADE, blank=True,null=True)
     
     offered = models.ForeignKey(Offer, name='Offered', on_delete=models.CASCADE)
     
     initial_date = models.DateTimeField(name='Initial_Date', auto_now=False, auto_now_add=False)
     
-    duration = models.IntegerField(name='Duration_in_sec',validators=(validate_positive,))
+    duration = models.PositiveIntegerField(name='Duration_in_sec')
     
-    money_pool = models.IntegerField(name='Money',validators=(validate_positive,))
+    money_pool = models.PositiveIntegerField(name='Money')
     
     def __str__(self):
         return f'{self.Offered.name} {self.Money}'
+
+class ShoppingCart(models.Model):
+    pass    
+
+class ShoppingOffer(models.Model):
+    
+    offer = models.ForeignKey(Offer,on_delete=models.CASCADE,name='Offer')
+    
+    amount = models.PositiveIntegerField(name='Amount')
+    
+    cart = models.ForeignKey(ShoppingCart, name='Cart', on_delete=models.CASCADE)

@@ -1,0 +1,35 @@
+{% extends "base/list.html" %} 
+{% block header %}
+<h1>Account List</h1>
+{% endblock header %} 
+{% block table_head %}
+<td>Owner</td>
+<td>Account Number</td>
+<td></td>
+{% endblock table_head %}
+{% block table_row %}
+<td>{{object.MyUser.username}}</td>
+<td>{{object.Account}}</td>
+<td>
+    <a class="btn btn-primary" href="{% url 'buy:bankaccount_update' object.id %}">Update</a>
+</td>
+<td>
+    <a class="btn btn-warning" href="{% url 'buy:bankaccount_delete' object.id%}">Delete</a>
+</td>
+{% endblock table_row %}
+{% block else_message %}
+<h1>No Bank Accounts</h1>
+{% endblock else_message %}
+
+{% block extra_body %}
+<a class="btn btn-primary" href="{% url 'buy:bankaccount_create' %}">Create bank account</a>
+{% endblock extra_body %}
+
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}

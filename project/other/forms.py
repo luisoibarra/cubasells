@@ -12,8 +12,17 @@ class ImageCreateForm(forms.ModelForm):
     
     class Meta:
         model = Image
-        fields = '__all__'
+        exclude = ['Owner']
 
+class MultiSelectSTagForm(forms.Form):
+
+    def __init__(self, tags, *args, **kwargs):
+        if tags is None:
+            tags = []
+        setattr(self, 'tags', forms.ChoiceField(
+            choices=[(x.id, x.Tag) for x in tags]))
+        super(forms.Form, self).__init__(*args, **kwargs)
+        self.fields['tags'] = self.tags
 
 
 class TagOrderForm(OrderForm):
