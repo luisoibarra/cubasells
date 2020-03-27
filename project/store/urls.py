@@ -21,6 +21,7 @@ from project.store.views import *
 from project.product.views import *
 from project.offer.views import *
 from project.suboffer.views import *
+from project.auction.views import *
 
 urlpatterns = [
     # Store
@@ -37,8 +38,11 @@ urlpatterns = [
     path('<int:store_id>/offer/',OfferListView.as_view(),name='store_offer_list'),
     path('<int:store_id>/offer/adm_create/',login_required(OfferCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_offer_create'),    
 
-    path('<int:store_id>/suboffer/list/',login_required(SubOfferListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_list'),
+    path('<int:store_id>/suboffer/',login_required(SubOfferListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_list'),
     path('<int:store_id>/suboffer/adm_create/',login_required(SubOfferCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_create'),
+    
+    path('<int:store_id>/auction/',login_required(AuctionListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_create'),
+    path('<int:store_id>/auction/create',login_required(AuctionCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_create'),
     
     # Test
     path('<int:store_id>/offer/create',login_required(StoreUserCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_offer_create_user'),
