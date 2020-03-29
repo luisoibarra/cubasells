@@ -21,5 +21,5 @@ urlpatterns = [
     path('create/',BankAccountCreateView.as_view(),name='create'),
     path('delete/<int:pk>',BankAccountDeleteView.as_view(),name='delete'),
     path('update/<int:pk>',BankAccountUpdateView.as_view(),name='update'),
-    path('list/'  ,BankAccountListView.as_view()  ,name='list'),
+    path(''  ,BankAccountListView.as_view()  ,name='list'),
 ]

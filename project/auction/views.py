@@ -3,6 +3,7 @@ from project.auction.forms import *
 from project.custom.views import *
 from project.auction.filters import *
 from project.auction.manager import auction_manager
+from project.auction.watcher import auction_watcher
 from django.urls import reverse_lazy
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -57,10 +58,10 @@ class AuctionDetailView(AuthenticateDetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form = self.form_class()
-        form.fields['account'].queryset = form.fields['account'].queryset.filter(MyUser__id=self.request.user.id) 
-        context['push_form'] = form
-
+        if not 'push_form' in context:
+            form = self.form_class()
+            form.fields['account'].queryset = form.fields['account'].queryset.filter(MyUser__id=self.request.user.id) 
+            context['push_form'] = form
         return context
     
     
@@ -72,12 +73,10 @@ class AuctionDetailView(AuthenticateDetailView):
             self.object = Auction.objects.get(id=self.kwargs['pk'])
             if form.is_valid():
                 messages = auction_manager.push(self.object,form.cleaned_data['account'],form.cleaned_data['money'],form.cleaned_data['password'])
-                context = self.get_context_data(messages=messages)
-                context['push_form'] = form
+                context = self.get_context_data(messages=messages,push_form=form)
                 return render(request,self.template_name,context)
             else:
-                context = self.get_context_data(mesagges=['Invalid form'])
-                context['push_form'] = form
+                context = self.get_context_data(mesagges=['Invalid form'],push_form=form)
                 return render(request,self.template_name,context)
         
 class AuctionDeleteView(AuthenticateDeleteView):
@@ -89,7 +88,7 @@ class AuctionDeleteView(AuthenticateDeleteView):
     def other_condition(self,request,*args, **kwargs):
         delete = Auction.objects.get(id=kwargs['pk'])
         from django.utils import timezone
-        if delete.Initial_Date < timezone.now() or request.user.id != delete.Offered.Store.Owner.id:
+        if delete.Initial_Date < timezone.now() < delete.Final_Date or request.user.id != delete.Offered.Store.Owner.id:
             return False
         return True
         

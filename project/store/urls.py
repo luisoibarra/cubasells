@@ -41,7 +41,7 @@ urlpatterns = [
     path('<int:store_id>/suboffer/',login_required(SubOfferListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_list'),
     path('<int:store_id>/suboffer/adm_create/',login_required(SubOfferCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_suboffer_create'),
     
-    path('<int:store_id>/auction/',login_required(AuctionListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_create'),
+    path('<int:store_id>/auction/',login_required(AuctionListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_list'),
     path('<int:store_id>/auction/create',login_required(AuctionCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_create'),
     
     # Test

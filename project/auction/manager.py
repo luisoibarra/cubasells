@@ -1,10 +1,20 @@
 from project.models import *
 from project.buy.buy import OfferBuyer,bank,Bank
 
+class AuctionBuyer(OfferBuyer):
+    
+    def __init__(self, offers, amounts, account, bank:Bank, password, deposit_account,price, *args, **kwargs):
+        super().__init__(offers, amounts, account, bank, password, deposit_account)
+        self._price = price
+    
+    def calculate_price(self):
+        return self._price
+
 class AuctionManager:
     
-    def __init__(self, bank:Bank):
+    def __init__(self, bank:Bank,buyer:AuctionBuyer):
         self.bank = bank
+        self.buyer = buyer
     
     def on_time_range(self,auction:Auction):
         from django.utils import timezone
@@ -14,7 +24,7 @@ class AuctionManager:
     def can_book_auction(self,offered:Offer):
         qs = Offer.objects.none()
         qs |= Offer.objects.filter(id=offered.id)
-        ob = OfferBuyer(qs,[1,],None,self.bank,None,None)
+        ob = self.buyer(qs,[1,],None,self.bank,None,None,None)
         if ob.check_products():
             ob.update_products()
             return ['Auction was saved']
@@ -45,16 +55,12 @@ class AuctionManager:
         from datetime import timedelta
         from django.utils import timezone
         
-        auction_to_end = Auction.objects.all().filter(Final_Date__lte=timezone.now()).filter(Ended=False)
+        print("Check")
+        auction_to_end = Auction.objects.filter(Final_Date__lte=timezone.now()).filter(Ended=False)
         
         
         for end in auction_to_end:
             self.end_auction(end)
-            
-        # minim = Auction.objects.all().filter(Final_Date__gte=timezone.now()).filter(Ended=False).order_by('Final_Date').first()
-        # if minim:
-        #     return minim.Final_Date
-        # return None
     
     def end_auction(self,auction:Auction):
         if auction.Ended:
@@ -68,7 +74,7 @@ class AuctionManager:
         if winner is None:
             qs = Offer.objects.none()
             qs |= Offer.objects.filter(id=auction.Offered.id)
-            ob = OfferBuyer(qs,[1,],winner,self.bank,None,None)
+            ob = self.buyer(qs,[1,],winner,self.bank,None,None,None)
             ob.update_products(True)
             return ['Nobody win the auction']
         try:
@@ -80,11 +86,11 @@ class AuctionManager:
         if user.Money >= auction.Money:
             qs = Offer.objects.none()
             qs |= Offer.objects.filter(id=auction.Offered.id)
-            ob = OfferBuyer(qs,[1,],winner,self.bank,auction.Password,auction.Deposit)
+            ob = self.buyer(qs,[1,],winner,self.bank,auction.Password,auction.Deposit.Account,auction.Money)
             ob.update_products(True)
             ob.buy_offers()
             return ['Auction ended successfully']
         else:
             return ['Auction winner dont have enough money']
         
-auction_manager = AuctionManager(bank)   
+auction_manager = AuctionManager(bank,AuctionBuyer)   

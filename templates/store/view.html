@@ -29,6 +29,7 @@
 <p><a href="{% url 'store:store_product_list' store.id %}">See Products</a></p>
 <p><a href="{% url 'store:store_offer_list' store.id %}">See Offer</a></p>
 <p><a href="{% url 'store:store_suboffer_list' store.id %}">See Suboffers</a></p>
+<p><a href="{% url 'store:store_auction_list' store.id %}">See Auctions</a></p>
 
 {% ifequal user.id store.Owner.id %}
 <a href="{% url 'store:store_product_create' store.id %}">Add Product</a>

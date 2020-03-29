@@ -11,20 +11,22 @@ class AuctionCreateForm(forms.ModelForm):
         exclude=['Winner','Password','Ended','Deposit']
 
     def clean_Initial_Date(self):
-        data = self.cleaned_data["Initial_Date"]
-        if data <= timezone.now():
-            raise ValidationError('Initial Date must be a future date')
-        return data
+        if 'Initial_Date' in self.cleaned_data:
+            data = self.cleaned_data["Initial_Date"]
+            if data <= timezone.now():
+                raise ValidationError('Initial Date must be a future date')
+            return data
     
     def clean_Final_Date(self):
-        data = self.cleaned_data["Final_Date"]
-        data2 = self.cleaned_data["Initial_Date"]
-        from datetime import timedelta
-        diff = data - data2
-        if diff < timedelta(minutes=5):
-            raise ValidationError('The minimun auction duration is 5 minutes')
-        return data
-
+        if 'Final_Date' in self.cleaned_data and 'Initial_Date' in self.cleaned_data:
+            data = self.cleaned_data["Final_Date"]
+            data2 = self.cleaned_data["Initial_Date"]
+            from datetime import timedelta
+            diff = data - data2
+            if diff < timedelta(minutes=5):
+                raise ValidationError('The minimun auction duration is 5 minutes')
+            return data
+        return self.cleaned_data.get('Final_Date',None)
 class AuctionPushForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     
