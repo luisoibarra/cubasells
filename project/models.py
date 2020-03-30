@@ -153,18 +153,24 @@ class BuyOffer(models.Model):
     
 class Auction(models.Model):
     
-    winner = models.OneToOneField(BankAccount, name='Winner', on_delete=models.CASCADE, blank=True,null=True)
+    deposit_account = models.ForeignKey(BankAccount,name='Deposit',on_delete=models.CASCADE)
+    
+    winner = models.ForeignKey(BankAccount, name='Winner', related_name='winner',on_delete=models.CASCADE, blank=True,null=True)
+    
+    password = models.CharField(max_length=200,name='Password')
     
     offered = models.ForeignKey(Offer, name='Offered', on_delete=models.CASCADE)
     
     initial_date = models.DateTimeField(name='Initial_Date', auto_now=False, auto_now_add=False)
     
-    duration = models.PositiveIntegerField(name='Duration_in_sec')
+    final_date = models.DateTimeField(name='Final_Date', auto_now=False, auto_now_add=False)
     
     money_pool = models.PositiveIntegerField(name='Money')
     
+    ended = models.BooleanField(name='Ended',default=False)
+    
     def __str__(self):
-        return f'{self.Offered.name} {self.Money}'
+        return f'{self.Offered.Offer_name} {self.Money}'
 
 class ShoppingCart(models.Model):
     pass    

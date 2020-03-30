@@ -1,0 +1,22 @@
+{% extends "base/base.html" %} {% block header %}
+<h1>Auction Create</h1>
+{% endblock header %} 
+{% block body %}
+<h1>Auction Create Body</h1>
+
+{% if messages %}
+    <ul>
+        {% for msg in messages %}
+          <li><p>{{msg}}</p></li>
+        {% endfor %}
+
+    </ul>
+{% endif %}
+    
+<form method="post">
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %} {% csrf_token %} {{form.as_p}}
+    <button type="submit">Save</button>
+</form>
+{% endblock body %}

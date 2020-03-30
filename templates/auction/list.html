@@ -1,0 +1,44 @@
+{% extends "base/list.html" %} 
+{% load static %}
+{% block header %}
+<h1>Auction List</h1>
+{% endblock header %} 
+{% block table_head %}
+<th>Auction</th>
+<th>Ended</th>
+
+{% endblock table_head %}
+{% block table_row %}
+<td><a href="{% url 'auction:auction_view' object.id %}">{{object.Offered.Offer_name}}</a></td>
+<td>{{object.Ended}}</td>
+<!-- sep -->
+{% ifequal user.id object.Offered.Store.Owner.id %}
+<td><a class="btn btn-primary" href="{% url 'auction:auction_update' object.id %}">Update</a></td>
+<td><a class="btn btn-danger" href="{% url 'auction:auction_delete' object.id %}">Delete</a></td>
+{% endifequal %}
+{% endblock table_row %}
+{% block else_message %}
+<h1>No Auctions</h1>
+
+{% endblock else_message %}
+
+
+{% block tag_filter_form %}
+    
+    {% if form1 %}
+    <table> 
+        {{form1.as_table}} 
+    </table>
+    {% endif %}
+        
+{% endblock tag_filter_form %}
+
+
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}

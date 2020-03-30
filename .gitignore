@@ -1,6 +1,5 @@
 */__pycache__
 /static
-*.sqlite3
 */__init__.py
 __init__.py
 *.pyc
