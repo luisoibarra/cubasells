@@ -9,7 +9,7 @@ class Bank:
     def __init__(self, accounts = [], *args, **kwargs):
         self.accounts = MyBank
     
-    def __get_user(self,number):
+    def __get_user(self,number)->MyBank:
         user_account = [ ac for ac in self.accounts.objects.filter(Number = number) ]
         if len(user_account) == 1:
             return user_account[0]
@@ -109,10 +109,13 @@ class OfferBuyer:
         else:
             return True
     
-    def update_products(self):
+    def update_products(self,add_products = False):
         id_products = self.get_to_buy_amount()
         for prod in self.get_products():
-            Product.objects.filter(id=prod.id).update(Store_Amount = prod.Store_Amount-id_products[prod.id])
+            if add_products:
+                Product.objects.filter(id=prod.id).update(Store_Amount = prod.Store_Amount+id_products[prod.id])
+            else:
+                Product.objects.filter(id=prod.id).update(Store_Amount = prod.Store_Amount-id_products[prod.id])
     
     def buy_offers(self):
         self.clean_messages()

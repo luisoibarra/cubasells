@@ -14,12 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,include
-from project.bank.views import *
+from project.auction.views import *
 from django.urls import reverse_lazy
+from django.contrib.auth.views import login_required
 
 urlpatterns = [
-    path('create/',BankAccountCreateView.as_view(),name='create'),
-    path('delete/<int:pk>',BankAccountDeleteView.as_view(),name='delete'),
-    path('update/<int:pk>',BankAccountUpdateView.as_view(),name='update'),
-    path(''  ,BankAccountListView.as_view()  ,name='list'),
+
+    path('',AuctionListView.as_view(),name='auction_list'),
+    path('<int:pk>/view/',AuctionDetailView.as_view(),name='auction_view'),
+    path('<int:pk>/delete/',login_required(AuctionDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='auction_delete'),
+    path('<int:pk>/update/',login_required(AuctionUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='auction_update'),
+    
 ]

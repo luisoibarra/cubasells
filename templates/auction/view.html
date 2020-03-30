@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %} 
+{% load static %}
+{% block title %}
+Auction
+{% endblock %} 
+{% block header %}
+<h1>Auction Detail:</h1>
+{% endblock %} 
+{% block body %} 
+{% if object %}
+<p>Name: {{object.Offered.Offer_name}}</p>
+<p>Description: {{object.Offered.Offer_description}}</p>
+<p>Images:</p>
+<ul>
+    {% for ima in object.Offered.Images.all %}
+    <li><img src="{% static ima.Image.url %}" alt="Imagen"></li>
+    {% endfor %}
+</ul>
+<p>Products:</p>
+<ul>
+    {% for pr in object.Offered.Suboffer.all %}
+    <li>
+        <a href="{% url 'product:product_view' pr.id %}">{{pr.Product_offer.Name}}</a>
+        <p> Amount: {{pr.Amount}} </p>
+    </li>
+    {% endfor %}
+</ul>
+
+<p>Start Date: {{object.Initial_Date}}</p>
+
+<p>End Date: {{object.Final_Date}}</p>
+
+
+{% if object.Winner.MyUser.username %}
+    <h3>Winning: {{ object.Winner.MyUser.username }}</h3>
+{% else %}
+    <h3>No pushes are made</h3>
+{% endif %}
+
+<h3>Price: {{ object.Money }}</h3>
+
+{% if messages %}
+    <h2>Messages</h2>
+    <ul>
+        {% for msg in messages %}
+        <li><h5>{{msg}}</h5></li>        
+        {% endfor %}
+    </ul>
+{% endif %}
+{% if push_form %}
+    <h3>Push:</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ push_form.as_p }}
+        <input type="submit" value="Push" name="_push">
+    </form>
+{% endif %}
+
+{% ifequal object.Offered.Store.Owner.id user.id %}
+<a class="btn btn-primary" href="{% url 'auction:auction_update' object.id %}">Update</a>
+<a class="btn btn-danger" href="{% url 'auction:auction_delete' object.id %}">Delete</a>
+<!-- sep -->
+{% endifequal %}
+<!-- sep -->
+{% endif %}
+<!-- sep -->
+{% endblock %}
