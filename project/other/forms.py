@@ -24,7 +24,6 @@ class MultiSelectSTagForm(forms.Form):
         super(forms.Form, self).__init__(*args, **kwargs)
         self.fields['tags'] = self.tags
 
-
 class TagOrderForm(OrderForm):
     model = Tag
     fields_to_order = ['Tag']

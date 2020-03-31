@@ -50,3 +50,4 @@ class OrderForm(forms.Form):
             for x in self.fields_name:
                 self.fields[x] = forms.BooleanField(required=False,label=field_dict[x].label,help_text=f'Order by  {field_dict[x].label}')
                 self.fields[f'{x}_decrease'] = forms.BooleanField(required=False,label=f'{field_dict[x].label} decrease',help_text=f'Order by {field_dict[x].label} decreasingly')
+

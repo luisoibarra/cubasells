@@ -8,8 +8,10 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 from project.models import *
 from project.offer.forms import *
 from project.custom.views import *
+from project.custom.forms import *
 from django.contrib.auth.models import Group
 from project.offer.filters import *
+# from excel_response import ExcelView
 
 # Create your views here.
 
@@ -79,9 +81,10 @@ class OfferListView(FilterOrderAuthenticateListView):
     template_name = "offer/list.html"
     paginate_by = 5
     permission = 'project.view_offer'
+    
     form_order = OfferOrderForm
     form_filter = OfferFilter
-    
+    queryset=None
     def get_queryset(self):
         """
         Return the list of items for this view.
@@ -156,4 +159,11 @@ class OfferTagFilterView(TagFilterView):
     permission = 'project.view_offer'
     form_order = OfferOrderForm
     form_filter = OfferFilter
-    
+
+# class OfferExportView(ExcelView,OfferListView):
+#     header_font = None
+#     data_font = None
+#     output_filename = "OffersData.xlsx"
+#     worksheet_name = "OffersData"
+#     force_csv = False
+#     paginate_by = None
