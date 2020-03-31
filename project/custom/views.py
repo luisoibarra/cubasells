@@ -186,7 +186,7 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                     })
             return self.render_to_response(context)
         else:
-            return render(request,'error.html',{'error':'You dont have authorization for this action'})
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
     def post(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
@@ -222,7 +222,7 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                 return ExcelResponse(self.object_list)
             return self.render_to_response(context)
         else:
-            return render(request,'error.html',{'error':'You dont have authorization for this action'})
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 class TagFilterView(FilterOrderAuthenticateListView):
 
@@ -307,7 +307,7 @@ class TagFilterView(FilterOrderAuthenticateListView):
                     })
             return self.render_to_response(context)
         else:
-            return render(request,'error.html',{'error':'You dont have authorization for this action'})
+            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 
     def other_condition(self, request,*args, **kwargs):
