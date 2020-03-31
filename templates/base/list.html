@@ -6,6 +6,10 @@
             <tr>
                 {% block table_head %} 
                 {% endblock %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Export Data" name="export">
+                </form>
             </tr>
             <tbody>
         </thead>

@@ -5,7 +5,7 @@ from project.auction.filters import *
 from project.auction.manager import auction_manager
 from project.auction.watcher import auction_watcher
 from django.urls import reverse_lazy
-from django.shortcuts import render_to_response
+from django.shortcuts import render as render_to_response
 from django.template import RequestContext
 
 # Create your views here.

@@ -1,13 +1,15 @@
 {% extends "base/list.html" %} 
 {% block header %}
 <h1>Offer List</h1>
+
 {% endblock header %} 
 {% block table_head %}
 <td>Name</td>
 <td>Description</td>
 <td>Price</td>
+<td>Shoping Cart</td>
 <td>Store</td>
-<td></td>
+<td>Additional Info</td>
 {% endblock table_head %}
 {% block table_row %}
 <td>{{object.Offer_name}}</td>
@@ -45,3 +47,4 @@
     {{filter.form.as_table}}
 </table>
 {% endblock order_filter_forms %}
+

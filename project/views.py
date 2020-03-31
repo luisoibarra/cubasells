@@ -11,6 +11,7 @@ from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.filters import *
 
+
 # Create your views here.
 
 def index(request):

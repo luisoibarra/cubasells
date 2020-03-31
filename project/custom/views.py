@@ -2,8 +2,10 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView,View)
 from django.shortcuts import render
 
-from project.other.forms import MultiSelectSTagForm
+from project.other.forms import *
 from project.models import *
+
+from excel_response import ExcelResponse
 
 class AuthenticateView(View):
     permission = None
@@ -121,7 +123,7 @@ class AuthenticateUpdateView(UpdateView):
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 class FilterOrderAuthenticateListView(AuthenticateListView):
-    
+
     form_order = None
     
     form_filter = None
@@ -216,6 +218,8 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                     raise Http404(_("Empty list and '%(class_name)s.allow_empty' is False.") % {
                         'class_name': self.__class__.__name__,
                     })
+            if "export" in request.POST:
+                return ExcelResponse(self.object_list)
             return self.render_to_response(context)
         else:
             return render(request,'error.html',{'error':'You dont have authorization for this action'})
@@ -308,3 +312,4 @@ class TagFilterView(FilterOrderAuthenticateListView):
 
     def other_condition(self, request,*args, **kwargs):
         return True
+
