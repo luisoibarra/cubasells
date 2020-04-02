@@ -6,7 +6,7 @@
 {% block body %}
 {% if object_list %}
 <div class="row prod">
-    {% for object in object_list %}
+    {% for object in object_list.all %}
     <div class="col-lg-2 col-md-6 mb-4">
         <div class="card h-100">
             {%if not object.Images.all%}
@@ -26,10 +26,10 @@
                 {%if object.Tags%}
                 <h6>{{object.Tags}}</h6>
                 {%endif%}
-                <a href="{% url 'cart:cart_create' object.id %}" class="btn btn-primary">Add to cart</a>
+                
             </div>
             {%block add_features%}
-            {%endblock%}
+            {%endblock add_features%}
             <!-- <div class="card-footer">
                             <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
                         </div> -->
@@ -42,5 +42,7 @@
 {%block else%}
 {%endblock else%}
 
+{%block add_button%}
+{%endblock add_button%}
 {%endif%}
 {% endblock body %}

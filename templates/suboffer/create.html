@@ -1,13 +1,13 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Suboffer Create</h1>
-{% endblock header %} {% block body %}
-<h1>Suboffer Create Body</h1>
+{% extends "base/create.html" %}
 
-<form method="post">
-    {% if error %}
-    <p>{{ error }}</p>
-    {% endif %} {% csrf_token %} {{form.as_p}}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'store:store_product_create' view.kwargs.store_id %}" target="_blank">Add product to store</a> 
-{% endblock body %}
+{% block create_header %}
+<h1 class="title-single">Create offer</h1>
+{% endblock create_header %}
+
+
+{% block save %}
+<a href="{% url 'store:store_product_create' view.kwargs.store_id %}" target="_blank" class = "large btn-center">Add product to store</a>
+<br>
+<button class="large">Save offer</button>
+{% endblock save %}
+

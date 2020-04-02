@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+{% block header %}
+<div class="container">
+    <div class="intro-single col-md-12 col-lg-8">
+        <div class="title-single-box">
+            {%block create_header%}
+            <h1 class="title-single">Create product</h1>
+            {%endblock create_header%}
+        </div>
+    </div>
+</div>
+{% endblock header %}
+
+{%block init_section%}
+{%endblock init_section%}
+
+{% block body %}
+<div class="container">
+    <div class="panel-body">
+        <form accept-charset="UTF-8" role="form" method="post" class="black">
+            {% if error %}
+            <p>{{ error }}</p>
+            {% endif %}
+
+            {% csrf_token %}
+            {{form.as_p}}
+
+            {%block save%}
+            <button class="large">Save product</button>
+            {%endblock save%}
+        </form>
+    </div>
+</div>
+{% endblock body %}

@@ -1,30 +1,30 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 
 {%block init_body%}
 <body class="fullscreen-centered page-login scroll">
 {%endblock init_body%}
 
-{% block header %}
-{% endblock header %} 
+    {% block header %}
+    <h3>
+        Sign Up
+    </h3>
+    {% endblock header %}
 
-{% block body %}
+    {% block body %}
     <div id="background-wrapper" class="green_grass bg-image" data-stellar-background-ratio="0.8"></div>
-        <!-- ======== @Region: #content ======== -->
-    <div id="content scroll">
-            <div class="row">
+    <!-- ======== @Region: #content ======== -->
+        <div id="content scroll">
+            <div >
                 <div class="col-sm-6 col-sm-offset-3">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="login">
-                                Sign Up
-                            </h3>
+                            
                         </div>
                         <div class="panel-body">
-                            <form accept-charset="UTF-8" role="form" method="POST" class = "black">
+                            <form accept-charset="UTF-8" role="form" method="POST" class="black">
                                 {% csrf_token %}
                                 {{form.as_p}}
-                                <button class="btn btn-lg btn-primary" type="submit"
-                                value="Sign Up">Sign Up</button>
+                                <button class="btn btn-lg btn-primary" type="submit" value="Sign Up">Sign Up</button>
                             </form>
                         </div>
                     </div>
@@ -32,8 +32,6 @@
             </div>
             <!-- /row -->
         </div>
-    </div>
-</div>
-{% endblock body %}
-{%block footer%}
-{%endblock footer%}
+    {% endblock body %}
+    {%block footer%}
+    {%endblock footer%}

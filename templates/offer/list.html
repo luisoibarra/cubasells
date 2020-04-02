@@ -1,50 +1,20 @@
-{% extends "base/list.html" %} 
-{% block header %}
-<h1>Offer List</h1>
+{%extends 'base/list2.html' %}
+{%load static%}
 
-{% endblock header %} 
-{% block table_head %}
-<td>Name</td>
-<td>Description</td>
-<td>Price</td>
-<td>Shoping Cart</td>
-<td>Store</td>
-<td>Additional Info</td>
-{% endblock table_head %}
-{% block table_row %}
-<td>{{object.Offer_name}}</td>
-<td>{{object.Offer_description}}</td>
-<td>{{object.Price}}</td>
-<td>
-    <a href="{% url 'cart:cart_create' object.id %}">Add to cart</a>
-</td>
-<td>
-    <a href="{% url 'store:store_view' object.Store.id %}">{{object.Store.Name}}</a>
-</td>
-<td>
-    <a href="{% url 'offer:offer_view' object.id%}">More info</a>
-</td>
-{% endblock table_row %}
-{% block else_message %}
-<h1>No Offers</h1>
-{% endblock else_message %}
+{%block url%}
+<a href="{%url 'offer:offer_view' object.id%}">object.Offer_name</a>
+{%endblock url%}
 
-{% block tag_filter_form %}
-    
-    {% if form1 %}
-    <table> 
-        {{form1.as_table}} 
-    </table>
-    {% endif %}
-        
-{% endblock tag_filter_form %}
+{%block add_features%}
+<a href="{% url 'cart:cart_create' object.id %}" class="btn btn-default ">
+    <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
+</a>
+{%endblock add_features%}
 
-{% block order_filter_forms %}
-<table>
-    {{ order.as_table }}
-</table>
-<table>
-    {{filter.form.as_table}}
-</table>
-{% endblock order_filter_forms %}
+{%block else%}
+<h1>No offers.</h1>
+{%endblock else%}
 
+{%block add_button%}
+<a class="btn btn-primary" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
+{%endblock add_button%}

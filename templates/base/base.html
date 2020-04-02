@@ -38,13 +38,11 @@
 </head>
 
 {%block init_body%}
-
 <body>
-    {%endblock init_body%}
+{%endblock init_body%}
 
     {% block navbar %}
     <!--/ Nav Star /-->
-
     <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand text-brand" href="{% url 'cubasells:index' %} ">Cuba<span
@@ -95,12 +93,13 @@
     {% endblock header %}
 
     {%block init_section%}
-        {%endblock init_section%}
+        <section class="intro-single">
+    {%endblock init_section%}
 
         {% block body %}
         <h1>Body</h1>
         {% endblock body %}
-
+        </section>
         {% block footer %}
         <!-- / footer Star /-->
         <section class="section-footer">
