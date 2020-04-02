@@ -1,32 +1,55 @@
-{% extends 'base/base.html' %} 
+{% extends 'base/view.html' %}
 {% load static %}
-{% block title %}
-<h1>Producto:</h1>
-{% endblock %} {% block header %}
-<h1>Producto:</h1>
-{% endblock %} 
-{% block body %} 
-{% if object %}
-<p>Name: {{object.Name}}</p>
-<p>Description: {{object.Description}}</p>
-<p>Store: <a href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
-<p>Store amount: {{object.Store_Amount}}</p>
-<p>Tags:</p>
+
+{% block first %}   
+    <h1 class="title-single">Producto</h1>
+{% endblock first %} 
+
+{% block images %}
+    {% if object.Tags.all %}
+        {% for img in object.Tags.all %}
+        <li><img src="{% static img.Image.url %}"  class="agent-avatar img-fluid" alt="Imagen"></li>
+        {% endfor %}
+        {% else %}
+        <h1>No images</h1>
+    {% endif %}
+{%endblock images%}
+
+{%block init%}
+    <h3 class="title-d">{{object.Name}} </h3>
+{%endblock init%}
+
+{%block descripcion%}
+    {{object.Description}}
+{%endblock descripcion%}
+
+{%block features%}
+<p>
+    <strong>Store: </strong>
+    <a class="color-text-a" href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}}</a>
+    <!-- <span class="color-text-a">{{object.Store.Name}} </span> -->
+</p>
+<p>
+    <strong>Store amount: </strong>
+    <span class="color-text-a"> {{object.Store_Amount}}</span>
+</p>
 <ul>
-    {% for tag in object.Tags.all %}
-    <li>{{tag.Tag}}</li>
-    {% endfor %}
+    {%if object.Tags.all%}
+        <p>
+            <strong>Tags:</strong>
+        </p>
+        {% for tag in object.Tags.all %}
+        <li>{{tag.Tag}}</li>
+        {% endfor %}
+    {%else%}
+    {%endif%}
 </ul>
-<p>Images:</p>
-<ul>
-    {% for ima in object.Images.all %}
-    <li><img src="{% static ima.Image.url %}" alt="Imagen"></li>
-    {% endfor %}
-</ul>
 
+{%endblock features%}
 
-<!-- sep     -->
-{% endif %}
-<!-- sep     -->
-
-{% endblock %}
+{% block button%}
+<div class="btn-group">
+    <a class="btn btn-outline-success" href="{% url 'product:product_update' object.id %}">Update</a>
+    <a class="btn btn-outline-dark" href="{% url 'product:product_delete' object.id %}">Delete</a>
+</div>
+{% endblock button%}

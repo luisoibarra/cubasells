@@ -6,7 +6,7 @@
 {%endblock url%}
 
 {%block cart%}
-    {%ifequal object.Store.Owner.id object.id%}
+    {%ifequal object.Store.Owner.id user.id%}
     <a href="{% url 'cart:cart_create' object.id %}" class=" card-header center">
         <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
     </a>
@@ -30,3 +30,12 @@
 {%block add_button%}
 <a class="btn btn-primary" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
 {%endblock add_button%}
+
+{% block filter %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock filter %}

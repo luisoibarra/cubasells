@@ -41,6 +41,9 @@
 <body>
 {%endblock init_body%}
 
+    {% block search_collapse %}
+    {% endblock search_collapse %}
+    
     {% block navbar %}
     <!--/ Nav Star /-->
     <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
@@ -80,6 +83,10 @@
                         <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
                     </a>
                     {% endif %}
+
+                    {%block search%}
+                    {%endblock search%}
+
                     {% endblock navbar_labels %}
                 </ul>
             </div>
