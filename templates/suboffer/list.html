@@ -1,31 +1,37 @@
-{% extends "base/list.html" %} 
-{% block header %}
-<h1>Suboffers List</h1>
-{% endblock header %} 
-{% block table_head %}
-<th>Product</th>
-<th>Amount per offert</th>
-<th>Stored Amount</th>
-<th></th>
-{% endblock table_head %}
-{% block table_row %}
-<td>{{object.Product_offer.Name}}</td>
-<td>{{object.Amount}}</td>
-<td>
-    {{object.Product_offer.Store_Amount}}
-</td>
-<td>
-    <a href="{% url 'suboffer:suboffer_view' object.id %}">More Info</a>
-</td>
-{% endblock table_row %}
-{% block else_message %}
-<h1>No Suboffers</h1>
-{% endblock else_message %}
-{% block order_filter_forms %}
+{%extends 'base/list2.html' %}
+{%load static%}
+
+{%block url%}
+<a href="{%url 'suboffer:suboffer_view' object.id%}">{{object.Product_offer.Name}}</a>
+{%endblock url%}
+
+{%block tag%}
+<p>Amount: {{object.Product_offer.Store_Amount}}</p>
+{%endblock tag%}
+
+{%block add_features%}
+
+<div class="btn-group top center">
+    {% ifequal object.Store.Owner.id user.id %}
+    <a class="btn btn-outline-primary" href="{% url 'suboffer:suboffer' object.id %}">Update</a>
+    <a class="btn btn-outline-dark" href="{% url 'suboffer:suboffer_delete' object.id %}">Delete</a>
+    {% endifequal %}
+</div>
+{%endblock add_features%}
+
+{%block else%}
+<h1>No suboffers.</h1>
+{%endblock else%}
+
+{%block add_button%}
+<a class="btn btn-primary" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
+{%endblock add_button%}
+
+{%block filter%}
 <table>
     {{ order.as_table }}
 </table>
 <table>
     {{filter.form.as_table}}
 </table>
-{% endblock order_filter_forms %}
+{% endblock filter %}

@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {%load static %}
+
 {%block header%}
 {%endblock header%}
 
@@ -7,29 +8,34 @@
 {% if object_list %}
 <div class="row prod">
     {% for object in object_list.all %}
-    <div class="col-lg-2 col-md-6 mb-4">
-        <div class="card h-100">
-            {%if not object.Images.all%}
-            <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
-            {%else%}
-
-            {%endif%}
-            <!-- {%if object.Images%}
-                        {%else%}
-                        {%endif%} -->
-            <div class="card-body">
-                <h6 class="card-title">
-                    {%block url %}
-                    <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
-                    {%endblock url%}
-                </h6>
-                {%if object.Tags%}
-                <h6>{{object.Tags}}</h6>
-                {%endif%}
+    <div class="col-lg-2 col-md-6 mb-4 btn-modify">
+        <div class="card h-70 card-width top black">
+            <h6 class="card-header">
+                {%block url %}
+                <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
+                {%endblock url%}
+                {%block cart%}
+                {%endblock cart%}
+            </h6>
+            <div class="card-body black">
+                {%if not object.Images.all%}
+                <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                {%else%}
                 
+                {%endif%}
+                <!-- {%if object.Images%}
+                                        {%else%}
+                                        {%endif%} -->
+                {% block tag%}
+                <div class  = "black">
+                    {%if object.Tags%}
+                        <p>{{object.Tags.Tag}}</p>
+                    {%endif%}
+                    {%block add_features%}
+                    {%endblock add_features%}
+                </div>
+                {%endblock tag%}
             </div>
-            {%block add_features%}
-            {%endblock add_features%}
             <!-- <div class="card-footer">
                             <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
                         </div> -->
@@ -39,10 +45,16 @@
     {%endfor%}
 </div>
 {%else%}
+
 {%block else%}
 {%endblock else%}
 
 {%block add_button%}
 {%endblock add_button%}
+
 {%endif%}
+
+{%block filter%}
+{%endblock filter%}
+
 {% endblock body %}

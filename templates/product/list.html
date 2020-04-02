@@ -1,43 +1,44 @@
-{% extends "base/list.html" %} 
+{% extends "base/list2.html" %} 
 {% load static %}
+
 {% block header %}
 <h1>Product List</h1>
 {% endblock header %} 
-{% block table_head %}
-<th>Name</th>
-<th>Stored</th>
-<th></th>
-{% endblock table_head %}
-{% block table_row %}
-<td>{{object.Name}}</td>
-<td>{{object.Store_Amount}}</td>
-<td>
-    <a class="btn btn-primary" href="{% url 'product:product_view' object.id %}">More info</a>
-</td>
-{% ifequal object.Store.Owner.id user.id %}
-<td>
-    <a class="btn btn-danger"  href="{% url 'product:product_delete' object.id %}">Delete</a>
-</td>
-<td>
-    <a class="btn btn-primary" href="{% url 'product:product_update' object.id %}">Update</a>
-</td>
-{% endifequal %}
-{% endblock table_row %}
-{% block else_message %}
+
+{%block add_features%}
+    <p class = "black">Amount:{{object.Store_Amount}}</p>
+    {% ifequal object.Store.Owner.id user.id %}
+        <div class = "black">
+            <div class = "btn-group center">
+                <a class="btn btn-outline-primary" href="{% url 'product:product_update' object.id %}">Update</a>
+                <a class="btn btn-outline-dark" href="{% url 'product:product_delete' object.id %}">Delete</a>
+            </div>
+        </div>
+    {% endifequal %}
+{%endblock add_features%}
+
+
+{% block else%}
 <h1>No Products</h1>
-{% endblock else_message %}
-{% block extra_body %}
+{% endblock else %}
+
+{% block add_button%}
 {% if store_id %}
 {% ifequal store.Owner.id user.id %}
-<a class="btn btn-primary" href="{% url 'store:store_product_create' store_id %}">Create product</a>
+    <a class="btn btn-primary" href="{% url 'store:store_product_create' store_id %}">Create product</a>
 {% endifequal %}
 {% endif %}
-{% endblock extra_body %}
-{% block order_filter_forms %}
+{% endblock add_button %}
+
+{% block filter %}
 <table>
     {{ order.as_table }}
 </table>
-<table>
+<table><br>
+<br>
+<br>
     {{filter.form.as_table}}
 </table>
-{% endblock order_filter_forms %}
+{% endblock filter %}
+
+

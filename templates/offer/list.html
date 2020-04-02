@@ -2,13 +2,25 @@
 {%load static%}
 
 {%block url%}
-<a href="{%url 'offer:offer_view' object.id%}">object.Offer_name</a>
+<a href="{%url 'offer:offer_view' object.id%}">{{object.Offer_name}}</a>
 {%endblock url%}
 
+{%block cart%}
+    {%ifequal object.Store.Owner.id object.id%}
+    <a href="{% url 'cart:cart_create' object.id %}" class=" card-header center">
+        <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
+    </a>
+    {%endifequal%}
+{%endblock cart%}
+
 {%block add_features%}
-<a href="{% url 'cart:cart_create' object.id %}" class="btn btn-default ">
-    <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
-</a>
+<div class = "btn-group top" style= "justify-content: center; align-items: center;">
+    
+    {% ifequal object.Store.Owner.id user.id %}
+        <a class="btn btn-outline-primary" href="{% url 'offer:offer_update' object.id %}">Update</a>
+        <a class="btn btn-outline-dark" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
+    {% endifequal %}
+</div>
 {%endblock add_features%}
 
 {%block else%}
