@@ -520,8 +520,8 @@ a:hover {
 .navbar-default {
   transition: all .5s ease-in-out;
   background-color: #ffffff;
-  padding-top: 28px;
-  padding-bottom: 28px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   box-shadow: 1px 2px 15px rgba(100, 100, 100, 0.3);
@@ -545,14 +545,14 @@ a:hover {
 .navbar-default.navbar-trans .nav-item,
 .navbar-default.navbar-reduce .nav-item {
   position: relative;
-  padding-right: 10px;
+  padding-right: 8px;
   padding-bottom: 8px;
   margin-left: 0;
 }
 
 .navbar-default.navbar-trans .nav-link,
 .navbar-default.navbar-reduce .nav-link {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #000000;
   font-weight: 600;
   letter-spacing: 0.030em;
@@ -768,7 +768,7 @@ a:hover {
   top: 30px;
   left: 60px;
   opacity: 0;
-  transition: all 1s ease;
+  transition: 1s ease;
   transition-delay: .3s;
 }
 
@@ -778,8 +778,8 @@ a:hover {
   left: 0;
   top: 6.5rem;
   bottom: 5rem;
-  padding-left: 10%;
-  padding-right: 10%;
+  padding-left: 5%;
+  padding-right: 5%;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0;
@@ -950,7 +950,7 @@ a:hover {
 /*------/ Intro Single /------*/
 
 .intro-single {
-  padding: 12rem 0 3rem;
+  padding: 8rem 0 3rem;
 }
 
 .intro-single .title-single-box {
@@ -2025,13 +2025,19 @@ footer .credits {
 }
 
 .intro-title-gray {
+<<<<<<< HEAD
   color: #d8d0d0;
   font-weight: 500;
+=======
+  color: #c7c2c2;
+  font-weight: 400;
+>>>>>>> origin/Visual
   font-size: 2.5rem;
 }
 
 .login {
-  color: #7be7a8;
+
+  color: #f0f3f0;
   font-weight: 500;
   font-size: 2.5rem;
   position: fixed;
@@ -2064,7 +2070,7 @@ footer .credits {
 }
 
 .green_grass{
-  background-image: url(../img/verde.jpg);
+  background-image: url(../img/new.jpg);
 }
 
 .center-form-product
@@ -2085,3 +2091,88 @@ footer .credits {
   left :10%;
   top : 70%;
 }
+.scroll
+{
+  padding-left: 400px;
+  overflow: scroll;
+}
+.black
+{
+  color:  #080808;
+}
+
+.shopping_cart
+{
+  width : 25px;
+  height: 25px;
+}
+
+.prod{
+  padding-top: 0px;
+  padding-left: 20px;
+}
+
+.center_screen
+{
+  max-width: 100%;
+}
+
+.btn-modify {
+  margin-left: 50px;
+
+}
+.btn-bottom
+{
+  margin-bottom: 10px;
+}
+.large{
+  border-radius: 0;
+  /* padding: 1rem 1rem; */
+  letter-spacing: .05rem;
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+.border
+{
+  border-radius: 20px;
+}
+
+.btn-center
+{
+  margin: 10px 0;
+  display: inline-block;
+}
+
+.card-width
+{
+  width: 140%;
+}
+
+.btn-left
+{
+  padding-left: 10px ;
+}
+.top
+{
+  padding-top: 10px;
+}
+
+.center
+{
+  justify-content: center;
+  align-items: center;
+}
+
+.card-size-font
+{
+  font-size : 13px;
+  display:grid;
+}
+
+.buy-cart
+{
+  padding-left: 25%;
+}
+

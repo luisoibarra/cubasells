@@ -1,6 +1,5 @@
 (function ($) {
   "use strict";
-  
   // Preloader
   $(window).on('load', function () {
     if ($('#preloader').length) {
@@ -22,7 +21,6 @@
     $('html, body').animate({scrollTop : 0},1500, 'easeInOutExpo');
     return false;
   });
-  
 	var nav = $('nav');
 	var navHeight = nav.outerHeight();
 
@@ -118,6 +116,7 @@
 		loop: true,
 		margin: 30,
 		responsive: {
+
 			0: {  
 				items: 1,
 			},
