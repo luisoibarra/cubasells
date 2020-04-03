@@ -12,7 +12,7 @@
         <div class="card h-70 card-width top black">
             <h6 class="card-header">
                 {%block url %}
-                <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
+                    <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
                 {%endblock url%}
                 {%block cart%}
                 {%endblock cart%}
@@ -31,6 +31,7 @@
                     {%if object.Tags%}
                         <p>{{object.Tags.Tag}}</p>
                     {%endif%}
+                    
                     {%block add_features%}
                     {%endblock add_features%}
                 </div>

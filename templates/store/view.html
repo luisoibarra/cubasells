@@ -1,45 +1,59 @@
-{% extends "base/base.html" %} 
+{% extends 'base/view.html' %}
 {% load static %}
-{% block header %}
-<h1>Current Store Index</h1>
-{% endblock header %} {% block body %}
-<h1>Current Store Index Body</h1>
-{% if store %}
-<p>Name: {{store.Name}}</p>
-{% else %} 
-{% for error in errors %}
-<h1>{{error}}</h1>
-{% endfor %} {% endif %}
-<ul>
-    <p>Tags:</p>
-    {% if store.Tags %} {% for tag in store.Tags.all %}
-    <li>{{ tag }}</li>
-    {% endfor %} {% else %}
-    <h1>No tags</h1>
-    {% endif %}
-</ul>
-<ul>
-    <p>Images:</p>
-    {% if store.Images %} {% for tag in store.Images.all %}
-    <li><img src="{% static tag.Image.url %}" alt="Imagen"></li>
-    <p>{{ tag.Image.name }}</p> {% endfor %} {% else %}
-    <h1>No images</h1>
-    {% endif %}
-</ul>
-<p><a href="{% url 'store:store_product_list' store.id %}">See Products</a></p>
-<p><a href="{% url 'store:store_offer_list' store.id %}">See Offer</a></p>
-<p><a href="{% url 'store:store_suboffer_list' store.id %}">See Suboffers</a></p>
-<p><a href="{% url 'store:store_auction_list' store.id %}">See Auctions</a></p>
 
-{% ifequal user.id store.Owner.id %}
-<a href="{% url 'store:store_product_create' store.id %}">Add Product</a>
-<a href="{% url 'store:store_offer_create' store.id %}">Add Offer</a>
-<a href="{% url 'store:store_suboffer_create' store.id %}">Add Suboffer</a>
-<a href="{% url 'store:store_auction_create' object.id %}">Add Auction</a>
+{% block first %}
+<h1 class="title-single">Store</h1>
+{% endblock first %}
+
+{% block images %}
+{% if store.Images.all %}
+{% for img in store.Images.all %}
+<li><img src="{% static img.Image.url %}" class="agent-avatar img-fluid" alt="Imagen"></li>
+{% endfor %}
+{% else %}
+    <h1>No images</h1>
+{% endif %}
+{%endblock images%}
+
+{%block init%}
+    <h3 class="title-d">{{store.Name}} </h3>
+{%endblock init%}
+
+{%block features%}
+<ul>
+    {%if store.Tags.all%}
+    <p>
+        <strong>Tags:</strong>
+    </p>
+    {% for tag in store.Tags.all %}
+    <li>{{tag.Tag}}</li>
+    {% endfor %}
+    {%else%}
+    {%endif%}
+</ul>
+{%endblock features%}
+
+{% block button%}
+<div class="btn-group">
+    <a class="btn btn-outline-success" href="{% url 'store:store_product_list' store.id %}">See Products</a>
+    <a class="btn btn-outline-success" href="{% url 'store:store_offer_list' store.id %}">See Offer</a>
+    <a class="btn btn-outline-success" href="{% url 'store:store_suboffer_list' store.id %}">See Suboffers</a>
+    <a class="btn btn-outline-success" href="{% url 'store:store_auction_list' store.id %}">See Auctions</a>
+</div>
 <br>
-<a class="btn btn-danger" href="{% url 'store:store_delete' store.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'store:store_update' store.id %}">Update</a>
-<!-- sep     -->
-{% endifequal %}
-<!-- sep     -->
-{%endblock%}
+<br>
+{% ifequal user.id store.Owner.id %}
+    <div class = "btn-group">
+        <a class = "btn btn-outline-dark" href="{% url 'store:store_product_create' store.id %}">Add Product</a>
+        <a class = "btn btn-outline-dark" href="{% url 'store:store_offer_create' store.id %}">Add Offer</a>
+        <a class = "btn btn-outline-dark" href="{% url 'store:store_suboffer_create' store.id %}">Add Suboffer</a>
+        <a class = "btn btn-outline-dark" href="{% url 'store:store_auction_create' object.id %}">Add Auction</a>  
+    </div>
+    <br>
+    <br>
+    <div class="btn-group">
+        <a class="btn btn-outline-success" href="{% url 'store:store_update' store.id %}">Update</a>
+        <a class="btn btn-outline-dark" href="{% url 'store:store_delete' store.id %}">Delete</a>
+    </div>
+{%endifequal%}
+{% endblock button%}

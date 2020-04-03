@@ -4,9 +4,11 @@
   
 {% endblock header %}
 {% block body %}
-<form method="POST">
-    {% csrf_token %}
-    <h1>Are you sure to delete {{ object }}?</h1>
-    <button type="submit" class="btn btn-danger" >Delete</button>
-</form>
+<div class ="container">
+    <form method="POST">
+        {% csrf_token %}
+        <h1>Are you sure to delete {{ object }}?</h1>
+        <button type="submit" class="btn large" >Delete</button>
+    </form>
+</div>
 {% endblock body %}

@@ -6,8 +6,8 @@
 {% endblock first %} 
 
 {% block images %}
-    {% if object.Tags.all %}
-        {% for img in object.Tags.all %}
+    {% if object.Images.all %}
+        {% for img in object.Images.all %}
         <li><img src="{% static img.Image.url %}"  class="agent-avatar img-fluid" alt="Imagen"></li>
         {% endfor %}
         {% else %}
