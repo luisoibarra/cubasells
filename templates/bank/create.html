@@ -1,12 +1,10 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Account Create</h1>
-{% endblock header %} {% block body %}
-<h1>Account Create Body</h1>
+{% extends "base/create.html" %}
 
-<form method="post">
-    {% if error %}
-    <p>{{ error }}</p>
-    {% endif %} {% csrf_token %} {{form.as_p}}
-    <button type="submit">Save</button>
-</form>
-{% endblock body %}
+{% block create_header %}
+<h1 class="title-single">Create account</h1>
+{% endblock create_header %}
+
+
+{% block save %}
+<button class="btn large">Save account</button>
+{% endblock save %}

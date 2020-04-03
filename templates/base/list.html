@@ -1,6 +1,12 @@
 {% extends 'base/base.html' %} 
+
 {% block body %}
 {% if object_list %}
+<div class ="container">
+
+    {%block btn_add%}
+    {%endblock btn_add%}
+    
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -17,6 +23,7 @@
             {% endfor %} 
         </tbody>
     </table>
+</div>
     {% block paginator %}
     {% if page_obj.has_previous %}
     <a class="btn btn-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a>
@@ -40,10 +47,9 @@
     <!-- sep -->
     {% endblock tag_filter_form %}
     {% block order_filter_forms %}
-    <h2>INSERT FILTER</h2>
+    
     {% endblock order_filter_forms %}
-    <input type="submit" value="Update and Export Data" name="export">
-    <button class="btn btn-primary" type="submit">Update</button>
+    </div>
     </form>
 {% endif %}
     

@@ -70,10 +70,10 @@
 {%block add_button%}
     {% if object_list %}
     <div class = "container">
-        <form action="{% url 'buy:buy_cart' %}" method="post">
+        <form action="{% url 'buy:buy_cart' %}" method="post" class = "buy-cart">
             {% csrf_token %}
             {{ form.as_p }}
-            <button class="btn btn-outline-dark " type="submit">Buy Cart</button>
+            <button class="btn large " type="submit">Buy Cart</button>
         </form>
     </div>
     {% endif %}

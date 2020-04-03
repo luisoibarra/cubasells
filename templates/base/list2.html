@@ -5,56 +5,59 @@
 {%endblock header%}
 
 {% block body %}
-{% if object_list %}
-<div class="row prod">
-    {% for object in object_list.all %}
-    <div class="col-lg-2 col-md-6 mb-4 btn-modify">
-        <div class="card h-70 card-width top black">
-            <h6 class="card-header">
-                {%block url %}
-                    <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
-                {%endblock url%}
-                {%block cart%}
-                {%endblock cart%}
-            </h6>
-            <div class="card-body black">
-                {%if not object.Images.all%}
-                <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
-                {%else%}
-                
-                {%endif%}
-                <!-- {%if object.Images%}
-                                        {%else%}
-                                        {%endif%} -->
-                {% block tag%}
-                <div class  = "black">
-                    {%if object.Tags%}
-                        <p>{{object.Tags.Tag}}</p>
-                    {%endif%}
+    {%block btn%}
+    {%endblock btn%}
+    
+    {% if object_list %}
+    <div class="row prod">
+        {% for object in object_list%}
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify">
+            <div class="card h-70 card-width top black">
+                <h6 class="card-header">
+                    {%block url %}
+                        <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
+                    {%endblock url%}
+                    {%block cart%}
+                    {%endblock cart%}
+                </h6>
+                <div class="card-body black">
+                    {%if not object.Images.all%}
+                    <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                    {%else%}
                     
-                    {%block add_features%}
-                    {%endblock add_features%}
+                    {%endif%}
+                    <!-- {%if object.Images%}
+                                            {%else%}
+                                            {%endif%} -->
+                    {% block tag%}
+                    <div class  = "black">
+                        {%if object.Tags%}
+                            <p>{{object.Tags.Tag}}</p>
+                        {%endif%}
+                        
+                        {%block add_features%}
+                        {%endblock add_features%}
+                    </div>
+                    {%endblock tag%}
                 </div>
-                {%endblock tag%}
+                <!-- <div class="card-footer">
+                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                            </div> -->
+
             </div>
-            <!-- <div class="card-footer">
-                            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                        </div> -->
-
         </div>
+        {%endfor%}
     </div>
-    {%endfor%}
-</div>
-{%else%}
+    {%else%}
 
-{%block else%}
-{%endblock else%}
-{%endif%}
+    {%block else%}
+    {%endblock else%}
+    {%endif%}
 
-{%block add_button%}
-{%endblock add_button%}
+    {%block add_button%}
+    {%endblock add_button%}
 
-{%block filter%}
-{%endblock filter%}
+    {%block filter%}
+    {%endblock filter%}
 
 {% endblock body %}

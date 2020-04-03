@@ -1,6 +1,18 @@
 {%extends 'base/list2.html' %}
 {%load static%}
 
+
+{%block btn%}
+    {%if store_id%}
+        {% ifequal object.Store.id user.Store.id %}
+            <div class = "container">
+                <a class="btn large" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
+            </div>
+            <br>
+        {% endifequal %}
+    {%endif%}
+{%endblock btn%}
+
 {%block search_collapse%}
 <div class="click-closed"></div>
 <!--/ Form Search Star /-->
@@ -54,7 +66,7 @@
     <a> Price:{{object.Price}}</a>
     <br>
     <a>Store: {{object.Store}}</a>
-    <div class = "btn-group top" style= "justify-content: center; align-items: center;">
+    <div class = "btn-group top" >
         {% ifequal object.Store.Owner.id user.id %}
             <a class="btn btn-outline-primary" href="{% url 'offer:offer_update' object.id %}">Update</a>
             <a class="btn btn-outline-dark" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
@@ -69,6 +81,5 @@
 {%endblock else%}
 
 {%block add_button%}
-<a class="btn btn-primary" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
 {%endblock add_button%}
 

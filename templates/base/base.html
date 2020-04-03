@@ -1,4 +1,5 @@
-<!DOCTYPE html> {% load static %}
+{% load static %}
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
@@ -53,40 +54,43 @@
             <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
                 <ul class="navbar-nav">
                     {% block navbar_labels %}
-                    {% if user.username %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cubasells:index' %} ">Home</a>
-                    </li>
-                    {% if not user.username %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cubasells:login' %} ">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cubasells:user_create' %} ">Register</a>
-                    </li>
-                    {%endif%}
-                    {% if user.username %}
-                    <li>
-                        <a class="nav-link" href="{% url 'store:store_list' %}">Stores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'offer:offer_list' %}">Offers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cubasells:logout' %}">Logout</a>
-                    </li>
-                    <a href="{% url 'cart:cart_list' %}" class="btn btn-default">
-                        <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
-                    </a>
-                    {% endif %}
+                        {% if user.username %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cubasells:index' %} ">Home</a>
+                        </li>
+                        {% if not user.username %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cubasells:login' %} ">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cubasells:user_create' %} ">Register</a>
+                            </li>
+                        {%endif%}
+                        {% if user.username %}
+                            <li>
+                                <a class="nav-link" href="{% url 'store:store_list' %}">Stores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'offer:offer_list' %}">Offers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'auction:auction_list' %}">Auctions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cubasells:logout' %}">Logout</a>
+                            </li>
+                            
+                            <a href="{% url 'cart:cart_list' %}" class="btn btn-default">
+                                <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
+                            </a>
+                        {% endif %}
 
-                    {%block search%}
-                    {%endblock search%}
-
+                        {%block search%}
+                        {%endblock search%}
                     {% endblock navbar_labels %}
                 </ul>
             </div>

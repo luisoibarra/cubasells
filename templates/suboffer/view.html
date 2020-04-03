@@ -1,16 +1,39 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Current Suboffer Index</h1>
-{% endblock header %} 
-{% block body %}
-<h1>Current Suboffer Index Body</h1>
+{% extends 'base/view.html' %}
+{% load static %}
 
-<p>SubOfferted: {{object.Product_offer.Name}}</p>
+{% block first %}
+<h1 class="title-single">Suboffer</h1>
+{% endblock first %}
 
-<p>Amount subofferted:  {{object.Amount}}</p>
+{% block images %}
+    {% if object.Product_offer.all %}
+    {% for img in object.Product_offer.Images.all %}
+    <li><img src="{% static img.Image.url %}" class="agent-avatar img-fluid" alt="Imagen"></li>
+    {% endfor %}
+    {% else %}
+    <h1>No images</h1>
+    {% endif %}
+{%endblock images%}
+
+{%block init%}
+<h3 class="title-d">{{object.Product_offer.Name}} </h3>
+{%endblock init%}
+
+{%block descripcion%}
+{%endblock descripcion%}
+
+{%block features%}
+<p>
+    <strong>Amount subofferted: </strong>
+    <span class="color-text-a"> {{object.Amount}}</span>
+</p>
+{%endblock features%}
+
+{% block button%}
 {% ifequal user.id object.Product_offer.Store.Owner.id %}
-<a class="btn btn-danger" href="{% url 'suboffer:suboffer_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'suboffer:suboffer_update' object.id %}">Update</a>
+    <a class="btn btn-outline-success" href="{% url 'suboffer:suboffer_update' object.id %}">Update</a>
+    <a class="btn btn-outline-dark" href="{% url 'suboffer:suboffer_delete' object.id %}">Delete</a>
 <!-- sep     -->
 {% endifequal %}
-<!-- sep     -->
-{% endblock %}
+{% endblock button%}
+
