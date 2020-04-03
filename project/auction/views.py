@@ -37,7 +37,6 @@ class AuctionCreateView(AuthenticateCreateView):
 class AuctionListView(FilterOrderAuthenticateListView):
     model = Auction
     template_name = "auction/list.html"
-    paginate_by = 5
     permission = 'project.view_auction'
     form_order = AuctionOrderForm
     form_filter = AuctionFilter

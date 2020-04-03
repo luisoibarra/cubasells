@@ -58,7 +58,6 @@ class StoreCreateView(AuthenticateCreateView):
 class StoreListView(FilterOrderAuthenticateListView):
     model = Store
     template_name = "store/list.html"
-    paginate_by = 5
     permission = 'project.view_store'
     form_order = StoreOrderForm
     form_filter = StoreFilter
@@ -177,7 +176,6 @@ class StoreUserCreateView(AuthenticateView):
 class StoreTagFilterView(TagFilterView):
     model = Store
     template_name = 'store/list.html'
-    paginate_by = 5
     permission = 'project.view_store'
     form_order = StoreOrderForm
     form_filter = StoreFilter

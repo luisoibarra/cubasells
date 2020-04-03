@@ -9,17 +9,20 @@
     {%endblock btn%}
     
     {% if object_list %}
-    <div class="row prod">
+    <div class = "container" style = "margin-left:auto; margin-right: auto;">
+    <div class="row prod" >
         {% for object in object_list%}
         <div class="col-lg-2 col-md-6 mb-4 btn-modify">
-            <div class="card h-70 card-width top black">
-                <h6 class="card-header">
+            <div class="card h-70 card-width top black" >
+                <div class = "container"  style = "display: run-in;">
+                <h6 class=" card-header" >
                     {%block url %}
                         <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
                     {%endblock url%}
                     {%block cart%}
                     {%endblock cart%}
                 </h6>
+                </div>
                 <div class="card-body black">
                     {%if not object.Images.all%}
                     <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
@@ -48,6 +51,7 @@
         </div>
         {%endfor%}
     </div>
+</div>
     {%else%}
 
     {%block else%}
