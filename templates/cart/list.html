@@ -68,15 +68,17 @@
 {%endblock else%}
 
 {%block add_button%}
+    {% if object_list %}
+    <div class = "container">
+        <form action="{% url 'buy:buy_cart' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-outline-dark " type="submit">Buy Cart</button>
+        </form>
+    </div>
+    {% endif %}
 {%endblock add_button%}
 
-{% if object_list %}
-<form action="{% url 'buy:buy_cart' %}" method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <button class="btn btn-primary" type="submit">Buy Cart</button>
-</form>
-{% endif %}
 
     
 

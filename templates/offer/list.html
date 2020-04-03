@@ -44,11 +44,9 @@
 {%endblock url%}
 
 {%block cart%}
-    {%ifequal object.Store.Owner.id user.id%}
     <a href="{% url 'cart:cart_create' object.id %}" class=" card-header center">
         <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
     </a>
-    {%endifequal%}
 {%endblock cart%}
 
 {%block add_features%}
