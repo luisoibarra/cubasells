@@ -170,6 +170,8 @@ class Auction(models.Model):
     
     ended = models.BooleanField(name='Ended',default=False)
     
+    status = models.CharField(name="Status",max_length=100,default='Not started')
+
     def __str__(self):
         return f'{self.Offered.Offer_name} {self.Money}'
 

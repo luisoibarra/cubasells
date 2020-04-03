@@ -35,7 +35,9 @@
                     {% block tag%}
                     <div class  = "black">
                         {%if object.Tags%}
-                            <p>{{object.Tags.Tag}}</p>
+                            {% for tag in objects.Tags %}
+                                <p>{{tag}}</p>
+                            {% endfor %}
                         {%endif%}
                         
                         {%block add_features%}
