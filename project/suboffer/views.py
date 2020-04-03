@@ -73,7 +73,6 @@ class SubOfferCreateView(AuthenticateCreateView):
 class SubOfferListView(FilterOrderAuthenticateListView):
     model = SubOffer
     template_name='suboffer/list.html'
-    paginate_by = 5
     permission = 'project.view_suboffer'
     form_order = SubOfferOrderForm
     form_filter = SubOfferFilter

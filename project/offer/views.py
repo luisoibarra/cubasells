@@ -79,7 +79,6 @@ class OfferCreateView(AuthenticateCreateView):
 class OfferListView(FilterOrderAuthenticateListView):
     model = Offer
     template_name = "offer/list.html"
-    paginate_by = 5
     permission = 'project.view_offer'
     
     form_order = OfferOrderForm
