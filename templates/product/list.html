@@ -1,5 +1,15 @@
-{% extends "base/list2.html" %} 
+{% extends "base/list2.html" %}
 {% load static %}
+
+{% block btn%}
+{% if store_id %}
+{% ifequal store.Owner.id user.id %}
+<div class = "container " style = "margin-left: 150px;">
+    <a class="btn large"  href="{% url 'store:store_product_create' store_id %}">Create product</a>
+</div>
+{% endifequal %}
+{% endif %}
+{% endblock btn%}
 
 {%block search_collapse%}
 <div class="click-closed"></div>
@@ -13,9 +23,9 @@
                 <h3 class="title-d">Search Products</h3>
             </div>
             <table>
-                <br>
+                <!-- <div style="display:grid; font-family:Georgia, 'Times New Roman', Times, serif; "> -->
                 {{filter.form.as_table}}
-                <br>
+                <!-- </div> -->
             </table>
             <div class="title-box-d">
                 <h3 class="title-d">Order Products</h3>
@@ -27,7 +37,7 @@
             <button class="btn btn-secondary col-md-12" type="submit">Update</button>
         </form>
     </div>
-    
+
 </div>
 <!--/ Form Search End /-->
 {%endblock search_collapse%}
@@ -41,7 +51,7 @@
 
 {% block header %}
 <h1>Product List</h1>
-{% endblock header %} 
+{% endblock header %}
 
 {%block add_features%}
     <p class = "black">Amount:{{object.Store_Amount}}</p>
@@ -61,11 +71,7 @@
 {% endblock else %}
 
 {% block add_button%}
-{% if store_id %}
-{% ifequal store.Owner.id user.id %}
-    <a class="btn btn-primary" href="{% url 'store:store_product_create' store_id %}">Create product</a>
-{% endifequal %}
-{% endif %}
+
 {% endblock add_button %}
 
 {% block filter %}

@@ -2170,3 +2170,12 @@ footer .credits {
 {
   padding-left: 25%;
 }
+
+.cart
+{
+  top: 0;
+  right: 0;
+  margin-right: 5px;
+  margin-top: 20px;
+   position: absolute;
+}
