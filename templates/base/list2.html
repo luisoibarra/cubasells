@@ -12,8 +12,8 @@
     <div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
     <div class="row prod" >
         {% for object in object_list%}
-        <div class="col-lg-2 col-md-6 mb-4 btn-modify">
-            <div class="card h-70 card-width top black" >
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify ">
+            <div class="card h-70 card-width top">
                 <h6 class="container card-header" >
                     {%block url %}
                         <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
@@ -21,7 +21,7 @@
                     {%block cart%}
                     {%endblock cart%}
                 </h6>
-                <div class="card-body black">
+                <div class="card-body">
                     {%if not object.Images.all%}
                     <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
                     {%else%}

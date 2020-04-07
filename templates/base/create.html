@@ -24,7 +24,9 @@
             {% endif %}
 
             {% csrf_token %}
+            {% block forms %}
             {{form.as_p}}
+            {% endblock forms %}
 
             {%block save%}
                 <button class = " btn large" type = "submmit">Save product</button>

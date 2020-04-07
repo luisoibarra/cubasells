@@ -1,12 +1,15 @@
 {% extends "base/base.html" %}
+{%load static%}
 <!-- sep -->
 {% block header %}
   
 {% endblock header %}
+
 {% block body %}
 <!-- sep -->
 <div class = "container">
-<h1 style = "color:#2eca6a;">Operation successful</h1>
+<img src = "{%static 'img/cart_success.png' %}" style="margin-left: 25%; width: 40%; height: 40%;">
+<h1 style = "color:#2eca6a; margin-left: 27%;">Operation successful</h1>
 </div>
 <!-- sep -->
 {% endblock body %}
