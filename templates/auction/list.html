@@ -55,9 +55,9 @@
 
 {%block add_features%}
 {%if object.Ended%}
-<p style = "color:black;">Ended</p>
+<p style = "color:black;">{{object.Status}}</p>
 {%else%}
-<p style = "color:chartreuse;">In course</p>
+<p style = "color:chartreuse;">{{object.Status}}</p>
 {%endif%}
 
 <div class = "card-size-font">

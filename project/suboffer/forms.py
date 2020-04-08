@@ -8,7 +8,6 @@ class SubOfferCreateForm(forms.ModelForm):
         model = SubOffer
         fields = '__all__'
 
-  
 class SubOfferOrderForm(OrderForm):
     model = SubOffer
     fields_to_order = ['Product_offer__Name','Amount']

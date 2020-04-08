@@ -2025,12 +2025,18 @@ footer .credits {
 }
 
 .intro-title-gray {
+<<<<<<< HEAD
+  color: #d8d0d0;
+  font-weight: 500;
+=======
   color: #c7c2c2;
   font-weight: 400;
+>>>>>>> origin/Visual
   font-size: 2.5rem;
 }
 
 .login {
+
   color: #f0f3f0;
   font-weight: 500;
   font-size: 2.5rem;
@@ -2085,7 +2091,6 @@ footer .credits {
   left :10%;
   top : 70%;
 }
-
 .scroll
 {
   padding-left: 400px;
