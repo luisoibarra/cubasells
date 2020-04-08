@@ -58,6 +58,11 @@ class AuctionManager:
         print("Check")
         auction_to_end = Auction.objects.filter(Final_Date__lte=timezone.now()).filter(Ended=False)
         
+        auction_running = Auction.objects.filter(Initial_Date__lte=timezone.now()).filter(Final_Date__gte=timezone.now()).exclude(Status="Running")
+        
+        for run in auction_running:
+            run.Status = "Running"
+            run.save()
         
         for end in auction_to_end:
             self.end_auction(end)
@@ -69,6 +74,7 @@ class AuctionManager:
         winner = auction.Winner
         
         auction.Ended = True
+        auction.Status = "Ended"
         auction.save()
         
         if winner is None:

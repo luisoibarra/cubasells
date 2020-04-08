@@ -1,12 +1,11 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Add Offer Create</h1>
-{% endblock header %} {% block body %}
-<h1>Add Offer Create Body</h1>
-<h3>{{ offer.Offer_name }}: {{ offer.Price }}</h3>
-<form method="post">
-    {% if error %}
-    <p>{{ error }}</p>
-    {% endif %} {% csrf_token %} {{form.as_p}}
-    <button type="submit">Save</button>
-</form>
-{% endblock body %}
+{% extends "base/create.html" %}
+
+{% block create_header %}
+<h1 class="title-single">Add offer</h1>
+<h6>Offer name:{{ offer.Offer_name }}</h6>
+<h6>Price: {{ offer.Price }}</h6>
+{% endblock create_header %}
+
+{% block save %}
+<button type="submit" class = "btn large">Add offer to cart</button>
+{% endblock save %}

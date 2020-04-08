@@ -1,27 +1,37 @@
-{% extends 'base/base.html' %} 
+{% extends 'base/view.html' %}
 {% load static %}
-{% block title %}
-<h1>Offer:</h1>
-{% endblock %} {% block header %}
-<h1>Offer:</h1>
-{% endblock %} {% block body %} {% if object %}
-<p>Name: {{object.Offer_name}}</p>
-<p>Description: {{object.Offer_description}}</p>
-<p>Price: {{ object.Price }}</p>
-<p>Store: <a href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}} </a> </p>
-<p>Tags:</p>
-<ul>
-    {% for tag in object.Tags.all %}
-    <li>{{tag.Tag}}</li>
-    {% endfor %}
-</ul>
-<p>Images:</p>
-<ul>
-    {% for ima in object.Images.all %}
-    <li><img src="{% static ima.Image.url %}" alt="Imagen"></li>
-    {% endfor %}
-</ul>
-<p>Products:</p>
+
+{% block first %}
+    <h1 class="title-single">Offer</h1>
+{% endblock first %}
+
+{% block images %}
+{% if object.Images.all %}
+<img src="{% static object.Images.all.first.Image.url %}" class="agent-avatar img-fluid" alt="Imagen">
+{% else %}
+<h1>No images</h1>
+{% endif %}
+{%endblock images%}
+
+{%block init%}
+    <h3 class="title-d">{{object.Offer_name}} </h3>
+{%endblock init%}
+
+{%block descripcion%}
+{{object.Offer_description}}
+{%endblock descripcion%}
+
+{%block features%}
+<p>
+    <strong>Store: </strong>
+    <a class="color-text-a" href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}}</a>
+    <!-- <span class="color-text-a">{{object.Store.Name}} </span> -->
+</p>
+<p>
+    <strong>Price: </strong>
+    <span class="color-text-a"> {{ object.Price }}</span>
+</p>
+<p> <strong>Products:</strong></p>
 <ul>
     {% for pr in object.Suboffer.all %}
     <li>
@@ -30,12 +40,26 @@
     </li>
     {% endfor %}
 </ul>
+<ul>
+    {%if object.Tags.all%}
+    <p>
+        <strong>Tags:</strong>
+    </p>
+    {% for tag in object.Tags.all %}
+    <li>{{tag.Tag}}</li>
+    {% endfor %}
+    {%else%}
+    {%endif%}
+</ul>
+
+{%endblock features%}
+
+{% block button%}
 {% ifequal object.Store.Owner.id user.id %}
-<a class="btn btn-danger" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
-<a class="btn btn-primary" href="{% url 'offer:offer_update' object.id %}">Update</a>
-<!-- sep -->
+<div class="btn-group">
+    <a class="btn btn-outline-success" href="{% url 'offer:offer_update' object.id %}">Update</a>
+    <a class="btn btn-outline-dark" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
+</div>
 {% endifequal %}
-<!-- sep -->
-{% endif %}
-<!-- sep -->
-{% endblock %}
+
+{% endblock button%}

@@ -1,15 +1,9 @@
-{% extends 'base/base.html' %}
-<!-- sep -->
-{% block header %}
-  
-{% endblock header %}
-{% block body %}
-<!-- sep -->
-<form method="post">
-    {% csrf_token %}
-    <!-- sep -->
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
-<!-- sep -->
-{% endblock body %}
+{% extends "base/create.html" %}
+
+{% block create_header %}
+<h1 class="title-single">Update</h1>
+{% endblock create_header %}
+
+{% block save %}
+<button class="btn large"> Update</button>
+{% endblock save %}

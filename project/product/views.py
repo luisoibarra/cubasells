@@ -74,7 +74,6 @@ class ProductCreateView(AuthenticateCreateView):
 class ProductListView(FilterOrderAuthenticateListView):
     model = Product
     template_name='product/list.html'
-    paginate_by = 5
     permission = 'project.view_product'
     form_order = ProductOrderForm
     form_filter = ProductFilter

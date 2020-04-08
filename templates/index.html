@@ -1,9 +1,9 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 {% block header %}
 <!--/ Carousel Star /-->
 <div class="intro intro-carousel">
   <div id="carousel" class="owl-carousel owl-theme">
-    <div class="carousel-item-a intro-item bg-image" style="background-other: url(static/img/verde.jpg)">
+    <div class="carousel-item-a intro-item bg-image  green_grass bg-image">
       <div class="overlay overlay-a"></div>
       <div class="intro-content display-table">
         <div class="table-cell">
@@ -24,10 +24,11 @@
   </div>
 </div>
 <!--/ Carousel end /-->
-{% endblock header %} {% block body %}
+{% endblock header %} 
 
+{% block body %}
 <!--/ Services Star /-->
-<section class="section-services section-t8">
+<section class="section-services">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -68,7 +69,7 @@
               <span class="fa fa-usd"></span>
             </div> -->
             <div class="card-title-c align-self-center">
-              <h2 class="title-c"> <a href="{% url 'auction:auction_list' %}">Auctions</a> </h2>
+              <h2 class="title-c"><a href="{% url 'auction:auction_list' %}">Auction</a></h2>
             </div>
           </div>
           <div class="card-body-c">
@@ -107,8 +108,7 @@
       </div>
     </div>
   </div>
-  
+
 </section>
 <!--/ Services End /-->
 {% endblock body %}
-

@@ -1,43 +1,88 @@
-{% extends "base/list.html" %} 
+{% extends "base/list2.html" %}
 {% load static %}
-{% block header %}
-<h1>Product List</h1>
-{% endblock header %} 
-{% block table_head %}
-<th>Name</th>
-<th>Stored</th>
-<th></th>
-{% endblock table_head %}
-{% block table_row %}
-<td>{{object.Name}}</td>
-<td>{{object.Store_Amount}}</td>
-<td>
-    <a class="btn btn-primary" href="{% url 'product:product_view' object.id %}">More info</a>
-</td>
-{% ifequal object.Store.Owner.id user.id %}
-<td>
-    <a class="btn btn-danger"  href="{% url 'product:product_delete' object.id %}">Delete</a>
-</td>
-<td>
-    <a class="btn btn-primary" href="{% url 'product:product_update' object.id %}">Update</a>
-</td>
-{% endifequal %}
-{% endblock table_row %}
-{% block else_message %}
-<h1>No Products</h1>
-{% endblock else_message %}
-{% block extra_body %}
+
+{% block btn%}
 {% if store_id %}
 {% ifequal store.Owner.id user.id %}
-<a class="btn btn-primary" href="{% url 'store:store_product_create' store_id %}">Create product</a>
+<div class = "container " style = "margin-left: 150px;">
+    <a class="btn large"  href="{% url 'store:store_product_create' store_id %}">Create product</a>
+</div>
 {% endifequal %}
 {% endif %}
-{% endblock extra_body %}
-{% block order_filter_forms %}
-<table>
+{% endblock btn%}
+
+{%block search_collapse%}
+<div class="click-closed"></div>
+<!--/ Form Search Star /-->
+<div class="box-collapse">
+    <span class="close-box-collapse right-boxed ion-ios-close"></span>
+    <div class="box-collapse-wrap form">
+        <form class="form-a" method="post">
+            {% csrf_token %}
+            <div class="title-box-d">
+                <h3 class="title-d">Search Products</h3>
+            </div>
+            <table>
+                <!-- <div style="display:grid; font-family:Georgia, 'Times New Roman', Times, serif; "> -->
+                {{filter.form.as_table}}
+                <!-- </div> -->
+            </table>
+            <div class="title-box-d">
+                <h3 class="title-d">Order Products</h3>
+            </div>
+            <table>
+                {{ order.as_table }}
+            </table>
+            <input type="submit" value="Update and Export Data" name="export" class="col-md-12">
+            <button class="btn btn-secondary col-md-12" type="submit">Update</button>
+        </form>
+    </div>
+
+</div>
+<!--/ Form Search End /-->
+{%endblock search_collapse%}
+
+{%block search%}
+    <button type="button" class="btn btn-search navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
+        data-target="#navbarTogglerDemo01" aria-expanded="false" style="background-color: white; height: 5px;">
+        <span class="fa fa-search" aria-hidden="false"></span>
+    </button>
+{%endblock search%}
+
+{% block header %}
+<h1>Product List</h1>
+{% endblock header %}
+
+{%block add_features%}
+    <p class = "black">Amount:{{object.Store_Amount}}</p>
+    {% ifequal object.Store.Owner.id user.id %}
+        <div class = "black">
+            <div class = "btn-group center">
+                <a class="btn btn-outline-success" href="{% url 'product:product_update' object.id %}">Update</a>
+                <a class="btn btn-outline-dark" href="{% url 'product:product_delete' object.id %}">Delete</a>
+            </div>
+        </div>
+    {% endifequal %}
+{%endblock add_features%}
+
+
+{% block else%}
+<h1>No Products</h1>
+{% endblock else %}
+
+{% block add_button%}
+
+{% endblock add_button %}
+
+{% block filter %}
+<!-- <table>
     {{ order.as_table }}
 </table>
-<table>
+<table><br>
+<br>
+<br>
     {{filter.form.as_table}}
-</table>
-{% endblock order_filter_forms %}
+</table> -->
+{% endblock filter %}
+
+

@@ -20,6 +20,9 @@ class Image(models.Model):
     
     owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.Name
+
 class Tag(models.Model):
     
     tag = models.CharField(name='Tag', max_length=50,unique=True)
@@ -170,6 +173,8 @@ class Auction(models.Model):
     
     ended = models.BooleanField(name='Ended',default=False)
     
+    status = models.CharField(name="Status",max_length=100,default='Not started')
+
     def __str__(self):
         return f'{self.Offered.Offer_name} {self.Money}'
 

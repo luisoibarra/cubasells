@@ -1,34 +1,37 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>User Create</h1>
-{% endblock header %} 
-{% block body %}
+{% extends "base/base.html" %}
 
+{%block init_body%}
+<body class="fullscreen-centered page-login scroll">
+{%endblock init_body%}
 
+    {% block header %}
+    <h3>
+        Sign Up
+    </h3>
+    {% endblock header %}
+
+    {% block body %}
+    <div id="background-wrapper" class="green_grass bg-image" data-stellar-background-ratio="0.8"></div>
     <!-- ======== @Region: #content ======== -->
-    <div id="content" >
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="login">
-                            Sign Up
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        <form accept-charset="UTF-8" role="form" method="POST">
-                            {% csrf_token %} 
-                            {{form.as_p}}
-                            <button class="btn btn-lg btn-primary btn-block" type="submit"
-                            value="Sign Up">Sign Up</button>
-                        </form>
-                        <div class="credits">
-                            Designed by <a href="https://bootstrapmade.com/">CubaSells Team</a>
+        <div id="content scroll">
+            <div >
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            
+                        </div>
+                        <div class="panel-body">
+                            <form accept-charset="UTF-8" role="form" method="POST" class="black">
+                                {% csrf_token %}
+                                {{form.as_p}}
+                                <button class="btn btn-lg btn-primary" type="submit" value="Sign Up">Sign Up</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- /row -->
         </div>
-        <!-- /row -->
-    </div>
-
-{% endblock body %}
+    {% endblock body %}
+    {%block footer%}
+    {%endblock footer%}

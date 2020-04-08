@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{%load static %}
+
+{%block header%}
+{%endblock header%}
+
+{% block body %}
+    {%block btn%}
+    {%endblock btn%}
+    
+    {% if object_list %}
+    <div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
+    <div class="row prod" >
+        {% for object in object_list%}
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify ">
+        <div class="card h-70 card-width top">
+                <h6 class="container card-header" >
+                    {%block url %}
+                        <a href="{% url 'product:product_view' object.id %}">{{object.Name}}</a>
+                    {%endblock url%}
+                    {%block cart%}
+                    {%endblock cart%}
+                </h6>
+                <div class="card-body">
+                    {% block image %}
+                    {%if not object.Images.all%}
+                    <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                    {%else%}
+                    
+                    <img class="card-img-top" src="{% static object.Images.all.first.Image.url %}" alt="">
+                    
+                    {%endif%}
+                    {% endblock image %}
+                    <!-- {%if object.Images%}
+                                            {%else%}
+                                            {%endif%} -->
+                    {% block tag%}
+                    <div class  = "black">
+                        {%if object.Tags%}
+                            {% for tag in objects.Tags %}
+                                <p>{{tag}}</p>
+                            {% endfor %}
+                        {%endif%}
+                        
+                        {%block add_features%}
+                        {%endblock add_features%}
+                    </div>
+                    {%endblock tag%}
+                </div>
+                <!-- <div class="card-footer">
+                                <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                            </div> -->
+
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+    {%else%}
+
+    {%block else%}
+    {%endblock else%}
+    {%endif%}
+
+    {%block add_button%}
+    {%endblock add_button%}
+
+    {%block filter%}
+    {%endblock filter%}
+
+{% endblock body %}

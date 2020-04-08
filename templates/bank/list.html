@@ -1,7 +1,9 @@
 {% extends "base/list.html" %} 
+
 {% block header %}
 <h1>Account List</h1>
 {% endblock header %} 
+
 {% block table_head %}
 <th>Name</th>
 <th>Number</th>
@@ -26,7 +28,7 @@
 </td>
 {% endblock table_row %}
 {% block extra_body %}
-<a class="btn btn-primary" href="{% url 'bank:create' %}">Create new account</a>
+<a class="btn btn-primary" href="{% url 'bank:create' %}">Add new account</a>
 {% endblock extra_body %}
 {% block else_message %}
 <h1>No Accounts</h1>

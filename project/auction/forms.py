@@ -8,7 +8,7 @@ class AuctionCreateForm(forms.ModelForm):
     
     class Meta:
         model = Auction
-        exclude=['Winner','Password','Ended','Deposit']
+        exclude=['Winner','Password','Ended','Deposit','Status']
 
     def clean_Initial_Date(self):
         if 'Initial_Date' in self.cleaned_data:

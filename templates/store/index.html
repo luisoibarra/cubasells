@@ -1,7 +1,13 @@
-{% extends "base/base.html" %} {% block header %}
+{% extends "base/base.html" %} 
+
+{% block header %}
 <h1>Store Index</h1>
-{% endblock header %} {% block body %}
+{% endblock header %} 
+
+{% block body %}
 <h1>Store Index Body</h1>
 
 <li><a href="{% url 'store:store_list' %}">Store list</a></li>
-<a href="{% url 'store:store_create' %}">Create store</a> {%endblock%}
+<a href="{% url 'store:store_create_user' %}">Create store</a> 
+
+{%endblock body%}

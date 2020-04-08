@@ -83,6 +83,10 @@ class ImageListView(FilterOrderAuthenticateListView):
     form_order = ImageOrderForm
     form_filter = ImageFilter
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(Owner__id=self.request.user.id)
+        
 class ImageDetailView(AuthenticateDetailView):
     model = Image
     template_name = "image/view.html"
@@ -94,10 +98,20 @@ class ImageDeleteView(AuthenticateDeleteView):
     success_url = reverse_lazy('project:success')
     permission = 'project.delete_image'
     
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        image = Image.objects.get(id=kwargs['pk'])
+        return image.Owner.id == user.id
+
 class ImageUpdateView(AuthenticateUpdateView):
     model = Image
     form_class = ImageCreateForm
     template_name = "update.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.change_image'
+
+    def other_condition(self, request,*args, **kwargs):
+        user = request.user
+        image = Image.objects.get(id=kwargs['pk'])
+        return image.Owner.id == user.id
 

@@ -1,35 +1,15 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 {% load static %}
 {% block head %}
 <meta charset="utf-8">
-<title>Login - 
-    {% block title %}
-    Cubasells
-    {% endblock title %}
+<title>Login -
+  {% block title %}
+  Cubasells
+  {% endblock title %}
 </title>
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <meta content="" name="keywords">
 <meta content="" name="description">
-
-<!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
-<meta property="og:title" content="">
-<meta property="og:image" content="">
-<meta property="og:url" content="">
-<meta property="og:site_name" content="">
-<meta property="og:description" content="">
-
-<!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
-<meta name="twitter:card" content="summary">
-<meta name="twitter:site" content="">
-<meta name="twitter:title" content="">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="">
-
-<!-- Fav and touch icons -->
-<link rel="shortcut icon" href="{% static 'img/icons/favicon.png">
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'img/icons/114x114.png">
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'img/icons/72x72.png">
-<link rel="apple-touch-icon-precomposed" href="{% static 'img/icons/default.png">
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900" rel="stylesheet">
@@ -51,20 +31,24 @@
 
 {% endblock head %}
 
-{% block body %} 
+{%block header%}
+{%endblock header%}
+
+{% block body %}
+
 <body class="fullscreen-centered page-login">
 
-<!--Change the background class to alter background image, options are: benches, boots, buildings, city, metro -->
-  <div id="background-wrapper" class="green_grass" data-stellar-background-ratio="0.8">
+  <!--Change the background class to alter background image, options are: benches, boots, buildings, city, metro -->
+  <div id="background-wrapper" class="green_grass bg-image" data-stellar-background-ratio="0.8">
     {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
-    {% endif %} 
-    {% if next %} 
+    {% endif %}
+    {% if next %}
     {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
     {% else %}
     <p>Please login to see this page.</p>
-    {% endif %} 
+    {% endif %}
     {% endif %}
     <!-- ======== @Region: #content ======== -->
     <div id="content">
@@ -73,21 +57,23 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="login">
-                  Login
-                </h3>
+                Login
+              </h3>
             </div>
-            <div class="panel-body">
+            <div>
               <form method="post" action="{% url 'cubasells:login' %}">
-                <fieldset>
-                  {% csrf_token %} {{form.as_p}}
-                  <input type="submit" value="login">
-                  <input type="hidden" name="next" value="{{ next }}">                    
+                <fieldset class="black">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                  <button class="btn btn-sm  btn-primary btn-block btn-center" type="submit" value="Sign Up">Login</button>
+                  <input type="hidden" name="next" value="{{ next }}">
                 </fieldset>
               </form>
-              <p class="m-b-0 m-t">Not signed up? <a href="{% url 'cubasells:user_create' %} ">Sign up here</a>.</p>
-              <div class="credits">
-            Designed by <a href="https://bootstrapmade.com/">CubaSells Team</a>
-            </div>
+              <p class="m-b-0 m-t black">Not signed up? <a href="{% url 'cubasells:user_create' %} ">Sign up here</a>.
+              </p>
+              <div class="credits black">
+                Designed by CubaSells Team
+              </div>
             </div>
           </div>
         </div>
@@ -116,5 +102,5 @@
 {% endblock %}
 
 {% block footer %}
-  
+
 {% endblock footer %}

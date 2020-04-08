@@ -1,22 +1,24 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Auction Create</h1>
-{% endblock header %} 
-{% block body %}
-<h1>Auction Create Body</h1>
+{% extends "base/create.html" %}
+
+{% block create_header %}
+<h1 class="title-single">Create auction</h1>
 
 {% if messages %}
-    <ul>
-        {% for msg in messages %}
-          <li><p>{{msg}}</p></li>
-        {% endfor %}
+<ul>
+    {% for msg in messages %}
+    <li>
+        <p>{{msg}}</p>
+    </li>
+    {% endfor %}
 
-    </ul>
+</ul>
 {% endif %}
-    
-<form method="post">
-    {% if error %}
-    <p>{{ error }}</p>
-    {% endif %} {% csrf_token %} {{form.as_p}}
-    <button type="submit">Save</button>
-</form>
-{% endblock body %}
+{% endblock create_header %}
+
+
+{% block save %}
+<!-- <a href="{% url 'store:store_suboffer_create' view.kwargs.store_id %}" target="_blank" class="large">Add suboffer to
+    store</a>
+<br><br> -->
+<button class="btn large" type = "submmit">Save auction</button>
+{% endblock save %}
