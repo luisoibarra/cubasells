@@ -5,7 +5,7 @@
 {%block btn%}
     {%if store_id%}
         {% ifequal object.Store.id user.Store.id %}
-            <div class = "container">
+            <div class = "container" style = "margin-left: 150px;">
                 <a class="btn large" href="{% url 'store:store_offer_create' store_id %}">Create offer</a>
             </div>
             <br>
@@ -45,9 +45,9 @@
 {%endblock search_collapse%}
 
 {%block search%}
-<button type="button" class="btn navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
-    data-target="#navbarTogglerDemo01" aria-expanded="false">
-    <span class="fa fa-search" aria-hidden="false"></span>
+<button type="button" class="btn btn-search navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
+    data-target="#navbarTogglerDemo01" aria-expanded="false" style = "background-color: white; height: 5px;">
+    <span class="fa fa-search"  aria-hidden="false"></span>
 </button>
 {%endblock search%}
 
@@ -56,8 +56,9 @@
 {%endblock url%}
 
 {%block cart%}
-    <a href="{% url 'cart:cart_create' object.id %}" class=" card-header center">
-        <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
+    
+    <a href="{% url 'cart:cart_create' object.id %}" >
+        <img src="{%static 'img/cart.png' %}" class="cart shopping_cart">
     </a>
 {%endblock cart%}
 
@@ -68,7 +69,7 @@
     <a>Store: {{object.Store}}</a>
     <div class = "btn-group top" >
         {% ifequal object.Store.Owner.id user.id %}
-            <a class="btn btn-outline-primary" href="{% url 'offer:offer_update' object.id %}">Update</a>
+            <a class="btn btn-outline-success" href="{% url 'offer:offer_update' object.id %}">Update</a>
             <a class="btn btn-outline-dark" href="{% url 'offer:offer_delete' object.id %}">Delete</a>
         {% endifequal %}
         

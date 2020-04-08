@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 from project.buy.filters import *
 from project.buy.buy import buy_offers, bank # Mi banco dinamico si algo se hace una BD 'bancaria'
 from project.cart.views import ShoppingOfferListView
+
 class BankAccountCreateView(AuthenticateCreateView):
     model = BankAccount
     template_name = "buy/bank_account/create.html"

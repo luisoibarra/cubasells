@@ -2107,6 +2107,14 @@ footer .credits {
   height: 25px;
 }
 
+.btn-search
+{
+  width : 25px;
+  height: 500px;
+  background-color: white;
+  height: 40px;
+  width:40px;
+}
 .prod{
   padding-top: 0px;
   padding-left: 20px;
@@ -2176,3 +2184,11 @@ footer .credits {
   padding-left: 25%;
 }
 
+.cart
+{
+  top: 0;
+  right: 0;
+  margin-right: 5px;
+  margin-top: 20px;
+  position: absolute;
+}

@@ -2,6 +2,7 @@ from django import forms
 from project.models import Offer
 from project.custom.forms import OrderForm
 from django.core.exceptions import ValidationError
+
 class OfferCreateForm(forms.ModelForm):
     
     class Meta:
