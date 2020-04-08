@@ -19,7 +19,7 @@ class ProductCreateForm(forms.ModelForm):
             'Store_Amount': forms.TextInput(attrs={'class':'form-group','placeholder':'Store Amount'}),
             'Tags': forms.Select(attrs={'multiple':'true'}) ,
             'Description': forms.TextInput(attrs={'class':'form-group','placeholder':'Description'}),
-            'Images': forms.FileInput(attrs={'class':'form-group','placeholder':'Add Image'}),
+            # 'Images': forms.FileInput(attrs={'class':'form-group','placeholder':'Add Image'}),
         }
 
 class ProductOrderForm(OrderForm):

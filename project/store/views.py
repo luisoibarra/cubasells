@@ -108,6 +108,7 @@ class StoreUserCreateView(AuthenticateView):
         f1 = OfferUserCreateForm()
         f2 = SubOfferCreateForm()
         f2.fields['Product_offer'].queryset = Product.objects.all().filter(Store__id = store_id)
+        f1.fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
         f3 = SubOfferSelectForm(None)
         context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
         return render(request,self.template_name,context=context)
@@ -153,9 +154,8 @@ class StoreUserCreateView(AuthenticateView):
             pass
             
         if '_save_offer' in request.POST and f1.is_valid():
-            offer = f1.save(False)
-            offer.Store = store
-            offer.save()
+            f1.instance.Store = store
+            offer = f1.save()
             offer.Suboffer.set(f3.fields['suboffers'].queryset)
             offer.save()
         

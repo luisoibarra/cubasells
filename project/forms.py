@@ -15,7 +15,7 @@ class MyUserCreateForm(UserCreationForm):
             'email',
             'Phone',
             'Description',
-            'Images'
+            # 'Images'
         ]
 
         widgets = {
@@ -25,7 +25,7 @@ class MyUserCreateForm(UserCreationForm):
         'email' : forms.TextInput(attrs={'class':'form-control','placeholder':'Email'}),
         'Phone' : forms.TextInput(attrs={'class':'form-control','placeholder':'Phone'}),
         'Description': forms.TextInput(attrs={'class':'form-control','placeholder':'Description'}),
-        'Images': forms.FileInput(attrs={'class':'form-group','placeholder':'Add Image'}),
+        # 'Images': forms.FileInput(attrs={'class':'form-group','placeholder':'Add Image'}),
         # 'Accounts': forms.Select(),
         #'password': forms.TextInput(attrs= {'class':'form-control','placeholder':'Password'}),
         #'password1' : forms.TextInput(attrs= {'class':'form-control','placeholder':'Confirm Password'}),

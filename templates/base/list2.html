@@ -24,11 +24,15 @@
                 </h6>
                 </div>
                 <div class="card-body black">
+                    {% block image %}
                     {%if not object.Images.all%}
                     <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
                     {%else%}
                     
+                    <img class="card-img-top" src="{% static object.Images.all.first.Image.url %}" alt="">
+                    
                     {%endif%}
+                    {% endblock image %}
                     <!-- {%if object.Images%}
                                             {%else%}
                                             {%endif%} -->

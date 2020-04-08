@@ -20,6 +20,9 @@ class Image(models.Model):
     
     owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.Name
+
 class Tag(models.Model):
     
     tag = models.CharField(name='Tag', max_length=50,unique=True)

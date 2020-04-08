@@ -64,5 +64,10 @@ class UserUpdateView(AuthenticateUpdateView):
     success_url = reverse_lazy('project:success')
     permission = 'project.change_myuser'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        return context
+    
     def other_condition(self, request,*args, **kwargs):
         return self.kwargs['pk'] == request.user.id

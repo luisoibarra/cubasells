@@ -53,6 +53,14 @@
 {%endblock url%}
 
 
+{% block image %}
+{%if not object.Offered.Images.all%}
+<a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+{%else%}
+<img src="{% static object.Offered.Images.all.first.Image.url %}" class="agent-avatar img-fluid" alt="Imagen">
+{%endif%}
+{% endblock image %}
+    
 {%block add_features%}
 {%if object.Ended%}
 <p style = "color:black;">{{object.Status}}</p>
