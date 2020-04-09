@@ -1,0 +1,38 @@
+{% extends "base/list.html" %}
+{% block header %}
+<h1>Chats</h1>
+{% endblock header %} 
+
+{% block table_head %}
+<th>Chats</th>
+<th></th>
+{% endblock table_head %}
+{% block table_row %}
+    <td><a href="{% url 'chat:chat_list' object.id %}">{{object.username}}</a></td>
+{% endblock table_row %}
+{% block else_message %}
+<h1>No peoples</h1>
+{% endblock else_message %}
+
+
+{% block extra_body %}
+    {% if user_searcher %}
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{user_searcher.as_table}}
+        </table>
+        <input type="submit" class = "btn btn-outline-success" value="Start chat with user" name="user_searcher">
+    </form>
+    {% endif %}
+{% endblock extra_body %}
+    
+
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+{% endblock order_filter_forms %}

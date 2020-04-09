@@ -1,0 +1,57 @@
+{% extends "base/list.html" %}
+{% load static %}
+{% block header %}
+<h1>Chat</h1>
+{% endblock header %} 
+{% block table_head %}
+<th>From</th>
+<th>Message</th>
+<th>Date</th>
+<th>Type</th>
+{% endblock table_head %}
+
+{% block for_block %}
+<h1>Chat with {{ object_list.first.receiver_user.username }}</h1>
+{% for object in object_list reversed %}
+<tr>
+    <td>
+        {% if object.sender_user.username == view.request.user.username %}
+            You
+        {% else %}
+            {{ object.sender_user.username}}
+        {% endif %}
+    </td>
+    <td> {{object.Message|linebreaksbr}}</td>
+    {# <td> <textarea name="" id="" cols="30" rows="5" readonly="true">{{object.Message}}</textarea> </td> #}    
+
+    <td>{{object.Date}}</td>
+    <td>{{object.type}}</td>
+</tr>
+{% endfor %} 
+{% endblock for_block %}
+    
+{% block else_message %}
+<h1>No Messages</h1>
+{% endblock else_message %}
+
+
+{% block extra_body %}
+    {% if send_form %}
+    <form action="{% url 'chat:chat_create' recv %}" method="post">
+        {% csrf_token %}
+        {{send_form.as_p}}
+        <input type="submit" class = "btn btn-outline-success" value="Send" name="send">
+    </form>
+    {% endif %}
+{% endblock extra_body %}
+    
+
+{% block order_filter_forms %}
+<table>
+    {{ order.as_table }}
+</table>
+<table>
+    {{filter.form.as_table}}
+</table>
+<button class = "btn btn-primary" type = "submmit">Update</button>
+{% endblock order_filter_forms %}

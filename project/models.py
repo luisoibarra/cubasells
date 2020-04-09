@@ -101,16 +101,16 @@ class Chat(models.Model):
     
     sender_user = models.ForeignKey(MyUser, related_name='sender_table', on_delete=models.CASCADE)
     
-    reciever_user = models.ForeignKey(MyUser,related_name='reciever_table', on_delete=models.CASCADE)
+    receiver_user = models.ForeignKey(MyUser,related_name='receiver_table', on_delete=models.CASCADE)
     
     date = models.DateTimeField(name='Date', auto_now=False, auto_now_add=True)
     
-    message = models.CharField(name='Message', max_length=1000)
+    message = models.CharField(name='Message', max_length=999)
     
     type_of_message = models.CharField(name='type',default='N',max_length=15,choices=[('N','Normal'),('I','Important'),('W','Warning')])
     
     def __str__(self):
-        return f'{self.sender_user.username} -> {self.reciever_user.username}; {self.Date}'
+        return f'{self.sender_user.username} -> {self.receiver_user.username}; {self.Date}'
     
 class SubOffer(models.Model):
     

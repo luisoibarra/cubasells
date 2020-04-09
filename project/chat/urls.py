@@ -14,6 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path,include
-from project.views import *
+from project.chat.views import *
 from django.urls import reverse_lazy
 from django.contrib.auth.views import login_required
+
+urlpatterns = [
+    # Chat
+    path('',ChatedUserListView.as_view(),name='chat_index'),
+    path('<int:recv>/',ChatListView.as_view(),name='chat_list'),
+    path('view/<int:pk>/',ChatDetailView.as_view(),name='chat_view'),
+    path('create/<int:recv>',ChatCreateView.as_view(),name='chat_create'),
+    path('delete/<int:pk>/',ChatDeleteView.as_view(),name='chat_delete'),
+    path('update/<int:pk>/',ChatUpdateView.as_view(),name='chat_update'),
+  
+]
