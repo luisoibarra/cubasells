@@ -13,12 +13,16 @@
             </tr>
             <tbody>
             </thead>
-            {% for object in object_list %}
-            <tr>
-                {% block table_row %} 
-                {% endblock %}
-            </tr>
-            {% endfor %} 
+            
+            {% block for_block %}
+                {% for object in object_list %}
+                <tr>
+                    {% block table_row %} 
+                    {% endblock %}
+                </tr>
+                {% endfor %} 
+            {% endblock for_block %}
+                
         </tbody>
     </table>
 </div>
@@ -49,7 +53,6 @@
     {% block order_filter_forms %}
     
     {% endblock order_filter_forms %}
-    </div>
     </form>
 {% endif %}
     
