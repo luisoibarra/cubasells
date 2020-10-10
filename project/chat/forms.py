@@ -46,6 +46,3 @@ class ChatOrderForm(OrderForm):
         ]
     
     
-class ChatUserOrderForm(OrderForm):
-    model = MyUser
-    fields_to_order = ['username']

@@ -5,6 +5,7 @@ from django.db.models import Q
 from project.chat.forms import *
 from project.chat.filters import *
 from django.urls import reverse_lazy,reverse
+from django.db.models import Max, QuerySet
 # Create your views here.
 
 
@@ -38,18 +39,41 @@ class ChatCreateView(AuthenticateCreateView):
         return True
 
 class ChatedUserListView(FilterOrderAuthenticateListView):
-    model = MyUser
+    model = Chat
     template_name = 'chat/index.html'
     permission = 'project.view_chat'
-    form_order = ChatUserOrderForm
-    form_filter = ChatUserFilter
+    form_order = ChatOrderForm
+    form_filter = ChatFilter
     form_user_search = UserSearchForm
     
     def get_queryset(self):
         qs = super().get_queryset()
-        qs1 = qs.filter(id__in=[obj.receiver_user.id for obj in Chat.objects.filter(sender_user__id=self.request.user.id)])
-        qs2 = qs.filter(id__in=[obj.sender_user.id for obj in Chat.objects.filter(receiver_user__id=self.request.user.id)])
-        return qs1 | qs2
+        sended_messages = Chat.objects.filter(sender_user__id = self.request.user.id)\
+                            .values('receiver_user__id').annotate(max_date=Max('Date'))\
+                            .order_by("-max_date")
+        received_messages = Chat.objects.filter(receiver_user__id = self.request.user.id)\
+                            .values('sender_user__id').annotate(max_date=Max('Date'))\
+                            .order_by("-max_date")
+        messages = dict()
+        for dic in sended_messages:
+            messages[dic['receiver_user__id']] = (dic['max_date'],'send')
+            
+        for dic in received_messages:
+            sender_id = dic['sender_user__id']
+            if sender_id in messages:
+                if dic['max_date'] > messages[sender_id][0]:
+                    messages[sender_id] = (dic['max_date'],'recv')
+            else:
+                messages[sender_id] = (dic['max_date'],'recv')
+        
+        message = Chat.objects.none()
+        for (user_id,(date,mode)) in messages.items():
+            if mode == 'send':
+                message |= Chat.objects.filter(sender_user__id = self.request.user.id,receiver_user__id = user_id, Date = date)
+            else:
+                message |= Chat.objects.filter(receiver_user__id = self.request.user.id,sender_user__id = user_id, Date = date)
+                
+        return message 
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -113,10 +137,9 @@ class ChatListView(FilterOrderAuthenticateListView):
     
     def get_queryset(self):
         qs = super().get_queryset()
-        q = Q(sender_user__id = self.request.user.id) | Q(receiver_user__id = self.request.user.id)
-        qs = qs.filter(q)
         if 'recv' in self.kwargs:
-            q = Q(sender_user__id = self.kwargs['recv']) | Q(receiver_user__id = self.kwargs['recv'])
+            q = (Q(sender_user__id = self.request.user.id) & Q(receiver_user__id=self.kwargs['recv'])) |\
+                (Q(receiver_user__id = self.request.user.id) & Q(sender_user__id=self.kwargs['recv']))
             qs = qs.filter(q)
         return qs.order_by('-Date') # Messages more recent on the top
     

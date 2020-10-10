@@ -5,10 +5,20 @@
 
 {% block table_head %}
 <th>Chats</th>
-<th></th>
+<th>Message</th>
+<th>Last message date</th>
 {% endblock table_head %}
 {% block table_row %}
-    <td><a href="{% url 'chat:chat_list' object.id %}">{{object.username}}</a></td>
+
+{% ifequal user.username object.receiver_user.username  %}
+    <td><a href="{% url 'chat:chat_list' object.sender_user.id %}">{{object.sender_user.username}}</a></td>
+{% else %}
+{% ifequal user.username object.sender_user.username %}
+<td><a href="{% url 'chat:chat_list' object.receiver_user.id %}">{{object.receiver_user.username}}</a></td>
+{% endifequal %}    
+{% endifequal %}
+<td>{{object.Message}}</td>
+<td>{{object.Date}}</td>
 {% endblock table_row %}
 {% block else_message %}
 <h1>No peoples</h1>
@@ -35,4 +45,5 @@
 <table>
     {{filter.form.as_table}}
 </table>
+<button class = "btn btn-primary" type = "submmit">Update</button>
 {% endblock order_filter_forms %}
