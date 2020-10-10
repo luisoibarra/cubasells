@@ -30,8 +30,11 @@ urlpatterns = [
     path('create/',login_required(StoreCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_create'),
     path('<int:pk>/delete/',login_required(StoreDeleteView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_delete'),
     path('<int:pk>/update/',login_required(StoreUpdateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_update'),
+    path('<int:pk>/stats/', login_required(Graph.as_view(),login_url=reverse_lazy('cubasells:login')), name='store_stats'),
 
     path('<int:pk>/',StoreDetailView.as_view(),name='store_view'),
+    
+
     path('<int:store_id>/product/',ProductListView.as_view(),name='store_product_list'),
     path('<int:store_id>/product/create/',login_required(ProductCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_product_create'),
 
@@ -43,7 +46,6 @@ urlpatterns = [
     
     path('<int:store_id>/auction/',login_required(AuctionListView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_list'),
     path('<int:store_id>/auction/create',login_required(AuctionCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_auction_create'),
-    
     # Test
     path('<int:store_id>/offer/create',login_required(StoreUserCreateView.as_view(),login_url=reverse_lazy('cubasells:login')),name='store_offer_create_user'),
     path('tags/', StoreTagFilterView.as_view(),name='store_tags_view'),

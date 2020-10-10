@@ -1,0 +1,17 @@
+{% extends "base/base.html" %} 
+
+{% block header %}
+<h1>Store Index</h1>
+{% endblock header %} 
+
+
+{% block body %}
+<h1>Store Stats</h1>
+
+    {% if graph %}
+        <div style="width:600;height:500">
+        {{ graph|safe }}
+        </div>
+    {% endif %}
+
+{%endblock body%}
