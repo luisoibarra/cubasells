@@ -6,12 +6,15 @@
 
 
 {% block body %}
-<h1>Store Stats</h1>
-
-    {% if graph %}
-        <div style="width:600;height:500">
-        {{ graph|safe }}
-        </div>
-    {% endif %}
+{% ifequal user.id store.Owner.id %}
+    <h1>Store Stats</h1>
+        {% if graph %}
+            <div style="width:600;height:500">
+            {{ graph|safe }}
+            </div>
+        {% endif %}
+{%else%}
+    <h1>You are not allowed to see other user's store stats</h1>
+{% endifequal %}
 
 {%endblock body%}
