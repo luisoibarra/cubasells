@@ -58,4 +58,9 @@
         </div>
     </div>
 {%endifequal%}
+{% ifnotequal store.Owner.id user.id %}
+    <div>
+        <a href="{% url 'chat:chat_list' store.Owner.id %}"> Contact owner </a>
+    </div>
+{% endifnotequal %}
 {% endblock button%}
