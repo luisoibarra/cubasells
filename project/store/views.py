@@ -12,7 +12,7 @@ from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.store.filters import *
-from django.db.models import QuerySet
+from django.db.models import QuerySet,Sum
 # Create your views here.
 import plotly.offline as opy
 import plotly.graph_objs as go
@@ -25,14 +25,44 @@ class Graph(AuthenticateDetailView):
 
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
+        q = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
+            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')[:5]
+        #Para probar los graficos quitar a partir del punto de filter hasta el punto antes de value
+        #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
+        q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
+            'Offer_id', 'Offer_id__Offer_name').annotate(
+                tprice=Sum('Offer_id__Price')).order_by('-tprice')[:5]
 
-        x = [-2,0,4,6,7]
-        y = [q**2-q+3 for q in x]
-        trace1 = go.Scatter(x=x, y=y, marker={'color': 'red', 'symbol': 104, 'size': 10},
-                            mode="lines",  name='1st Trace')
+        OfferNameP=[]
+        OfferNameA=[]
+        TPrice=[]
+        TAmount=[]
 
-        data=go.Data([trace1])
-        layout=go.Layout(title="Tabla de Prueba", xaxis={'title':'x1'}, yaxis={'title':'x2'})
+        for i in q:
+            _,t2,t3=i.values()
+            OfferNameA.append(t2)
+            TAmount.append(t3)
+        for i in q2:
+            _, t2, t3 = i.values()
+            OfferNameP.append(t2)
+            TPrice.append(t3)
+        
+
+        data=[
+            go.Bar(
+                x=OfferNameP,
+                y=TPrice,
+                name='Precio total de ventas por oferta'
+            )
+            ,
+            go.Bar(
+                x=OfferNameA,
+                y=TAmount,
+                name='Cantidad de ventas por oferta'
+            )
+            
+        ]
+        layout=go.Layout(title="Stats", xaxis={'title':'Ofertas'}, yaxis={'title':'Ventas'})
         figure=go.Figure(data=data,layout=layout)
         div = opy.plot(figure, auto_open=False, output_type='div')
 
