@@ -6,6 +6,7 @@ from project.chat.forms import *
 from project.chat.filters import *
 from django.urls import reverse_lazy,reverse
 from django.db.models import Max, QuerySet
+from project.chat.chat_utils import get_last_chats, get_users_chats
 # Create your views here.
 
 
@@ -45,39 +46,20 @@ class ChatedUserListView(FilterOrderAuthenticateListView):
     form_order = ChatOrderForm
     form_filter = ChatFilter
     form_user_search = UserSearchForm
+    form_send = ChatCreateForm
     
     def get_queryset(self):
         qs = super().get_queryset()
-        sended_messages = Chat.objects.filter(sender_user__id = self.request.user.id)\
-                            .values('receiver_user__id').annotate(max_date=Max('Date'))\
-                            .order_by("-max_date")
-        received_messages = Chat.objects.filter(receiver_user__id = self.request.user.id)\
-                            .values('sender_user__id').annotate(max_date=Max('Date'))\
-                            .order_by("-max_date")
-        messages = dict()
-        for dic in sended_messages:
-            messages[dic['receiver_user__id']] = (dic['max_date'],'send')
-            
-        for dic in received_messages:
-            sender_id = dic['sender_user__id']
-            if sender_id in messages:
-                if dic['max_date'] > messages[sender_id][0]:
-                    messages[sender_id] = (dic['max_date'],'recv')
-            else:
-                messages[sender_id] = (dic['max_date'],'recv')
-        
-        message = Chat.objects.none()
-        for (user_id,(date,mode)) in messages.items():
-            if mode == 'send':
-                message |= Chat.objects.filter(sender_user__id = self.request.user.id,receiver_user__id = user_id, Date = date)
-            else:
-                message |= Chat.objects.filter(receiver_user__id = self.request.user.id,sender_user__id = user_id, Date = date)
-                
+        message = get_last_chats(self.request.user.id)
         return message 
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_searcher'] = self.form_user_search(self.request.POST)
+        context["send_form"] = self.form_send(self.request.POST)
+        if 'recv' in self.kwargs:
+            context['chat_user'] = MyUser.objects.get(id=self.kwargs['recv'])
+            context['user_conversation'] = get_users_chats(self.kwargs['recv'],self.request.user.id)
         return context
     
     def post(self, request, *args, **kwargs):
@@ -125,7 +107,6 @@ class ChatedUserListView(FilterOrderAuthenticateListView):
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
     
-    
 class ChatListView(FilterOrderAuthenticateListView):
     model = Chat
     template_name='chat/list.html'
@@ -138,10 +119,8 @@ class ChatListView(FilterOrderAuthenticateListView):
     def get_queryset(self):
         qs = super().get_queryset()
         if 'recv' in self.kwargs:
-            q = (Q(sender_user__id = self.request.user.id) & Q(receiver_user__id=self.kwargs['recv'])) |\
-                (Q(receiver_user__id = self.request.user.id) & Q(sender_user__id=self.kwargs['recv']))
-            qs = qs.filter(q)
-        return qs.order_by('-Date') # Messages more recent on the top
+            qs = get_users_chats(self.request.user.id, self.kwargs['recv'])
+        return qs
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

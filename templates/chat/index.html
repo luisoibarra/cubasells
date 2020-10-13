@@ -26,6 +26,25 @@
 
 
 {% block extra_body %}
+    {% if user_conversation %}
+    
+    {% if chat_user %}
+        <h2>Chatting with {{chat_user.username}}</h2>
+    {% endif %}
+        
+      <ul>
+          {% for chat in user_conversation %}
+          
+        <li>
+            <h5>To {{chat.receiver_user.username}}: {{chat.Date}}</h5>
+            <h5>From {{chat.sender_user.username}}</h5>
+            <u>{{chat.Message|linebreaksbr}}</u>
+        </li>
+              
+          {% endfor %}
+      </ul>
+    {% endif %}
+
     {% if user_searcher %}
     <form method="post">
         {% csrf_token %}
@@ -34,6 +53,15 @@
         </table>
         <input type="submit" class = "btn btn-outline-success" value="Start chat with user" name="user_searcher">
     </form>
+    {% endif %}
+    {% if send_form %}
+    {% if recv %}
+    <form action="{% url 'chat:chat_create' recv %}" method="post">
+        {% csrf_token %}
+        {{send_form.as_p}}
+        <input type="submit" class = "btn btn-outline-success" value="Send" name="send">
+    </form>
+    {% endif %}
     {% endif %}
 {% endblock extra_body %}
     
