@@ -9,8 +9,14 @@
 {% ifequal user.id store.Owner.id %}
     <h1>Store Stats</h1>
         {% if graph %}
-            <div style="width:600;height:500">
+            <div style="width:300;height:250">
             {{ graph|safe }}
+            </div>
+        {% endif %}
+
+        {% if graph1 %}
+            <div style="width:300;height:250">
+            {{ graph1|safe }}
             </div>
         {% endif %}
 {%else%}

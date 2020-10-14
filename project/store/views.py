@@ -26,12 +26,14 @@ class Graph(AuthenticateDetailView):
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
         q = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
-            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')[:5]
+            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')
         #Para probar los graficos quitar a partir del punto de filter hasta el punto antes de value
         #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
         q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
             'Offer_id', 'Offer_id__Offer_name').annotate(
                 tprice=Sum('Offer_id__Price')).order_by('-tprice')[:5]
+
+
 
         OfferNameP=[]
         OfferNameA=[]
@@ -54,19 +56,26 @@ class Graph(AuthenticateDetailView):
                 y=TPrice,
                 name='Precio total de ventas por oferta'
             )
-            ,
-            go.Bar(
-                x=OfferNameA,
-                y=TAmount,
+        ]
+        data1=[
+            go.Pie(
+                labels=OfferNameA,
+                values=TAmount,
                 name='Cantidad de ventas por oferta'
             )
             
         ]
-        layout=go.Layout(title="Stats", xaxis={'title':'Ofertas'}, yaxis={'title':'Ventas'})
+
+        layout = go.Layout(title="Precio total de ventas por oferta", xaxis={
+                           'title': 'Ofertas'}, yaxis={'title': 'Ventas'})
         figure=go.Figure(data=data,layout=layout)
         div = opy.plot(figure, auto_open=False, output_type='div')
-
         context['graph'] = div
+
+        layout1 = go.Layout(title='Cantidad de ventas por oferta')
+        figure1 = go.Figure(data=data1, layout=layout1)
+        div1 = opy.plot(figure1, auto_open=False, output_type='div')
+        context['graph1'] = div1
 
         return context
 
