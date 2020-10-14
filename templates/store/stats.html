@@ -1,0 +1,26 @@
+{% extends "base/base.html" %} 
+
+{% block header %}
+<h1>Store Index</h1>
+{% endblock header %} 
+
+
+{% block body %}
+{% ifequal user.id store.Owner.id %}
+    <h1>Store Stats</h1>
+        {% if graph %}
+            <div style="width:300;height:250">
+            {{ graph|safe }}
+            </div>
+        {% endif %}
+
+        {% if graph1 %}
+            <div style="width:300;height:250">
+            {{ graph1|safe }}
+            </div>
+        {% endif %}
+{%else%}
+    <h1>You are not allowed to see other user's store stats</h1>
+{% endifequal %}
+
+{%endblock body%}

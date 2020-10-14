@@ -12,8 +12,70 @@ from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.store.filters import *
-from django.db.models import QuerySet
+from django.db.models import QuerySet,Sum
 # Create your views here.
+import plotly.offline as opy
+import plotly.graph_objs as go
+
+
+class Graph(AuthenticateDetailView):
+    model = Store
+    template_name = 'store/stats.html'
+    permission = 'project.view_store'
+
+    def get_context_data(self, **kwargs):
+        context = super(Graph, self).get_context_data(**kwargs)
+        q = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
+            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')
+        #Para probar los graficos quitar a partir del punto de filter hasta el punto antes de value
+        #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
+        q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
+            'Offer_id', 'Offer_id__Offer_name').annotate(
+                tprice=Sum('Offer_id__Price')).order_by('-tprice')
+
+        OfferNameP=[]
+        OfferNameA=[]
+        TPrice=[]
+        TAmount=[]
+
+        for i in q:
+            _,t2,t3=i.values()
+            OfferNameA.append(t2)
+            TAmount.append(t3)
+        for i in q2:
+            _, t2, t3 = i.values()
+            OfferNameP.append(t2)
+            TPrice.append(t3)
+        
+
+        data=[
+            go.Bar(
+                x=OfferNameP,
+                y=TPrice,
+                name='Precio total de ventas por oferta'
+            )
+        ]
+        data1=[
+            go.Pie(
+                labels=OfferNameA,
+                values=TAmount,
+                name='Cantidad de ventas por oferta'
+            )
+            
+        ]
+
+        layout = go.Layout(title="Precio total de ventas por oferta", xaxis={
+                           'title': 'Ofertas'}, yaxis={'title': 'Ventas'})
+        figure=go.Figure(data=data,layout=layout)
+        div = opy.plot(figure, auto_open=False, output_type='div')
+        context['graph'] = div
+
+        layout1 = go.Layout(title='Cantidad de ventas por oferta')
+        figure1 = go.Figure(data=data1, layout=layout1)
+        div1 = opy.plot(figure1, auto_open=False, output_type='div')
+        context['graph1'] = div1
+
+        return context
 
 def store_index(request):
     context = {'stores':Store.objects.all()}
