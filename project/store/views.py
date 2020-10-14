@@ -31,9 +31,7 @@ class Graph(AuthenticateDetailView):
         #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
         q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
             'Offer_id', 'Offer_id__Offer_name').annotate(
-                tprice=Sum('Offer_id__Price')).order_by('-tprice')[:5]
-
-
+                tprice=Sum('Offer_id__Price')).order_by('-tprice')
 
         OfferNameP=[]
         OfferNameA=[]
