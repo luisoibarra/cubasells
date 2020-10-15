@@ -12,7 +12,7 @@ from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.store.filters import *
-from django.db.models import QuerySet,Sum
+from django.db.models import QuerySet,Sum,F,FloatField
 # Create your views here.
 import plotly.offline as opy
 import plotly.graph_objs as go
@@ -31,7 +31,7 @@ class Graph(AuthenticateDetailView):
         #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
         q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
             'Offer_id', 'Offer_id__Offer_name').annotate(
-                tprice=Sum('Offer_id__Price')).order_by('-tprice')
+                tprice=Sum(F('Offer_id__Price') * F('Amount'),output_field=FloatField())).order_by('-tprice')
 
         OfferNameP=[]
         OfferNameA=[]
@@ -54,23 +54,59 @@ class Graph(AuthenticateDetailView):
                 y=TPrice,
                 name='Precio total de ventas por oferta'
             )
+            ,
+            go.Bar(
+                x=OfferNameA,
+                y=TAmount,
+                name='Cantidad de ventas por oferta'
+            )
         ]
         data1=[
             go.Pie(
+                labels=OfferNameP,
+                values=TPrice,
+                name='Precio total de ventas por oferta',
+                domain={'x': [0, .50]},
+                hole=.5,
+                #textposition='inside',
+                #hoverinfo='label+percent+name'
+            )
+            ,
+            go.Pie(
                 labels=OfferNameA,
                 values=TAmount,
-                name='Cantidad de ventas por oferta'
+                name='Cantidad de ventas por oferta',
+                domain={'x': [.50, 1]},
+                hole=.5,
+                #textposition='inside',
+                #hoverinfo='label+percent+name'
             )
-            
         ]
 
-        layout = go.Layout(title="Precio total de ventas por oferta", xaxis={
+        layout = go.Layout(title="Bar Graphs", xaxis={
                            'title': 'Ofertas'}, yaxis={'title': 'Ventas'})
         figure=go.Figure(data=data,layout=layout)
         div = opy.plot(figure, auto_open=False, output_type='div')
         context['graph'] = div
 
-        layout1 = go.Layout(title='Cantidad de ventas por oferta')
+        layout1 = go.Layout(title='Pie Graphs',
+            annotations=[
+                {
+                    "font":{"size":16},
+                    "showarrow":False,
+                    "text": '''Precio total de <br> ventas por oferta''',
+                    "x":0.185,
+                    "y":0.5
+                },
+                {
+                    "font": {"size": 16},
+                    "showarrow": False,
+                    "text": '''Cantidad de <br> ventas por oferta''',
+                    "x": 0.815,
+                    "y": 0.5
+                }
+            ]
+        )
         figure1 = go.Figure(data=data1, layout=layout1)
         div1 = opy.plot(figure1, auto_open=False, output_type='div')
         context['graph1'] = div1
