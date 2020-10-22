@@ -6,6 +6,11 @@
 
 
 {% block save %}
+
+{% if image_form %}
+    {{ image_form.as_p }}
+{% endif %}
+    
 <a href="{% url 'store:store_suboffer_create' view.kwargs.store_id %}" target="_blank" class = " btn large">Add suboffer to store</a>
 <br><br>
 <button class="btn large" type = 'submit'>Save offer</button>

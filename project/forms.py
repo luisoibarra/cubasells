@@ -89,3 +89,6 @@ class AuctionCreateForm(forms.ModelForm):
             raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_aticipation})
         return data
 
+class DeleteSuccessURLForm(forms.Form):
+    success_url = forms.CharField(widget=forms.HiddenInput())
+    
