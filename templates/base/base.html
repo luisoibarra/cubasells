@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,8 +27,9 @@
     <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
 
     <!-- Main Stylesheet File -->
+    {% block style %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
+    {% endblock style %}
     <!-- =======================================================
       Theme Name: EstateAgency
       Theme URL: https://bootstrapmade.com/real-estate-agency-bootstrap-template/
@@ -39,12 +40,13 @@
 </head>
 
 {%block init_body%}
+
 <body>
-{%endblock init_body%}
+    {%endblock init_body%}
 
     {% block search_collapse %}
     {% endblock search_collapse %}
-    
+
     {% block navbar %}
     <!--/ Nav Star /-->
     <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
@@ -54,45 +56,45 @@
             <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
                 <ul class="navbar-nav">
                     {% block navbar_labels %}
-                        {% if user.username %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
-                            </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cubasells:index' %} ">Home</a>
-                        </li>
-                        {% if not user.username %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cubasells:login' %} ">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cubasells:user_create' %} ">Register</a>
-                            </li>
-                        {%endif%}
-                        {% if user.username %}
-                            <li>
-                                <a class="nav-link" href="{% url 'store:store_list' %}">Stores</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'offer:offer_list' %}">Offers</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'auction:auction_list' %}">Auctions</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'cubasells:logout' %}">Logout</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'chat:chat_index' %}">Chat</a>
-                            </li>
-                            <a href="{% url 'cart:cart_list' %}" class="btn btn-default">
-                                <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
-                            </a>
-                        {% endif %}
+                    {% if user.username %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cubasells:user_index' %}">{{user.username}}</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cubasells:index' %} ">Home</a>
+                    </li>
+                    {% if not user.username %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cubasells:login' %} ">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cubasells:user_create' %} ">Register</a>
+                    </li>
+                    {%endif%}
+                    {% if user.username %}
+                    <li>
+                        <a class="nav-link" href="{% url 'store:store_list' %}">Stores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'offer:offer_list' %}">Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'auction:auction_list' %}">Auctions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cubasells:logout' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'chat:chat_index' %}">Chat</a>
+                    </li>
+                    <a href="{% url 'cart:cart_list' %}" class="btn btn-default">
+                        <img src="{%static 'img/cart.png' %}" class=" shopping_cart">
+                    </a>
+                    {% endif %}
 
-                        {%block search%}
-                        {%endblock search%}
+                    {%block search%}
+                    {%endblock search%}
                     {% endblock navbar_labels %}
                 </ul>
             </div>
@@ -106,124 +108,125 @@
     {% endblock header %}
 
     {%block init_section%}
-        <section class="intro-single">
-    {%endblock init_section%}
+    <section class="intro-single">
+        {%endblock init_section%}
 
         {% block body %}
         <h1>Body</h1>
         {% endblock body %}
-        </section>
-        {% block footer %}
-        <!-- / footer Star /-->
-        <section class="section-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12 col-md-4">
-                        <div class="widget-a">
-                            <div class="w-header-a">
-                                <h3 class="w-title-a text-brand">CubaSells</h3>
-                            </div>
-                            <div class="w-body-a">
-                                <p class="w-text-a color-text-a">
-                                    The best trading software for you
-                                </p>
-                            </div>
-                            <div class="w-footer-a">
-                                <ul class="list-unstyled">
-                                    <li class="color-a">
-                                        <span class="color-text-a">Phone .</span> 52398293</li>
-                                    <li class="color-a">
-                                        <span class="color-text-a">Email .</span>cubasells@gmail.com </li>
-                                </ul>
-                            </div>
+    </section>
+    {% block footer %}
+    <!-- / footer Star /-->
+    <section class="section-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                    <div class="widget-a">
+                        <div class="w-header-a">
+                            <h3 class="w-title-a text-brand">CubaSells</h3>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <nav class="nav-footer">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a href="#">Home</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">About</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">Property</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">Blog</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">Contact</a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div class="socials-a">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <i class="fa fa-facebook" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <i class="fa fa-twitter" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <i class="fa fa-instagram" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <i class="fa fa-pinterest-p" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="#">
-                                        <i class="fa fa-dribbble" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="copyright-footer">
-                            <p class="copyright color-text-a">
-                                &copy; Copyright
-                                <span class="color-a">CubaSells</span> All Rights Reserved.
+                        <div class="w-body-a">
+                            <p class="w-text-a color-text-a">
+                                The best trading software for you
                             </p>
                         </div>
-                        <div class="credits">
-                            Designed by <a href="#">CubaSells Team</a>
+                        <div class="w-footer-a">
+                            <ul class="list-unstyled">
+                                <li class="color-a">
+                                    <span class="color-text-a">Phone .</span> 52398293</li>
+                                <li class="color-a">
+                                    <span class="color-text-a">Email .</span>cubasells@gmail.com </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!--/ Footer End / -->
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="nav-footer">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="#">Home</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">About</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">Property</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">Blog</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="socials-a">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    <i class="fa fa-pinterest-p" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#">
+                                    <i class="fa fa-dribbble" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="copyright-footer">
+                        <p class="copyright color-text-a">
+                            &copy; Copyright
+                            <span class="color-a">CubaSells</span> All Rights Reserved.
+                        </p>
+                    </div>
+                    <div class="credits">
+                        Designed by <a href="#">CubaSells Team</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--/ Footer End / -->
 
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-        <div id="preloader"></div>
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <div id="preloader"></div>
 
-        <!-- JavaScript Libraries -->
-        <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
-        <script src="{% static 'lib/jquery/jquery-migrate.min.js' %}"></script>
-        <script src="{% static 'lib/popper/popper.min.js' %}"></script>
-        <script src="{% static 'lib/bootstrap/js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-        <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-        <script src="{% static 'lib/scrollreveal/scrollreveal.min.js' %}"></script>
-        <!-- Contact Form JavaScript File -->
-        <script src="{% static 'contactform/contactform.js' %}"></script>
+    <!-- JavaScript Libraries -->
+    <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery-migrate.min.js' %}"></script>
+    <script src="{% static 'lib/popper/popper.min.js' %}"></script>
+    <script src="{% static 'lib/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/scrollreveal/scrollreveal.min.js' %}"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="{% static 'contactform/contactform.js' %}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
 
-        <!-- Template Main Javascript File -->
-        <script src="{% static 'js/main.js' %}"></script>
+    <!-- Template Main Javascript File -->
+    <script src="{% static 'js/main.js' %}"></script>
 
-        {% endblock footer %}
+    {% endblock footer %}
 </body>

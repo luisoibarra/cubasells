@@ -36,10 +36,12 @@
                             {% if user.myuser.Images.all %}
                             <img src="{% static user.myuser.Images.all.first.Image.url %}" class="agent-avatar img-fluid" alt="Imagen">
                             {% else %}
-                            <h1>No images</h1>
+                            <img src="{%static 'img/desconocida.jpg' %}" class="agent-avatar img-fluid" alt="Imagen">
                             {% endif %}
-                            <a class="btn btn-primary" href="{% url 'other:image_create' %}">Add image</a>
-                            <a class="btn btn-primary" href="{% url 'other:image_list' %}">See images</a>
+                            <div style = "padding-left: 6rem;">
+                            <a class="btn btn-outline-primary" href="{% url 'other:image_create' %}">Add image</a>
+                            <a class="btn btn-outline-primary" href="{% url 'other:image_list' %}">See images</a>
+                            </div>
                             {%endblock images%}
                         </div>
                     </div>

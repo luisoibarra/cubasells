@@ -1,14 +1,22 @@
-{% extends "base/base.html" %} {% block header %}
-<h1>Image Create</h1>
-{% endblock header %} {% block body %}
-<h1>Image Create Body</h1>
+{% extends "base/create.html" %}
 
+{% block create_header %}
+<h1 class="title-single">Create Image</h1>
+{% endblock create_header %}
+
+{% block forms %}
 <form method="post" enctype="multipart/form-data">
     {% if error %}
     <p>{{ error }}</p>
-    {% endif %} 
-    {% csrf_token %} 
+    {% endif %}
+    {% csrf_token %}
     {{form.as_p}}
-    <button type="submit">Save</button>
 </form>
-{% endblock body %}
+{% endblock forms %}
+
+{% block save %}
+<br><br>
+<button class="btn large" name="_save_image" type='submit'>Save</button>
+{% endblock save %}
+
+

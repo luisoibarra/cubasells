@@ -1,77 +1,152 @@
-{% extends "base/list.html" %}
-{% block header %}
-<h1>Chats</h1>
-{% endblock header %} 
+{% extends "base/base.html" %}
+{% load static %}
 
-{% block table_head %}
-<th>Chats</th>
-<th>Message</th>
-<th>Last message date</th>
-{% endblock table_head %}
-{% block table_row %}
+{% block style %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/chat_style.css' %}" rel="stylesheet">
+{% endblock style %}
 
-{% ifequal user.username object.receiver_user.username  %}
-    <td><a href="{% url 'chat:chat_list' object.sender_user.id %}">{{object.sender_user.username}}</a></td>
-{% else %}
-{% ifequal user.username object.sender_user.username %}
-<td><a href="{% url 'chat:chat_list' object.receiver_user.id %}">{{object.receiver_user.username}}</a></td>
-{% endifequal %}    
-{% endifequal %}
-<td>{{object.Message}}</td>
-<td>{{object.Date}}</td>
-{% endblock table_row %}
-{% block else_message %}
-<h1>No peoples</h1>
-{% endblock else_message %}
+{%block init_section%}
+{% endblock init_section %}
 
+{%block body%}
+<div class = "top"> 
+<div class="container app">
+    <div class="row app-one ">
+        <div class="col-sm-4 si/chat/16/de">
+            <!--lado izquierdo-->
+            <div class="side-one">
+                <!-- chats anteriores-->
+                <div class="row heading">
+                    <div class="col-sm-3 col-xs-3 heading-avatar">
+                        <div class="heading-avatar-icon">
+                            <img src="{% static 'img/desconocida.jpg' %}">
+                        </div>
+                    </div>
+                </div>
 
-{% block extra_body %}
-    {% if user_conversation %}
-    
-    {% if chat_user %}
-        <h2>Chatting with {{chat_user.username}}</h2>
-    {% endif %}
+                
+                <!--buscar usuario en lista-->
+                <div class="row searchBox">
+                    <div class="col-sm-12 ">
+                        <div class="form-group has-feedback">
+                            {% if user_searcher %}
+                            <form method="post" class = "row" >
+                                {% csrf_token %}
+                                {{user_searcher.as_p}}
+                                <button type="submit" class="btn " name="user_searcher">
+                                    <i class="fa fa-search fa-2x "></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <!--usuario  en la lista de chats-->
+               <div class="row sideBar">
+                    <div class="row sideBar-body ">
+                        <div class="col-sm-9 col-xs-9 sideBar-main top">
+                            {%for object in object_list%}
+                            <div class="row">
+                                <div class="col-sm-8 col-xs-8 sideBar-name">
+                                    <span class="name-meta">
+                                        {% ifequal user.username object.receiver_user.username  %}
+                                        <a href="{% url 'chat:chat_list' object.sender_user.id %}">{{object.sender_user.username}}</a>
+                                        {% else %}
+                                        {% ifequal user.username object.sender_user.username %}
+                                        <a href="{% url 'chat:chat_list' object.receiver_user.id %}">{{object.receiver_user.username}}</a>
+                                        {% endifequal %}
+                                        {% endifequal %}
+                                    </span>
+                                </div>
+                                <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                                    <span class="time-meta pull-right">{{object.Date}}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-8 conversation">
+            <div class="row heading">
+                <div class="col-sm-1 col-md-1 col-xs-3 heading-avatar">
+                    <div class="heading-avatar-icon">
+                        <img src="{% static 'img/desconocida.jpg' %}">
+                    </div>
+                </div>
+                <div class="col-sm-8 col-xs-7 heading-name">
+                    <a class="heading-name-meta">{{chat_user.username}}<!--usuario con el que se esta chateando-->
+                    </a>
+                    <span class="heading-online">Online</span>
+                </div>
+            </div>
+
+            {% if user_conversation %}
+            <div class="row message" id="conversation">
+                <div class="row message-previous">
+                    <div class="col-sm-12 previous">
+                        <a onclick="previous(this)" id="ankitjain28" name="20">
+                            Show Previous Message!
+                        </a>
+                    </div>
+                </div>
+                {% for chat in user_conversation reversed%}
+                    {% ifequal chat.sender_user.username  user.username%}
+                        <!-- mensaje derecha-->
+                        <div class="row message-body">
+                            <div class="col-12 message-main-sender">
+                                <div class="sender">
+                                    <div class="message-text">
+                                        {{chat.Message|linebreaksbr}}
+                                    </div>
+                                    <span class="message-time pull-right">
+                                        {{chat.Date}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {%else%}
+                        <!-- mensaje izquierda-->
+                        <div class="row message-body">
+                            <div class="col-sm-12 message-main-receiver">
+                                <div class="receiver">
+                                    <div class="message-text">
+                                        {{chat.Message|linebreaksbr}}
+                                    </div>
+                                    <span class="message-time pull-right">
+                                        {{chat.Date}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endifequal %}
+                {%endfor%}
+        </div>
+        {%endif%}
+
+        {%if send_form %}
+        {%if recv%}
+        <form action="{% url 'chat:chat_create' recv %}" method="post" class="message-space row">
+            {% csrf_token %}
+            {{send_form.as_p}}
+            <button type="submit" class="btn" name="send" >
+                <i class="fa fa-send fa-2x  send-button"></i>
+            </button>
+        </form>
+        {% endif %}
+        {% endif %}
         
-      <ul>
-          {% for chat in user_conversation %}
-          
-        <li>
-            <h5>To {{chat.receiver_user.username}}: {{chat.Date}}</h5>
-            <h5>From {{chat.sender_user.username}}</h5>
-            <u>{{chat.Message|linebreaksbr}}</u>
-        </li>
-              
-          {% endfor %}
-      </ul>
-    {% endif %}
+    </div>
+    </div>
+     
+</div>
+</div>
+{%endblock body%}
 
-    {% if user_searcher %}
-    <form method="post">
-        {% csrf_token %}
-        <table>
-            {{user_searcher.as_table}}
-        </table>
-        <input type="submit" class = "btn btn-outline-success" value="Start chat with user" name="user_searcher">
-    </form>
-    {% endif %}
-    {% if send_form %}
-    {% if recv %}
-    <form action="{% url 'chat:chat_create' recv %}" method="post">
-        {% csrf_token %}
-        {{send_form.as_p}}
-        <input type="submit" class = "btn btn-outline-success" value="Send" name="send">
-    </form>
-    {% endif %}
-    {% endif %}
-{% endblock extra_body %}
-    
-
-{% block order_filter_forms %}
-<table>
-    {{ order.as_table }}
-</table>
-<table>
-    {{filter.form.as_table}}
-</table>
-<button class = "btn btn-primary" type = "submmit">Update</button>
-{% endblock order_filter_forms %}
