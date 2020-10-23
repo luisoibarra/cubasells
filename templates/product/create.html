@@ -1,3 +1,9 @@
 {% extends "base/create.html" %}
 
 
+{% block forms %}
+{{form.as_p}}
+{% if image_form %}
+    {{ image_form.as_p }}
+{% endif %}
+{% endblock forms %}

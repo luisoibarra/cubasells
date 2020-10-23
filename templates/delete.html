@@ -8,6 +8,7 @@
     <form method="POST">
         {% csrf_token %}
         <h1>Are you sure to delete {{ object }}?</h1>
+        {{ form.as_p }}
         <div class = "container" style = "width :50%; justify-self: center;">
         <button type="submit" class="btn large" >Delete</button>
         </div>

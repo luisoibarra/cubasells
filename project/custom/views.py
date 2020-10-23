@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from project.other.forms import *
 from project.models import *
+from project.forms import DeleteSuccessURLForm
 
 from excel_response import ExcelResponse
 
@@ -53,7 +54,18 @@ class AuthenticateDeleteView(DeleteView):
     
     permission = None
     permission_denied_template = 'error.html'
+    form = DeleteSuccessURLForm
     
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form()
+        try:
+            context['form'].fields['success_url'].initial = self.request.META.get('HTTP_REFERER')
+        except:
+            pass
+        return context
+
     def get(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             self.object = None
@@ -64,13 +76,22 @@ class AuthenticateDeleteView(DeleteView):
     def other_condition(self, request,*args, **kwargs):
         return True
 
+    def get_form(self):
+        return self.form(self.request.POST)
+    
     def post(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             self.object = None
+            form = self.get_form()
+            if form.is_valid():
+                prev_url = form.cleaned_data.get('success_url')
+                if prev_url:
+                    self.success_url = prev_url
             return super().post(request, *args, **kwargs)
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-        
+
+
 class AuthenticateDetailView(DetailView):
     
     permission = None
@@ -105,6 +126,14 @@ class AuthenticateUpdateView(UpdateView):
     permission = None
     permission_denied_template = 'error.html'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context['form'].fields['success_url'].initial = self.request.META.get('HTTP_REFERER')
+        except:
+            pass
+        return context
+    
     def get(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             self.object = None
@@ -118,10 +147,19 @@ class AuthenticateUpdateView(UpdateView):
     def post(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             self.object = None
-            return super().post(request, *args, **kwargs)
+            form = self.get_form()
+            if form.is_valid():
+                prev_url = form.cleaned_data.get('success_url')
+                if prev_url:
+                    self.success_url = prev_url
+            return self._post(self, request, *args, **kwargs)
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
+    def _post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+        
+    
 class FilterOrderAuthenticateListView(AuthenticateListView):
 
     form_order = None
@@ -225,9 +263,6 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
 
 class TagFilterView(FilterOrderAuthenticateListView):
-
-
-
     def get(self, request, *args, **kwargs):
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             self.object = None

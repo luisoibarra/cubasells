@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import HttpResponseRedirect, render
+from django.shortcuts import HttpResponseRedirect, render, resolve_url, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
@@ -16,6 +16,7 @@ from django.db.models import QuerySet,Sum,F,FloatField
 # Create your views here.
 import plotly.offline as opy
 import plotly.graph_objs as go
+from project.other.forms import ImageCreateForm
 
 
 class Graph(AuthenticateDetailView):
@@ -134,6 +135,7 @@ class StoreCreateView(AuthenticateCreateView):
         context = super().get_context_data(**kwargs)
         context['form'].fields['Bank_Account'].queryset = BankAccount.objects.filter(MyUser__id=self.request.user.id)
         context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        context['image_form'] = ImageCreateForm()
         return context
     
     
@@ -147,7 +149,14 @@ class StoreCreateView(AuthenticateCreateView):
             form = self.get_form()
             form.instance.Owner = MyUser.objects.get(id=request.user.id)
             if form.is_valid():
-                return self.form_valid(form)
+                store = form.save()
+                image_form = ImageCreateForm(request.POST, request.FILES)
+                if image_form.is_valid():
+                    image_form.instance.Owner_id = request.user.id
+                    image = image_form.save()
+                    store.Images.add(image)
+                store.save()
+                return redirect(resolve_url('store:store_list'),permanent=True)
             else:
                 return self.form_invalid(form)
         else:
@@ -208,7 +217,8 @@ class StoreUserCreateView(AuthenticateView):
         f2.fields['Product_offer'].queryset = Product.objects.all().filter(Store__id = store_id)
         f1.fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
         f3 = SubOfferSelectForm(None)
-        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
+        f4 = ImageCreateForm()
+        context = self.get_context(form1=f1,form2=f2,form3=f3, image_form=f4, store_id=kwargs['store_id'])
         return render(request,self.template_name,context=context)
 
     def post(self, request, *args, **kwargs):
@@ -250,14 +260,23 @@ class StoreUserCreateView(AuthenticateView):
                 
         if '_remove_suboffer' in request.POST:
             pass
-            
+        
+        image_form = ImageCreateForm(request.POST, request.FILES)
+        
         if '_save_offer' in request.POST and f1.is_valid():
             f1.instance.Store = store
+            image = None
+            if image_form.is_valid():
+                image_form.instance.Owner_id = request.user.id
+                image = image_form.save()
             offer = f1.save()
             offer.Suboffer.set(f3.fields['suboffers'].queryset)
+            if image:
+                offer.Images.add(image)
             offer.save()
+            return redirect(resolve_url('store:store_offer_list',kwargs['store_id']),permanent=True)
         
-        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
+        context = self.get_context(form1=f1,form2=f2,form3=f3,image_form=image_form,store_id=kwargs['store_id'])
 
         return render(request,self.template_name,context=context)
 

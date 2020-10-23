@@ -19,9 +19,10 @@
     <h3 class="title-d">{{store.Name}} </h3>
 {%endblock init%}
 
-{%block descripcion%}
-    {{store.Owner.Description}}
-{%endblock descripcion%}
+
+{% block descripcion %}
+    {{store.Description}}
+{% endblock descripcion %}
 
 {%block features%}
 <ul>

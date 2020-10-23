@@ -40,12 +40,23 @@ class UserCreateView(CreateView):
     form_class = MyUserCreateForm
     success_url = reverse_lazy('cubasells:login')
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_form'] = ImageCreateForm()
+        return context
+    
     def post(self, request, *args, **kwargs):
         self.object = None
         p_return = super().post(request, *args, **kwargs)
         if self.object:
             group = Group.objects.get(name='UserGroup')
             group.user_set.add(self.object)
+            image_form = ImageCreateForm(request.POST, request.FILES)
+            if image_form.is_valid():
+                image_form.instance.Owner_id = self.object.id
+                image = image_form.save()
+                self.object.Images.add(image)
+                self.object.save()
         return p_return
 
 class UserDeleteView(AuthenticateDeleteView):

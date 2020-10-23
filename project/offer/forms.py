@@ -4,6 +4,7 @@ from project.custom.forms import OrderForm
 from django.core.exceptions import ValidationError
 
 class OfferCreateForm(forms.ModelForm):
+    success_url = forms.CharField(widget=forms.HiddenInput())
     
     class Meta:
         model = Offer
@@ -16,6 +17,7 @@ class OfferCreateForm(forms.ModelForm):
         return data
     
 class OfferUserCreateForm(forms.ModelForm):
+    success_url = forms.CharField(widget=forms.HiddenInput(),required=False)
     
     class Meta:
         model = Offer

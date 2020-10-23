@@ -14,6 +14,10 @@
 </div>
 <br> 
 <br> 
+{% if image_form %}
+    {{ image_form.as_p }}
+{% endif %}
+    
 {% endblock forms %}
 
 {% block save %}
