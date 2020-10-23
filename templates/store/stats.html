@@ -7,10 +7,19 @@
 
 {% block body %}
 {% ifequal user.id store.Owner.id %}
-    <h1>Store Stats</h1>
+    <h2>
+        <strong>Stats of: </strong>
+        <a class="color-text-a" href="{% url 'store:store_view' store.id %}"> {{store.Name}}</a>
+        <!-- <span class="color-text-a">{{object.Store.Name}} </span> -->
+    </h2>
         {% if graph %}
-            <div style="width:600;height:500">
+            <div style="width:300;height:250">
             {{ graph|safe }}
+            </div>
+        {% endif %}
+        {% if graph1 %}
+            <div style="width:300;height:250">
+            {{ graph1|safe }}
             </div>
         {% endif %}
 {%else%}

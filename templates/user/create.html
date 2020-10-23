@@ -21,9 +21,10 @@
                             
                         </div>
                         <div class="panel-body">
-                            <form accept-charset="UTF-8" role="form" method="POST" class="black">
+                            <form accept-charset="UTF-8" enctype="multipart/form-data" role="form" method="POST" class="black">
                                 {% csrf_token %}
                                 {{form.as_p}}
+                                {{image_form.as_p}}
                                 <button class="btn btn-lg btn-primary" type="submit" value="Sign Up">Sign Up</button>
                             </form>
                         </div>

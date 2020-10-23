@@ -3,6 +3,7 @@ from project.models import *
 from project.custom.forms import OrderForm
 
 class ProductCreateForm(forms.ModelForm):
+    success_url = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Product

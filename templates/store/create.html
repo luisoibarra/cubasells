@@ -4,6 +4,13 @@
 <h1 class="title-single">Create store</h1>
 {% endblock create_header %}
 
+{% block forms %}
+{{form.as_p}}
+{% if image_form %}
+    {{ image_form.as_p }}
+{% endif %}
+{% endblock forms %}
+
 {% block save %}
 <button class="btn large">Save store</button>
 {% endblock save %}

@@ -61,14 +61,14 @@
 
 {%block add_features%}
 <div class = "card-size-font">
+    <p> {{object.Description}} </p>
     <p> Owner: {{object.Owner}}</p>
-    <p> Creation date:{{object.Create_Date}} </p>
+    {% ifequal object.Owner.id user.id %}
     <div class="btn-group top" style="justify-content: center; align-items: center;">
-        {% ifequal object.Store.Owner.id user.id %}
         <a class="btn btn-outline-primary" href="{% url 'store:store_update' object.id %}">Update</a>
         <a class="btn btn-outline-dark" href="{% url 'store:store_delete' object.id %}">Delete</a>
-        {% endifequal %}
     </div>
+    {% endifequal %}
 </div>
 {%endblock add_features%}
 

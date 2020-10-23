@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import HttpResponseRedirect, render
+from django.shortcuts import HttpResponseRedirect, render, resolve_url, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
@@ -12,10 +12,11 @@ from project.models import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.store.filters import *
-from django.db.models import QuerySet,Sum
+from django.db.models import QuerySet,Sum,F,FloatField
 # Create your views here.
 import plotly.offline as opy
 import plotly.graph_objs as go
+from project.other.forms import ImageCreateForm
 
 
 class Graph(AuthenticateDetailView):
@@ -26,12 +27,12 @@ class Graph(AuthenticateDetailView):
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
         q = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
-            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')[:5]
+            'Offer_id', 'Offer_id__Offer_name').annotate(tamount=Sum('Amount')).order_by('-tamount')
         #Para probar los graficos quitar a partir del punto de filter hasta el punto antes de value
         #la tienda que cree no tiene ventas ni nada asi q por eso no sale nada
         q2 = BuyOffer.objects.filter(Offer_id__Store_id=context['store'].id).values(
             'Offer_id', 'Offer_id__Offer_name').annotate(
-                tprice=Sum('Offer_id__Price')).order_by('-tprice')[:5]
+                tprice=Sum(F('Offer_id__Price') * F('Amount'),output_field=FloatField())).order_by('-tprice')
 
         OfferNameP=[]
         OfferNameA=[]
@@ -60,13 +61,56 @@ class Graph(AuthenticateDetailView):
                 y=TAmount,
                 name='Cantidad de ventas por oferta'
             )
-            
         ]
-        layout=go.Layout(title="Stats", xaxis={'title':'Ofertas'}, yaxis={'title':'Ventas'})
+        data1=[
+            go.Pie(
+                labels=OfferNameP,
+                values=TPrice,
+                name='Precio total de ventas por oferta',
+                domain={'x': [0, .50]},
+                hole=.5,
+                #textposition='inside',
+                #hoverinfo='label+percent+name'
+            )
+            ,
+            go.Pie(
+                labels=OfferNameA,
+                values=TAmount,
+                name='Cantidad de ventas por oferta',
+                domain={'x': [.50, 1]},
+                hole=.5,
+                #textposition='inside',
+                #hoverinfo='label+percent+name'
+            )
+        ]
+
+        layout = go.Layout(title="Bar Graphs", xaxis={
+                           'title': 'Ofertas'}, yaxis={'title': 'Ventas'})
         figure=go.Figure(data=data,layout=layout)
         div = opy.plot(figure, auto_open=False, output_type='div')
-
         context['graph'] = div
+
+        layout1 = go.Layout(title='Pie Graphs',
+            annotations=[
+                {
+                    "font":{"size":16},
+                    "showarrow":False,
+                    "text": '''Precio total de <br> ventas por oferta''',
+                    "x":0.185,
+                    "y":0.5
+                },
+                {
+                    "font": {"size": 16},
+                    "showarrow": False,
+                    "text": '''Cantidad de <br> ventas por oferta''',
+                    "x": 0.815,
+                    "y": 0.5
+                }
+            ]
+        )
+        figure1 = go.Figure(data=data1, layout=layout1)
+        div1 = opy.plot(figure1, auto_open=False, output_type='div')
+        context['graph1'] = div1
 
         return context
 
@@ -91,6 +135,7 @@ class StoreCreateView(AuthenticateCreateView):
         context = super().get_context_data(**kwargs)
         context['form'].fields['Bank_Account'].queryset = BankAccount.objects.filter(MyUser__id=self.request.user.id)
         context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        context['image_form'] = ImageCreateForm()
         return context
     
     
@@ -104,7 +149,14 @@ class StoreCreateView(AuthenticateCreateView):
             form = self.get_form()
             form.instance.Owner = MyUser.objects.get(id=request.user.id)
             if form.is_valid():
-                return self.form_valid(form)
+                store = form.save()
+                image_form = ImageCreateForm(request.POST, request.FILES)
+                if image_form.is_valid():
+                    image_form.instance.Owner_id = request.user.id
+                    image = image_form.save()
+                    store.Images.add(image)
+                store.save()
+                return redirect(resolve_url('store:store_list'),permanent=True)
             else:
                 return self.form_invalid(form)
         else:
@@ -165,7 +217,8 @@ class StoreUserCreateView(AuthenticateView):
         f2.fields['Product_offer'].queryset = Product.objects.all().filter(Store__id = store_id)
         f1.fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
         f3 = SubOfferSelectForm(None)
-        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
+        f4 = ImageCreateForm()
+        context = self.get_context(form1=f1,form2=f2,form3=f3, image_form=f4, store_id=kwargs['store_id'])
         return render(request,self.template_name,context=context)
 
     def post(self, request, *args, **kwargs):
@@ -207,14 +260,23 @@ class StoreUserCreateView(AuthenticateView):
                 
         if '_remove_suboffer' in request.POST:
             pass
-            
+        
+        image_form = ImageCreateForm(request.POST, request.FILES)
+        
         if '_save_offer' in request.POST and f1.is_valid():
             f1.instance.Store = store
+            image = None
+            if image_form.is_valid():
+                image_form.instance.Owner_id = request.user.id
+                image = image_form.save()
             offer = f1.save()
             offer.Suboffer.set(f3.fields['suboffers'].queryset)
+            if image:
+                offer.Images.add(image)
             offer.save()
+            return redirect(resolve_url('store:store_offer_list',kwargs['store_id']),permanent=True)
         
-        context = self.get_context(form1=f1,form2=f2,form3=f3,store_id=kwargs['store_id'])
+        context = self.get_context(form1=f1,form2=f2,form3=f3,image_form=image_form,store_id=kwargs['store_id'])
 
         return render(request,self.template_name,context=context)
 
@@ -234,4 +296,3 @@ class StoreTagFilterView(TagFilterView):
     permission = 'project.view_store'
     form_order = StoreOrderForm
     form_filter = StoreFilter
-    

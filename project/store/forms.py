@@ -20,6 +20,7 @@ class MultiSelectSubOfferForm(forms.Form):
 
 
 class StoreCreateForm(forms.ModelForm):
+    success_url = forms.CharField(widget=forms.HiddenInput(), required=False)
     
     class Meta:
         model = Store

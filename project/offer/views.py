@@ -11,6 +11,7 @@ from project.custom.views import *
 from project.custom.forms import *
 from django.contrib.auth.models import Group
 from project.offer.filters import *
+from project.other.forms import ImageCreateForm
 # from excel_response import ExcelView
 
 # Create your views here.
@@ -23,12 +24,14 @@ class OfferCreateView(AuthenticateCreateView):
     form_class = OfferCreateForm
     success_url = reverse_lazy('store:store_index') # idealmente quiero que te deje en la tienda q le vas a agregar el producto
     permission = 'project.add_offer'
+    image_form_class = ImageCreateForm
     
     def get_context_data(self,**kwargs):
         context = super().get_context_data()
         try:
             context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
             self.form_class.base_fields['Suboffer'].queryset = SubOffer.objects.filter(Product_offer__Store__id = self.kwargs['store_id'])#forms.ModelMultipleChoiceField(queryset=Product.objects.filter(Store__id = self.kwargs['store_id']))
+            context['image_form'] = self.image_form_class()
         except KeyError:
             context.update({'error':'Missing parameter store_id in url'})
         return context
@@ -47,6 +50,7 @@ class OfferCreateView(AuthenticateCreateView):
         self.object = None
         if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
             form = self.get_form()
+            image_form = self.image_form_class(request.POST, request.FILES)
             try:
                 store = Store.objects.get(id=kwargs['store_id'])
                 if store.Owner.id == request.user.id:
@@ -60,7 +64,9 @@ class OfferCreateView(AuthenticateCreateView):
                 extra = {'error':'Store doesnt exist'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-            if form.is_valid():
+            if form.is_valid() and image_form.is_valid():
+                image = image_form.save()
+                form.instance.Images.add(image)
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)

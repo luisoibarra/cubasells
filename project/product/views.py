@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import HttpResponseRedirect, render
+from django.shortcuts import HttpResponseRedirect, render, redirect, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
@@ -10,6 +10,7 @@ from project.product.forms import *
 from project.custom.views import *
 from django.contrib.auth.models import Group
 from project.product.filters import *
+from project.other.forms import ImageCreateForm 
 
 # Create your views here.
 
@@ -31,6 +32,7 @@ class ProductCreateView(AuthenticateCreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        context['image_form'] = ImageCreateForm()
         return context
     
     
@@ -57,7 +59,15 @@ class ProductCreateView(AuthenticateCreateView):
                 return self.form_invalid(form)
             
             if form.is_valid():
-                return self.form_valid(form)
+                image_form = ImageCreateForm(request.POST, request.FILES)
+                product = form.save()
+                if image_form.is_valid():
+                    image_form.instance.Owner_id = request.user.id
+                    image = image_form.save()
+                    product.Images.add(image)
+                product.save()
+                return redirect(resolve_url('store:store_index'),permanent=True)
+                # return self.form_valid(form)
             else:
                 return self.form_invalid(form)
         else:
@@ -148,8 +158,16 @@ class ProductUpdateView(AuthenticateUpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'].fields['Images'].queryset = Image.objects.filter(Owner__id=self.request.user.id)
+        # context['form'].fields['success_url'].initial = self.request.META.get('HTTP_REFERER')
         return context
- 
+    
+    def _post(self, request, *args, **kwargs):
+        # form = self.get_form()
+        # if form.is_valid():
+        #     prev_url = form.cleaned_data.get('success_url')
+        #     if prev_url:
+        #         self.success_url = prev_url
+        return super()._post(request, *args, **kwargs)
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user

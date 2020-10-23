@@ -39,6 +39,16 @@
 </button>
 {%endblock search%}
 
+{% block image %}
+{%if not object.Offer.Images.all%}
+<a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+{%else%}
+
+<img class="card-img-top" src="{% static object.Offer.Images.all.first.Image.url %}" alt="">
+
+{%endif%}
+{% endblock image %}
+
 {%block url%}
 <a href="{%url 'offer:offer_view' object.Offer.id%}">{{object.Offer.Offer_name}}</a>
 {%endblock url%}

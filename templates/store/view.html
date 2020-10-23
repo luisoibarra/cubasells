@@ -11,13 +11,18 @@
 <li><img src="{% static img.Image.url %}" class="agent-avatar img-fluid" alt="Imagen"></li>
 {% endfor %}
 {% else %}
-    <h1>No images</h1>
+    <h2>No images</h2>
 {% endif %}
 {%endblock images%}
 
 {%block init%}
     <h3 class="title-d">{{store.Name}} </h3>
 {%endblock init%}
+
+
+{% block descripcion %}
+    {{store.Description}}
+{% endblock descripcion %}
 
 {%block features%}
 <ul>
