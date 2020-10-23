@@ -26,6 +26,9 @@
     <strong>Store: </strong>
     <a class="color-text-a" href="{% url 'store:store_view' object.Store.id %}"> {{object.Store.Name}}</a>
     <!-- <span class="color-text-a">{{object.Store.Name}} </span> -->
+    <a href="{% url 'cart:cart_create' object.id %}" >
+        <img src="{%static 'img/cart.png' %}" class="cart shopping_cart">
+    </a>
 </p>
 <p>
     <strong>Price: </strong>
@@ -35,7 +38,7 @@
 <ul>
     {% for pr in object.Suboffer.all %}
     <li>
-        <a href="{% url 'product:product_view' pr.id %}">{{pr.Product_offer.Name}}</a>
+        <a href="{% url 'product:product_view' pr.Product_offer_id %}">{{pr.Product_offer.Name}}</a>
         <p> Amount: {{pr.Amount}} </p>
     </li>
     {% endfor %}
@@ -51,7 +54,6 @@
     {%else%}
     {%endif%}
 </ul>
-
 {%endblock features%}
 
 {% block button%}

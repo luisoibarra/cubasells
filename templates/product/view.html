@@ -48,8 +48,11 @@
 {%endblock features%}
 
 {% block button%}
-<div class="btn-group">
-    <a class="btn btn-outline-success" href="{% url 'product:product_update' object.id %}">Update</a>
-    <a class="btn btn-outline-dark" href="{% url 'product:product_delete' object.id %}">Delete</a>
-</div>
+
+    {% ifequal user.id store.Owner.id %}
+        <div class="btn-group">
+            <a class="btn btn-outline-success" href="{% url 'product:product_update' object.id %}">Update</a>
+            <a class="btn btn-outline-dark" href="{% url 'product:product_delete' object.id %}">Delete</a>
+        </div>
+    {%endifequal%}
 {% endblock button%}
