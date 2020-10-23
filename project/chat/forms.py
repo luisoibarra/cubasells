@@ -7,11 +7,11 @@ from django.core.exceptions import ObjectDoesNotExist,ValidationError
 class ChatCreateForm(forms.ModelForm):
     class Meta:
         model = Chat
-        fields = ['Message','type']
-        cols = 30
+        fields = ['Message']
+        cols = 25
         
         widgets = {
-            'Message':forms.Textarea(attrs={'rows':5,'cols':cols})
+            'Message':forms.Textarea(attrs={'required':"", 'rows':1,'cols':cols, 'class': 'message-form'})
         }
 
     def clean_Message(self):
@@ -23,14 +23,14 @@ class ChatCreateForm(forms.ModelForm):
             return new_data
     
 class UserSearchForm(forms.Form):
-    username = forms.CharField(help_text='Write the username to talk with')
+    username = forms.CharField(required ="")
     
     def clean_username(self):
         data = self.cleaned_data["username"]
         try:
             user = MyUser.objects.get(username=data)
         except ObjectDoesNotExist:
-            raise ValidationError(f'No user exist with username {data}')
+            raise ValidationError(f' {data} no exist')
         data = self.cleaned_data['username'] = user.id
         return data
     
@@ -44,8 +44,3 @@ class ChatOrderForm(OrderForm):
         'Message',
         'type',
         ]
-    
-    
-class ChatUserOrderForm(OrderForm):
-    model = MyUser
-    fields_to_order = ['username']

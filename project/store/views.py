@@ -296,4 +296,3 @@ class StoreTagFilterView(TagFilterView):
     permission = 'project.view_store'
     form_order = StoreOrderForm
     form_filter = StoreFilter
-    

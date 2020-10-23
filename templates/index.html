@@ -24,7 +24,7 @@
   </div>
 </div>
 <!--/ Carousel end /-->
-{% endblock header %} 
+{% endblock header %}
 
 {% block body %}
 <!--/ Services Star /-->
@@ -43,11 +43,11 @@
       <div class="col-md-4">
         <div class="card-box-c foo">
           <div class="card-header-c d-flex">
-            <!-- <div class="card-box-ico">
-              <span class="fa fa-usd"></span>
-            </div> -->
+            <div class="card-box-ico">
+              <span class="fa fa-shopping-basket"></span>
+            </div>
             <div class="card-title-c align-self-center">
-              <h2 class="title-c"> <a href="{% url 'store:store_list' %}">Stores</a> </h2>
+              <h2 class="title-c"> Stores </h2>
             </div>
           </div>
           <div class="card-body-c">
@@ -56,7 +56,7 @@
             </p>
           </div>
           <div class="card-footer-c">
-            <a href="#" class="link-c link-icon">Read more
+            <a href="{% url 'store:store_list' %}" class="link-c link-icon">See more
               <span class="ion-ios-arrow-forward"></span>
             </a>
           </div>
@@ -65,11 +65,11 @@
       <div class="col-md-4">
         <div class="card-box-c foo">
           <div class="card-header-c d-flex">
-            <!-- <div class="card-box-ico">
-              <span class="fa fa-usd"></span>
-            </div> -->
+            <div class="card-box-ico">
+              <span class="fa fa-handshake-o"></span>
+            </div>
             <div class="card-title-c align-self-center">
-              <h2 class="title-c"><a href="{% url 'auction:auction_list' %}">Auction</a></h2>
+              <h2 class="title-c">Auction</h2>
             </div>
           </div>
           <div class="card-body-c">
@@ -78,7 +78,7 @@
             </p>
           </div>
           <div class="card-footer-c">
-            <a href="#" class="link-c link-icon">Read more
+            <a href="{% url 'auction:auction_list' %}" class="link-c link-icon">See more
               <span class="ion-ios-arrow-forward"></span>
             </a>
           </div>
@@ -87,11 +87,11 @@
       <div class="col-md-4">
         <div class="card-box-c foo">
           <div class="card-header-c d-flex">
-            <!-- <div class="card-box-ico">
-              <span class="fa fa-usd"></span>
-            </div> -->
+            <div class="card-box-ico">
+              <span class="fa fa-tags"></span>
+            </div>
             <div class="card-title-c align-self-center">
-              <h2 class="title-c"><a href="{% url 'offer:offer_list' %}">Announcement</a></h2>
+              <h2 class="title-c">Announcement</h2>
             </div>
           </div>
           <div class="card-body-c">
@@ -100,7 +100,7 @@
             </p>
           </div>
           <div class="card-footer-c">
-            <a href="#" class="link-c link-icon">Read more
+            <a href="{% url 'offer:offer_list' %}" class="link-c link-icon">See more
               <span class="ion-ios-arrow-forward"></span>
             </a>
           </div>

@@ -21,7 +21,7 @@ from django.contrib.auth.views import login_required
 urlpatterns = [
     # Chat
     path('',ChatedUserListView.as_view(),name='chat_index'),
-    path('<int:recv>/',ChatListView.as_view(),name='chat_list'),
+    path('<int:recv>/',ChatedUserListView.as_view(),name='chat_list'),
     path('view/<int:pk>/',ChatDetailView.as_view(),name='chat_view'),
     path('create/<int:recv>',ChatCreateView.as_view(),name='chat_create'),
     path('delete/<int:pk>/',ChatDeleteView.as_view(),name='chat_delete'),

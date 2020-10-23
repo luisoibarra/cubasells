@@ -26,7 +26,6 @@
 
 {%block features%}
 <ul>
-    
     {%if store.Tags.all%}
     <p>
         <strong>Tags:</strong>
@@ -49,13 +48,11 @@
 <br>
 <br>
 {% ifequal user.id store.Owner.id %}
-    
     <div class = "btn-group" style = "display:ruby-base-container;  " >
         <a class = "btn btn-outline-dark" href="{% url 'store:store_product_create' store.id %}">Add Product</a>
         <a class = "btn btn-outline-dark" href="{% url 'store:store_offer_create_user' store.id %}">Add Offer</a>
         <a class = "btn btn-outline-dark" href="{% url 'store:store_suboffer_create' store.id %}">Add Suboffer</a>
-        <a class = "btn btn-outline-dark" href="{% url 'store:store_auction_create' object.id %}">Add Auction</a>
-          
+        <a class = "btn btn-outline-dark" href="{% url 'store:store_auction_create' object.id %}">Add Auction</a>  
     </div>
     <br>
     <br>
@@ -63,8 +60,12 @@
         <div class="btn-group">
             <a class="btn btn-outline-success" href="{% url 'store:store_update' store.id %}">Update</a>
             <a class="btn btn-outline-dark" href="{% url 'store:store_delete' store.id %}">Delete</a>
-            <a class = "btn btn-outline-dark" href="{% url 'store:store_stats' store.id %}">Stats</a> 
         </div>
     </div>
 {%endifequal%}
+{% ifnotequal store.Owner.id user.id %}
+    <div>
+        <a class = "btn btn-outline-dark" href="{% url 'chat:chat_list' store.Owner.id %}"> Contact owner </a>
+    </div>
+{% endifnotequal %}
 {% endblock button%}
