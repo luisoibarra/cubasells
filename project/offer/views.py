@@ -116,7 +116,7 @@ class OfferListView(FilterOrderAuthenticateListView):
             return queryset
         return qs_fun
 
-    @anotate_available
+#    @anotate_available
     def get_queryset(self):
         """
         Return the list of items for this view.
