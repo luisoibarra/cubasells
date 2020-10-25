@@ -34,6 +34,10 @@
     <strong>Price: </strong>
     <span class="color-text-a"> {{ object.Price }}</span>
 </p>
+<p>
+    <strong>Available: </strong>
+    <span class="color-text-a"> {{ object.available }}</span>
+</p>
 <p> <strong>Products:</strong></p>
 <ul>
     {% for pr in object.Suboffer.all %}

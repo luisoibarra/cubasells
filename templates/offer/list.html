@@ -66,6 +66,8 @@
 <div class = "card-size-font">
     <a> Price:{{object.Price}}</a>
     <br>
+    <a> Available:{{object.available}}</a>
+    <br>
     <a>Store: {{object.Store}}</a>
     <div class = "btn-group top" >
         {% ifequal object.Store.Owner.id user.id %}
