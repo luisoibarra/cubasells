@@ -257,7 +257,15 @@ class FilterOrderAuthenticateListView(AuthenticateListView):
                         'class_name': self.__class__.__name__,
                     })
             if "export" in request.POST:
-                return ExcelResponse(self.object_list)
+                return ExcelResponse(
+                    self.object_list,
+                    output_filename=f'{self.model.__name__}_data',
+                    worksheet_name=f'{self.model.__name__}',
+                    force_csv=False,
+                    header_font=None,
+                    data_font=None, 
+                    guess_types=True
+                    )
             return self.render_to_response(context)
         else:
             return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})

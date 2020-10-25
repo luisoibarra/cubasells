@@ -105,8 +105,7 @@ class OfferListView(FilterOrderAuthenticateListView):
                             Price=F("offer_id__Price"),
                             Offer_name=F("offer_id__Offer_name"),
                             Offer_description=F("offer_id__Offer_description"),
-                            Store_id=F("offer_id__Store_id"),
-                            Store=F("offer_id__Store_id__Name"),
+                            Store=F("offer_id__Store_id"),
                             id=F("offer_id"))
 
             ordering = self.get_ordering()
