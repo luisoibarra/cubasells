@@ -5,7 +5,7 @@ class OfferFilter(dfil.FilterSet):
     class Meta:
         model = Offer
         fields = {
-            'Price':['lte'],
+            'Price':['gte','lte'],
             'Offer_name':['icontains'],
             'Store__Name':['icontains'],
         }
