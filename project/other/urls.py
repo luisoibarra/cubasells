@@ -32,4 +32,6 @@ urlpatterns = [
     path('tag/create/',TagCreateView.as_view(),name='tag_create'),
     path('tag/delete/<int:pk>/',TagDeleteView.as_view(),name='tag_delete'),
     path('tag/update/<int:pk>/',TagUpdateView.as_view(),name='tag_update'),
+    
+    path('tag/search/', TagSearchView.as_view(), name='tag_search'),
 ]

@@ -31,10 +31,10 @@
                     <div class="col-sm-12 ">
                         <div class="form-group has-feedback">
                             {% if user_searcher %}
-                            <form method="post" class = "row" >
+                            <form action="{% url 'chat:chat_index' %}" method="post" class = "row" >
                                 {% csrf_token %}
                                 {{user_searcher.as_p}}
-                                <button type="submit" class="btn " name="user_searcher">
+                                <button type="submit" class="btn" name="user_searcher">
                                     <i class="fa fa-search fa-2x "></i>
                                 </button>
                             </form>

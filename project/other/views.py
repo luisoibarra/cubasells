@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+                                  UpdateView, TemplateView)
 
 from project.other.forms import *
 from project.models import *
@@ -13,6 +13,41 @@ from project.other.filters import *
 
 # Create your views here.
 
+class TagSearchView(TemplateView):
+    template_name = 'tag/search.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not 'tag_form' in kwargs:
+            context['tag_form'] = MultiSelectTagForm(Tag.objects.all())
+        if not 'tag_search' in kwargs:
+            context['tag_search'] = TagNameForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        tag_search = TagNameForm(request.POST)
+        if tag_search.is_valid():
+            name = tag_search.cleaned_data['name']
+            if name:
+                tags = Tag.objects.filter(Tag__icontains=name)
+            else:
+                tags = Tag.objects.all()
+        else:
+            tags = Tag.objects.all()
+            
+        tag_form = MultiSelectTagForm(tags,request.POST)
+        
+        if tag_form.is_valid():
+            tags = [int(tag_id) for tag_id in tag_form.cleaned_data['tags']] # Poner las tags aqui
+            stores = Store.objects.filter(Tags__in=tags)
+            offers = Offer.objects.filter(Tags__in=tags)
+            products = Product.objects.filter(Tags__in=tags)
+            context = self.get_context_data(stores=stores, offers=offers, products=products,tag_form=tag_form, tag_search=tag_search)
+        else:
+            context = self.get_context_data(tag_form=tag_form, tag_search=tag_search)
+        return render(request, self.template_name, context)
+        
+        
 
 class TagCreateView(AuthenticateCreateView):
     model = Tag

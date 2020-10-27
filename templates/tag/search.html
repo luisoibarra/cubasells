@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block body %}
+<div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
+    <h2>Choose the tags to find</h2>
+    <form action="{% url 'other:tag_search' %}" enctype="multipart/form-data" method="post">
+        <div class="row prod">
+            {% csrf_token %}
+            {{ tag_search.as_p }}
+            {{ tag_form.as_p }}
+        </div>
+        <button class="btn btn-info" type="submit">Search</button>
+    </form>
+</div>
+
+
+{% if stores %}
+<div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
+    <h3>Stores</h3>
+    <div class="row prod" >
+        {% for store in stores %}
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify ">
+            <div class="card h-70 card-width top">
+                <h6 class="container card-header" >
+                    <a href="{% url 'store:store_view' store.id %}">{{store.Name}}</a>
+                </h6>
+                <div class="card-body">
+                    {%if not store.Images.all%}
+                        <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                    {%else%}
+                        <img class="card-img-top" src="{% static store.Images.all.first.Image.url %}" alt="">
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{% endif %}
+{% if offers %}
+<div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
+    <h3>Offers</h3>
+    <div class="row prod" >
+        {% for offer in offers %}
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify ">
+            <div class="card h-70 card-width top">
+                <h6 class="container card-header" >
+                    <a href="{% url 'offer:offer_view' offer.id %}">{{offer.Offer_name}}</a>
+                </h6>
+                <div class="card-body">
+                    {%if not offer.Images.all%}
+                        <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                    {%else%}
+                        <img class="card-img-top" src="{% static offer.Images.all.first.Image.url %}" alt="">
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{% endif %}
+
+{% if products %}
+<div class = "container" style = "margin-left:auto; margin-right: auto; margin-top: 10px;">
+    <h3>Products</h3>
+    <div class="row prod" >
+        {% for product in products %}
+        <div class="col-lg-2 col-md-6 mb-4 btn-modify ">
+            <div class="card h-70 card-width top">
+                <h6 class="container card-header" >
+                    <a href="{% url 'product:product_view' product.id %}">{{product.Name}}</a>
+                </h6>
+                <div class="card-body">
+                    {%if not product.Images.all%}
+                        <a><img class="card-img-top" src="{% static 'img/not_found.jpg' %}" alt=""></a>
+                    {%else%}
+                        <img class="card-img-top" src="{% static product.Images.all.first.Image.url %}" alt="">
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{% endif %}
+
+{% endblock body %}
