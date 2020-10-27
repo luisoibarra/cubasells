@@ -70,7 +70,7 @@ class MyUserUpdateForm(UserCreationForm):
 
 class AuctionCreateForm(forms.ModelForm):
     auction_minim_time = 30 # In minutes
-    auction_aticipation = 60 # In minutes
+    auction_anticipation = 60 # In minutes
     class Meta:
         model = Auction
         exclude = ['winner',]
@@ -85,8 +85,8 @@ class AuctionCreateForm(forms.ModelForm):
     def clean_initial_date(self):
         data = self.cleaned_data["initial_date"]
         import datetime as dt
-        if data < dt.datetime.now() + dt.datetime(minute=self.auction_aticipation):
-            raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_aticipation})
+        if data < dt.datetime.now() + dt.datetime(minute=self.auction_anticipation):
+            raise ValidationError('The initial date must have at least %(minutes) minutes of anticipation',code='invalid initial date',params={'minutes':self.auction_anticipation})
         return data
 
 class DeleteSuccessURLForm(forms.Form):
