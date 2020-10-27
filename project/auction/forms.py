@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 class AuctionCreateForm(forms.ModelForm):
+    success_url = forms.CharField(widget=forms.HiddenInput(),required=False)
     
     class Meta:
         model = Auction

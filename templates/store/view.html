@@ -42,7 +42,9 @@
 <div class="btn-group" style = "display:ruby-base-container;">
     <a class="btn btn-outline-success" href="{% url 'store:store_product_list' store.id %}">See Products</a>
     <a class="btn btn-outline-success" href="{% url 'store:store_offer_list' store.id %}">See Offers</a>
+    {% ifequal user.id store.Owner.id %}
     <a class="btn btn-outline-success" href="{% url 'store:store_suboffer_list' store.id %}">See Suboffers</a>
+    {%endifequal%}
     <a class="btn btn-outline-success" href="{% url 'store:store_auction_list' store.id %}">See Auctions</a>
 </div>
 <br>

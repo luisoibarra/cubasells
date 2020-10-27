@@ -63,7 +63,7 @@
     {% endif %}
 
 
-    {% if messages.all %}
+    {% if messages %}
     <p> <strong>Messages<strong></strong></p>
     <ul>
         {% for msg in messages %}
@@ -74,6 +74,8 @@
     </ul>
     {% endif %}
     {% if push_form %}
+    {% if object.Ended %}
+    {% else %}
     <p> <strong>You can push here</strong></p>
     <form method="post">
         {% csrf_token %}
@@ -81,6 +83,7 @@
         <input type="submit" value="Push" class="btn btn-outline-success padding-left" name="_push">
     </form>
     <br>
+    {% endif %}
     {% endif %}
 </div>
 {%endblock features%}
