@@ -66,7 +66,7 @@ class ProductCreateView(AuthenticateCreateView):
                     image = image_form.save()
                     product.Images.add(image)
                 product.save()
-                return redirect(resolve_url('store:store_index'),permanent=True)
+                return redirect(resolve_url('store:store_view',store_id=kwargs['store_id']),permanent=True)
                 # return self.form_valid(form)
             else:
                 return self.form_invalid(form)

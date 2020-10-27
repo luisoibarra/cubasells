@@ -45,8 +45,8 @@ class AuctionListView(FilterOrderAuthenticateListView):
         qs = super().get_queryset()
         if 'store_id' in self.kwargs:
             qs = qs.filter(Offered__Store__id=self.kwargs['store_id'])
-            return qs
-        return qs
+            return qs.order_by('-Initial_Date')
+        return qs.order_by('-Initial_Date')
     
 class AuctionDetailView(AuthenticateDetailView):
     model = Auction
