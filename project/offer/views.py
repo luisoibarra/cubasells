@@ -12,7 +12,7 @@ from project.custom.forms import *
 from django.contrib.auth.models import Group
 from project.offer.filters import *
 from project.other.forms import ImageCreateForm
-from django.db.models import QuerySet, F ,Min
+from django.db.models import QuerySet, F , Min , OuterRef ,Subquery
 # from excel_response import ExcelView
 
 # Create your views here.
@@ -91,32 +91,7 @@ class OfferListView(FilterOrderAuthenticateListView):
     form_order = OfferOrderForm
     form_filter = OfferFilter
     queryset=None
-    
-    def anotate_available(qs_fun):
-        def qs_fun(self):
-            q = Offer.Suboffer.through.objects.values(
-                "offer_id", "suboffer_id").annotate(
-                available=F(
-                    "suboffer_id__Product_offer_id__Store_Amount")/F(
-                    "suboffer_id__Amount")).values("offer_id").annotate(available=Min("available"))
-
-
-            queryset = q.values("available",
-                            Price=F("offer_id__Price"),
-                            Offer_name=F("offer_id__Offer_name"),
-                            Offer_description=F("offer_id__Offer_description"),
-                            Store=F("offer_id__Store_id"),
-                            id=F("offer_id"))
-
-            ordering = self.get_ordering()
-            if ordering:
-                if isinstance(ordering, str):
-                    ordering = (ordering,)
-                queryset = queryset.order_by(*ordering)
-            return queryset
-        return qs_fun
-
-#    @anotate_available
+        
     def get_queryset(self):
         """
         Return the list of items for this view.
@@ -124,16 +99,23 @@ class OfferListView(FilterOrderAuthenticateListView):
         The return value must be an iterable and may be an instance of
         `QuerySet` in which case `QuerySet` specific behavior will be enabled.
         """
-        
+        q = Offer.Suboffer.through.objects.values().annotate(
+            available=F(
+                "suboffer_id__Product_offer_id__Store_Amount")/F(
+                "suboffer_id__Amount")).values("offer_id").annotate(
+                    available=Min("available")).filter(offer_id=OuterRef("pk"))
+
         if self.queryset is not None:
             queryset = self.queryset            
             if isinstance(queryset, QuerySet):
-                queryset = queryset.all()       
+                queryset = queryset.annotate(
+                    available=Subquery(q.values("available")))
         elif self.model is not None:
             try:
-                queryset = self.model.objects.filter(Store__id=self.kwargs['store_id']) 
+                queryset = self.model.objects.filter(
+                    Store__id=self.kwargs['store_id']).annotate(available=Subquery(q.values("available")))
             except KeyError:
-                queryset = self.model.objects.all()   
+                queryset = self.model.objects.annotate(available=Subquery(q.values("available")))   
         else:
             raise ImproperlyConfigured(
                 "%(cls)s is missing a QuerySet. Define "
@@ -142,6 +124,15 @@ class OfferListView(FilterOrderAuthenticateListView):
                     'cls': self.__class__.__name__
                 }
             )
+        
+
+        #queryset = q.values("available",
+        #                Price=F("offer_id__Price"),
+        #                Offer_name=F("offer_id__Offer_name"),
+        #                Offer_description=F("offer_id__Offer_description"),
+        #                Store=F("offer_id__Store_id"),
+        #                id=F("offer_id"))
+
         ordering = self.get_ordering()
         if ordering:
             if isinstance(ordering, str):
