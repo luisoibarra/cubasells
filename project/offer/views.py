@@ -108,8 +108,7 @@ class OfferListView(FilterOrderAuthenticateListView):
         if self.queryset is not None:
             queryset = self.queryset            
             if isinstance(queryset, QuerySet):
-                queryset = queryset.annotate(
-                    available=Subquery(q.values("available")))
+                queryset = queryset.annotate(available=Subquery(q.values("available")))
         elif self.model is not None:
             try:
                 queryset = self.model.objects.filter(
@@ -124,14 +123,6 @@ class OfferListView(FilterOrderAuthenticateListView):
                     'cls': self.__class__.__name__
                 }
             )
-        
-
-        #queryset = q.values("available",
-        #                Price=F("offer_id__Price"),
-        #                Offer_name=F("offer_id__Offer_name"),
-        #                Offer_description=F("offer_id__Offer_description"),
-        #                Store=F("offer_id__Store_id"),
-        #                id=F("offer_id"))
 
         ordering = self.get_ordering()
         if ordering:
@@ -147,6 +138,23 @@ class OfferDetailView(AuthenticateDetailView):
     model = Offer
     template_name = "offer/view.html"
     permission = 'project.view_offer'
+
+    def get(self, request, *args, **kwargs):
+
+        q = Offer.Suboffer.through.objects.values().annotate(
+            available=F(
+                "suboffer_id__Product_offer_id__Store_Amount")/F(
+                "suboffer_id__Amount")).values("offer_id").annotate(
+            available=Min("available")).filter(offer_id=OuterRef("pk"))
+
+        queryset = self.model.objects.annotate(
+            available=Subquery(q.values("available")))
+
+        self.object = self.get_object(queryset=queryset)
+        
+        context = self.get_context_data(object=self.object)
+                
+        return self.render_to_response(context)
 
 class OfferDeleteView(AuthenticateDeleteView):
     model = Offer
