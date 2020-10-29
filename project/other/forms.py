@@ -8,11 +8,32 @@ class TagCreateForm(forms.ModelForm):
         model = Tag
         fields = '__all__'
 
+
+def get_CharFieldNotRequired(*args, **kwargs):
+    kwargs['required'] = False        
+    return forms.CharField(*args,**kwargs)
 class ImageCreateForm(forms.ModelForm):
     
     class Meta:
         model = Image
         exclude = ['Owner']
+        field_classes = {
+            'ImageName': get_CharFieldNotRequired
+        }
+        
+    def clean_ImageName(self):
+        data = self.cleaned_data["ImageName"]
+        if not data:
+            raise ValidationError('No Name provided')
+        return data
+    
+    def clean_Image(self):
+        data = self.cleaned_data["Image"]
+        if data == 'default.jpg':
+            raise ValidationError('No Image provided')
+        return data
+    
+    
 
 class MultiSelectSTagForm(forms.Form):
 
@@ -42,4 +63,4 @@ class TagOrderForm(OrderForm):
 
 class ImageOrderForm(OrderForm):
     model = Image
-    fields_to_order = ['Name']
+    fields_to_order = ['ImageName']

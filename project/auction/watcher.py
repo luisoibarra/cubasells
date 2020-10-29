@@ -24,4 +24,4 @@ class AuctionWatcher:
         self.process.terminate()
         
 auction_watcher = AuctionWatcher(auction_manager,5)
-auction_watcher.start_watcher()
+# auction_watcher.start_watcher()

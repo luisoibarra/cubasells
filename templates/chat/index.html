@@ -20,28 +20,38 @@
                 <div class="row heading">
                     <div class="col-sm-3 col-xs-3 heading-avatar">
                         <div class="heading-avatar-icon">
+                            
+                            {% if user.myuser.Images.all %}
+                            <img src="{% static user.myuser.Images.all.first.Image.url %}" alt="User image">
+                            {% else %}
                             <img src="{% static 'img/desconocida.jpg' %}">
+                            {% endif %}
                         </div>
+                    </div>
+                    <div class="col-sm-8 col-xs-7 heading-name">
+                        <a class="heading-name-meta">{{user.username}}<!--usuario con el que se esta chateando-->
+                        </a>
                     </div>
                 </div>
 
-                
                 <!--buscar usuario en lista-->
-                <div class="row searchBox">
-                    <div class="col-sm-12 ">
-                        <div class="form-group has-feedback">
+                <!-- <div class="row searchBox"> -->
+                    <!-- <div class="col-sm-12"> -->
+                        <!-- <div class="form-group has-feedback"> -->
                             {% if user_searcher %}
                             <form action="{% url 'chat:chat_index' %}" method="post" class = "row" >
                                 {% csrf_token %}
-                                {{user_searcher.as_p}}
+                                {% for field in user_searcher %}
+                                  {{ field }}
+                                {% endfor %}
                                 <button type="submit" class="btn" name="user_searcher">
                                     <i class="fa fa-search fa-2x "></i>
                                 </button>
                             </form>
                             {% endif %}
-                        </div>
-                    </div>
-                </div>
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
                 
                 <!--usuario  en la lista de chats-->
                <div class="row sideBar">
@@ -78,7 +88,11 @@
             <div class="row heading">
                 <div class="col-sm-1 col-md-1 col-xs-3 heading-avatar">
                     <div class="heading-avatar-icon">
+                        {% if chat_user.Images.all %}
+                        <img src="{% static chat_user.Images.all.first.Image.url %}" alt="User image">
+                        {% else %}
                         <img src="{% static 'img/desconocida.jpg' %}">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-sm-8 col-xs-7 heading-name">
@@ -133,13 +147,19 @@
 
         {%if send_form %}
         {%if recv%}
-        <form action="{% url 'chat:chat_create' recv %}" method="post" class="message-space row">
-            {% csrf_token %}
-            {{send_form.as_p}}
-            <button type="submit" class="btn" name="send" >
-                <i class="fa fa-send fa-2x  send-button"></i>
-            </button>
-        </form>
+        <div class="col-sm-12">
+            <form action="{% url 'chat:chat_create' recv %}" method="post" class="message-space row">
+                {% csrf_token %}
+                {% for field in send_form %}
+                
+                {{ field }}
+                  
+                {% endfor %}
+                <button type="submit" class="btn" name="send" >
+                    <i class="fa fa-send fa-2x  send-button"></i>
+                </button>
+            </form>
+        </div>
         {% endif %}
         {% endif %}
         
