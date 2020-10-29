@@ -10,9 +10,9 @@
 <th></th>
 {% endblock table_head %}
 {% block table_row %}
-<td>{{object.Name}}</td>
+<td>{{object.ImageName}}</td>
 <!-- "-->
-<td><img src="{% static object.Image.url %}" width="150" height="150" alt="{{object.Name}}" ></td>
+<td><img src="{% static object.Image.url %}" width="150" height="150" alt="{{object.ImageName}}" ></td>
 <td>{{ object.Owner.username}}</td>
 <td>
     <a href="{% url 'other:image_view' object.id %}">More Info</a>

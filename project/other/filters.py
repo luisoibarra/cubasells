@@ -12,5 +12,5 @@ class ImageFilter(dfil.FilterSet):
     class Meta:
         model = Image
         fields = {
-            'Name':['icontains'],
+            'ImageName':['icontains'],
         }

@@ -14,14 +14,14 @@ def validate_positive(number):
 
 class Image(models.Model):
     
-    name = models.CharField(name='Name',max_length=200)
+    name = models.CharField(name='ImageName',max_length=200)
     
     image = models.ImageField(name = 'Image', upload_to='images',default='default.jpg')
     
     owner = models.ForeignKey('project.MyUser', name="Owner", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.Name
+        return self.ImageName
 
 class Tag(models.Model):
     
