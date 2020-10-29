@@ -11,12 +11,12 @@
     {% endif %}
     {% csrf_token %}
     {{form.as_p}}
+    <button class="btn large" name="_save_image" type='submit'>Save</button>
 </form>
 {% endblock forms %}
 
 {% block save %}
 <br><br>
-<button class="btn large" name="_save_image" type='submit'>Save</button>
 {% endblock save %}
 
 
