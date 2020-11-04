@@ -138,29 +138,26 @@ class StoreCreateView(AuthenticateCreateView):
         context['image_form'] = ImageCreateForm()
         return context
     
-    
+    @auth
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
         self.object = None
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            form = self.get_form()
-            form.instance.Owner = MyUser.objects.get(id=request.user.id)
-            if form.is_valid():
-                store = form.save()
-                image_form = ImageCreateForm(request.POST, request.FILES)
-                if image_form.is_valid():
-                    image_form.instance.Owner_id = request.user.id
-                    image = image_form.save()
-                    store.Images.add(image)
-                store.save()
-                return redirect(resolve_url('store:store_list'),permanent=True)
-            else:
-                return self.form_invalid(form)
+        form = self.get_form()
+        form.instance.Owner = MyUser.objects.get(id=request.user.id)
+        if form.is_valid():
+            store = form.save()
+            image_form = ImageCreateForm(request.POST, request.FILES)
+            if image_form.is_valid():
+                image_form.instance.Owner_id = request.user.id
+                image = image_form.save()
+                store.Images.add(image)
+            store.save()
+            return redirect(resolve_url('store:store_list'),permanent=True)
         else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+            return self.form_invalid(form)
 
 class StoreListView(FilterOrderAuthenticateListView):
     model = Store
@@ -203,13 +200,8 @@ class StoreUserCreateView(AuthenticateView):
     permission_denied_template = 'error.html'
     template_name = 'offer/user_create.html'
     
+    @auth
     def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            return self._get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-  
-    def _get(self, request, *args, **kwargs):
         store_id = kwargs['store_id']
         store = Store.objects.all().get(id=store_id)
         f1 = OfferUserCreateForm()
@@ -221,14 +213,8 @@ class StoreUserCreateView(AuthenticateView):
         context = self.get_context(form1=f1,form2=f2,form3=f3, image_form=f4, store_id=kwargs['store_id'])
         return render(request,self.template_name,context=context)
 
+    @auth
     def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            return self._post(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-
-    def _post(self, request, *args, **kwargs):
-        
         store_id = kwargs['store_id']
         store = Store.objects.all().get(id=store_id)
         f1 = OfferUserCreateForm(request.POST)

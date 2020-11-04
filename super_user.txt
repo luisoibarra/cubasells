@@ -1,4 +1,0 @@
-superuser: admin
-password: administrator123
-
-all_test_users_password: aeiou123!
