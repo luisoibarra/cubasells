@@ -1,5 +1,6 @@
 from multiprocessing import Process
 from project.auction.manager import AuctionManager, auction_manager
+import Cubasells.settings as settings
 import time
 
 class AuctionWatcher:
@@ -15,6 +16,7 @@ class AuctionWatcher:
             self.auction_watcher_func = func
             
     def start_watcher(self):
+        print("AuctionWatcher started")
         self.process = Process(target=self.auction_watcher_func)
         self.process.start()
     
@@ -23,6 +25,7 @@ class AuctionWatcher:
     
     def end_watcher(self):
         self.process.terminate()
-        
-auction_watcher = AuctionWatcher(auction_manager,5)
-# auction_watcher.start_watcher()
+
+if settings.AUCTION_TIMER:
+    auction_watcher = AuctionWatcher(auction_manager,settings.AUCTION_TIMER)
+    auction_watcher.start_watcher()

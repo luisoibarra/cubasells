@@ -125,6 +125,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# If 0 the AuctionWatcher it is not started else is started with this interval in seconds
+AUCTION_TIMER = 5
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

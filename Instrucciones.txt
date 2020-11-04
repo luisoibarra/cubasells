@@ -1,2 +1,5 @@
-Correr en la consola:
+Correr en la consola antes de la primera corrida:
 $ ./setup.sh
+
+Para correr el proyecto use este comando:
+$ python3 manage.py runserver
