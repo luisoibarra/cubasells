@@ -1,5 +1,7 @@
 Correr en la consola antes de la primera corrida:
+- Antes en Cubasells/settings.py asegurarse que el valor de AUCTION_TIMER sea 0
 $ ./setup.sh
 
 Para correr el proyecto use este comando:
+- Antes en Cubasells/settings.py asegurarse que el valor de AUCTION_TIMER sea mayor que 0
 $ python3 manage.py runserver
