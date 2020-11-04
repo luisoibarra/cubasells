@@ -4,11 +4,12 @@ import time
 
 class AuctionWatcher:
     def __init__(self, auction_manager:AuctionManager, interval:float, func=None):
+        self.interval = interval
         if func is None:
             def watcher():
                 while True:
                     auction_manager.check_auctions()
-                    time.sleep(interval)     
+                    time.sleep(self.interval)     
             self.auction_watcher_func = watcher
         else:
             self.auction_watcher_func = func
