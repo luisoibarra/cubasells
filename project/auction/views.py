@@ -3,7 +3,7 @@ from project.auction.forms import *
 from project.custom.views import *
 from project.auction.filters import *
 from project.auction.manager import auction_manager
-from project.auction.watcher import auction_watcher
+from project.auction.watcher import AuctionManager # Dont delete this
 from django.urls import reverse_lazy
 from django.template import RequestContext
 

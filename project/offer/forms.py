@@ -26,4 +26,4 @@ class OfferUserCreateForm(forms.ModelForm):
 
 class OfferOrderForm(OrderForm):
     model = Offer
-    fields_to_order = ['Price','Offer_name','Store__name']
+    fields_to_order = ['Price','Offer_name','Store__Name']
