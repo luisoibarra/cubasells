@@ -6,6 +6,7 @@ from project.auction.manager import auction_manager
 from project.auction.watcher import AuctionManager # Dont delete this
 from django.urls import reverse_lazy
 from django.template import RequestContext
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -82,6 +83,15 @@ class AuctionDeleteView(AuthenticateDeleteView):
     template_name = "delete.html"
     success_url = reverse_lazy('project:success')
     permission = 'project.delete_auction'
+    
+    @auth
+    @go_back
+    def post(self, request, *args, **kwargs):
+        delete = Auction.objects.get(id=kwargs['pk'])
+        if auction_manager.delete_auction(delete):
+            return redirect(self.success_url,permanent=True)
+        else:
+            return render(request, 'error.html', {'error':'Error deleting auction'})
     
     def other_condition(self,request,*args, **kwargs):
         delete = Auction.objects.get(id=kwargs['pk'])

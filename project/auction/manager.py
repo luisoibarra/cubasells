@@ -67,6 +67,17 @@ class AuctionManager:
         for end in auction_to_end:
             self.end_auction(end)
     
+    def delete_auction(self, auction:Auction):
+        if auction and not self.on_time_range(auction):
+            offer = auction.Offered
+            for suboffer in offer.Suboffer.all():
+                product = suboffer.Product_offer
+                product.Store_Amount += suboffer.Amount
+                product.save()
+            auction.delete()
+            return True
+        return False
+    
     def end_auction(self,auction:Auction):
         if auction.Ended:
             return ['Auction already ended']
