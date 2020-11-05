@@ -62,6 +62,7 @@
         <div class="btn-group">
             <a class="btn btn-outline-success" href="{% url 'store:store_update' store.id %}">Update</a>
             <a class="btn btn-outline-dark" href="{% url 'store:store_delete' store.id %}">Delete</a>
+            <a class="btn btn-outline-success" href="{% url 'store:store_stats' store.id %}">Stats</a>
         </div>
     </div>
 {%endifequal%}
