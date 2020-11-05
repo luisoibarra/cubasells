@@ -1,0 +1,5 @@
+superuser: admin
+password: administrator123
+
+test usernames: test, test2, test3
+password: aeiou123!

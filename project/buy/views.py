@@ -19,14 +19,8 @@ class BankAccountCreateView(AuthenticateCreateView):
     success_url = reverse_lazy('project:user_index')
     permission = 'project.add_bankaccount'
     
+    @auth
     def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return self._post(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-
-    def _post(self,request,*args, **kwargs):
         form = self.get_form()
         if form.is_valid():
             form.instance.MyUser = request.user.myuser
@@ -69,20 +63,18 @@ class BuyCartView(AuthenticateView):
     permission = 'project.add_buyoffer'
     bank_class = bank
     
+    @auth
     def post(self,request,*args,**kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            password = request.POST['password']
-            account = BankAccount.objects.get(id=int(request.POST['account']))
-            shop_offers = ShoppingOffer.objects.filter(Cart__myuser__id=request.user.id)
-            buy_offer = buy_offers(account,password,shop_offers)
-            if 'error' in buy_offer:
-                return render(request,'error.html',buy_offer)
-            shop_offers.delete()
-            context = self.get_context_data(**kwargs)
-            context.update(buy_offer)
-            return redirect(reverse_lazy('project:success'))
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        password = request.POST['password']
+        account = BankAccount.objects.get(id=int(request.POST['account']))
+        shop_offers = ShoppingOffer.objects.filter(Cart__myuser__id=request.user.id)
+        buy_offer = buy_offers(account,password,shop_offers)
+        if 'error' in buy_offer:
+            return render(request,'error.html',buy_offer)
+        shop_offers.delete()
+        context = self.get_context_data(**kwargs)
+        context.update(buy_offer)
+        return redirect(reverse_lazy('project:success'))
 
     def get_context_data(self, **kwargs):
         context = {}

@@ -34,33 +34,31 @@ class SubOfferCreateView(AuthenticateCreateView):
             context.update({'error':'Missing parameter store_id in url'})
         return context
     
+    @auth
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
         self.object = None
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            form = self.get_form()
-            try:
-                store = Store.objects.get(id=kwargs['store_id'])
-                if store.Owner.id == request.user.id:
-                    self.success_url = reverse_lazy('store:store_suboffer_list',kwargs={'store_id':store.id})
-                else:
-                    extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
-                    self.update_extra_context(extra)
-                    return self.form_invalid(form)
-            except ObjectDoesNotExist:
-                extra = {'error':'Store doesnt exist'}
+        form = self.get_form()
+        try:
+            store = Store.objects.get(id=kwargs['store_id'])
+            if store.Owner.id == request.user.id:
+                self.success_url = reverse_lazy('store:store_suboffer_list',kwargs={'store_id':store.id})
+            else:
+                extra = {'error':'User not authorized to create an offer in this store, must be its owner'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-            
-            if form.is_valid():
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
+        except ObjectDoesNotExist:
+            extra = {'error':'Store doesnt exist'}
+            self.update_extra_context(extra)
+            return self.form_invalid(form)
+        
+        if form.is_valid():
+            return self.form_valid(form)
         else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+            return self.form_invalid(form)
 
     def other_condition(self, request,*args, **kwargs):
         user = request.user

@@ -62,7 +62,7 @@ class AuctionDetailView(AuthenticateDetailView):
             context['push_form'] = form
         return context
     
-    
+    @auth
     def post(self,request,*args, **kwargs):
         auction_manager.check_auctions()
         
