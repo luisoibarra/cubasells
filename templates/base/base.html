@@ -64,6 +64,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cubasells:index' %} "> Home </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bank:list' %} "> Bank </a>
+                    </li>
                     {% if not user.username %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cubasells:login' %} "> Login </a>
