@@ -9,7 +9,7 @@
 
 {% if object.Images.all %}
 {% for image in object.Images.all %}
-    <img src="{% static image.Image.url %}" class="agent-avatar img-fluid" alt="{{image.Name}}">
+    <img src="{% static image.Image.url %}" class="agent-avatar img-fluid" alt="{{image.ImageName}}">
 {% endfor %}
 {% else %}
 <h1>No images</h1>

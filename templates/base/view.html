@@ -33,15 +33,6 @@
                     <div class="col-md-6">
                         <div class="agent-avatar-box">
                             {% block images %}
-                            {% if user.myuser.Images.all %}
-                            <img src="{% static user.myuser.Images.all.first.Image.url %}" class="agent-avatar img-fluid" alt="Imagen">
-                            {% else %}
-                            <img src="{%static 'img/desconocida.jpg' %}" class="agent-avatar img-fluid" alt="Imagen">
-                            {% endif %}
-                            <div style = "padding-left: 6rem;">
-                            <a class="btn btn-outline-primary" href="{% url 'other:image_create' %}">Add image</a>
-                            <a class="btn btn-outline-primary" href="{% url 'other:image_list' %}">See images</a>
-                            </div>
                             {%endblock images%}
                         </div>
                     </div>
@@ -50,36 +41,16 @@
                             <div class="agent-title">
                                 <div class="title-box-d">
                                     {%block init%}
-                                        <h3 class="title-d">{{user.username}} </h3>
                                     {%endblock init%}
                                 </div>
                             </div>
                             <div class="agent-content mb-3">
                                 <p class="content-d color-text-a">
                                     {%block descripcion%}
-                                        {{user.myuser.Description}}
                                     {%endblock descripcion%}
                                 </p>
                                 <div class="info-agents color-a">
                                     {%block features%}
-                                        <p>
-                                            <strong>Phone: </strong>
-                                            <span class="color-text-a"> {{user.myuser.Phone}} </span>
-                                        </p>
-                                        <p>
-                                            <strong>Email: </strong>
-                                            <span class="color-text-a"> {{user.email}}</span>
-                                        </p>
-                                        <p>
-                                            <a href="{% url 'buy:bankaccount_list'%}"><strong>Accounts: </strong></a>
-                                            {% if accounts %}
-                                            {% for tag in accounts %}
-                                            <span class="color-text-a">{{ tag }}</span>
-                                            {% endfor %}
-                                            {% else %}
-                                            <span class="color-text-a">No accounts</span>
-                                            {% endif %}
-                                        </p>
                                     {%endblock features%}
                                 </div>
                                 {% block button%}

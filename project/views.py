@@ -2,6 +2,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse_lazy
+from django.db.models import F, Sum, FloatField
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
@@ -30,6 +31,9 @@ def user_index(request):
     context = {'user': request.user}
     context.update({'tags':request.user.myuser.Tags.all()})
     context.update({'images':request.user.myuser.Images.all()})
+    context.update({'purchases':BuyOffer.objects.filter(Buyer__MyUser__id=request.user.id)\
+                    .order_by('-Buy_Date')\
+                    .annotate(total=Sum(F('Offer_id__Price') * F('Amount'),output_field=FloatField()))})
     context.update({'accounts':BankAccount.objects.all().filter(MyUser__id=request.user.id)})
 
     return render(request,'user/index.html',context=context)
