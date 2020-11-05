@@ -16,6 +16,17 @@ def auth(func):
             return render(request, self.permission_denied_template, {'error':'You dont have authorization for this action'})
     return inner_func
 
+def go_back(func):
+    def inner_function(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        if form.is_valid():
+            prev_url = form.cleaned_data.get('success_url')
+            if prev_url:
+                self.success_url = prev_url
+        return func(self, request, *args, **kwargs)
+    return inner_function
+
 class AuthMixin:
     permission = None
     permission_denied_template = 'error.html'
@@ -70,13 +81,8 @@ class AuthenticateDeleteView(DeleteView, AuthMixin):
         return self.form(self.request.POST)
 
     @auth    
+    @go_back
     def post(self, request, *args, **kwargs):
-        self.object = None
-        form = self.get_form()
-        if form.is_valid():
-            prev_url = form.cleaned_data.get('success_url')
-            if prev_url:
-                self.success_url = prev_url
         return super().post(request, *args, **kwargs)
 
 
@@ -110,13 +116,8 @@ class AuthenticateUpdateView(UpdateView, AuthMixin):
         return super().get(request, *args, **kwargs)
     
     @auth
+    @go_back
     def post(self, request, *args, **kwargs):
-        self.object = None
-        form = self.get_form()
-        if form.is_valid():
-            prev_url = form.cleaned_data.get('success_url')
-            if prev_url:
-                self.success_url = prev_url
         return super().post(request, *args, **kwargs)
 
     
