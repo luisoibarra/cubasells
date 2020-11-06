@@ -15,9 +15,9 @@ class ShoppingOfferCreateForm(forms.ModelForm):
 
 class SelectAccountForm(forms.Form):
     
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput,label="Bank Account Password")
 
     def __init__(self,queryset, *args, **kwargs):
         setattr(self,'account',forms.ModelChoiceField(queryset))
         super().__init__(*args, **kwargs)
-        self.fields['account'] = forms.ModelChoiceField(queryset)
+        self.fields['account'] = forms.ModelChoiceField(queryset, label="Bank Account")

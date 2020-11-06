@@ -6,10 +6,22 @@ from django.utils import timezone
 
 class AuctionCreateForm(forms.ModelForm):
     success_url = forms.CharField(widget=forms.HiddenInput(),required=False)
-    
+
     class Meta:
         model = Auction
         exclude=['Winner','Password','Ended','Deposit','Status']
+        
+        field_classes = {
+            'Initial_Date':forms.SplitDateTimeField,
+            'Final_Date':forms.SplitDateTimeField,
+        }
+        
+        widgets = {
+            'Initial_Date':forms.SplitDateTimeWidget(date_attrs={'type':'date'},
+                                                     time_attrs={'type':'time'}),
+            'Final_Date':forms.SplitDateTimeWidget(date_attrs={'type':'date'},
+                                                     time_attrs={'type':'time'}),
+        }
 
     def clean_Initial_Date(self):
         if 'Initial_Date' in self.cleaned_data:

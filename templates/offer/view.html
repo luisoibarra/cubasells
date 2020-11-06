@@ -6,8 +6,11 @@
 {% endblock first %}
 
 {% block images %}
+
 {% if object.Images.all %}
-<img src="{% static object.Images.all.first.Image.url %}" class="agent-avatar img-fluid" alt="Imagen">
+{% for image in object.Images.all %}
+    <img src="{% static image.Image.url %}" class="agent-avatar img-fluid" alt="{{image.ImageName}}">
+{% endfor %}
 {% else %}
 <h1>No images</h1>
 {% endif %}

@@ -35,43 +35,40 @@ class ProductCreateView(AuthenticateCreateView):
         context['image_form'] = ImageCreateForm()
         return context
     
-    
+    @auth
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
         self.object = None
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            form = self.get_form()
-            try:
-                store = Store.objects.get(id=kwargs['store_id'])
-                if store.Owner.id == request.user.id:
-                    form.instance.Store = store
-                    self.success_url = reverse_lazy('store:store_product_list',kwargs={'store_id':store.id})
-                else:
-                    extra = {'error':'User not authorized to create a product in this store, must be its owner'}
-                    self.update_extra_context(extra)
-                    return self.form_invalid(form)
-            except ObjectDoesNotExist:
-                extra = {'error':'Store doesnt exist'}
+        form = self.get_form()
+        try:
+            store = Store.objects.get(id=kwargs['store_id'])
+            if store.Owner.id == request.user.id:
+                form.instance.Store = store
+                self.success_url = reverse_lazy('store:store_product_list',kwargs={'store_id':store.id})
+            else:
+                extra = {'error':'User not authorized to create a product in this store, must be its owner'}
                 self.update_extra_context(extra)
                 return self.form_invalid(form)
-            
-            if form.is_valid():
-                image_form = ImageCreateForm(request.POST, request.FILES)
-                product = form.save()
-                if image_form.is_valid():
-                    image_form.instance.Owner_id = request.user.id
-                    image = image_form.save()
-                    product.Images.add(image)
-                product.save()
-                return redirect(resolve_url('store:store_view',pk=kwargs['store_id']),permanent=True)
-                # return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
+        except ObjectDoesNotExist:
+            extra = {'error':'Store doesnt exist'}
+            self.update_extra_context(extra)
+            return self.form_invalid(form)
+        
+        if form.is_valid():
+            image_form = ImageCreateForm(request.POST, request.FILES)
+            product = form.save()
+            if image_form.is_valid():
+                image_form.instance.Owner_id = request.user.id
+                image = image_form.save()
+                product.Images.add(image)
+            product.save()
+            return redirect(resolve_url('store:store_view',pk=kwargs['store_id']),permanent=True)
+            # return self.form_valid(form)
         else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+            return self.form_invalid(form)
 
     def other_condition(self, request,*args, **kwargs):
         if 'store_id' in kwargs:
@@ -96,9 +93,6 @@ class ProductListView(FilterOrderAuthenticateListView):
         except:
             pass
         return context
-    
-    def get(self,request,*args, **kwargs):
-        return super().get(request,*args, **kwargs)
     
     def get_queryset(self):
         """
@@ -161,14 +155,6 @@ class ProductUpdateView(AuthenticateUpdateView):
         # context['form'].fields['success_url'].initial = self.request.META.get('HTTP_REFERER')
         return context
     
-    def _post(self, request, *args, **kwargs):
-        # form = self.get_form()
-        # if form.is_valid():
-        #     prev_url = form.cleaned_data.get('success_url')
-        #     if prev_url:
-        #         self.success_url = prev_url
-        return super()._post(request, *args, **kwargs)
-
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         product = Product.objects.get(id=kwargs['pk'])

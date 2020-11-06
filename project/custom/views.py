@@ -8,52 +8,58 @@ from project.forms import DeleteSuccessURLForm
 
 from excel_response import ExcelResponse
 
-class AuthenticateView(View):
+def auth(func):
+    def inner_func(self, request, *args, **kwargs):
+        if request.user.has_perm(self.permission) and self.other_condition(request,*args, **kwargs):
+            return func(self, request, *args, **kwargs)
+        else:
+            return render(request, self.permission_denied_template, {'error':'You dont have authorization for this action'})
+    return inner_func
+
+def go_back(func):
+    def inner_function(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        if form.is_valid():
+            prev_url = form.cleaned_data.get('success_url')
+            if prev_url:
+                self.success_url = prev_url
+        return func(self, request, *args, **kwargs)
+    return inner_function
+
+class AuthMixin:
     permission = None
     permission_denied_template = 'error.html'
-    
-    def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
     
     def other_condition(self, request,*args, **kwargs):
-        return True       
-    
-    def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            return super().post(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        return True     
 
-
-class AuthenticateCreateView(CreateView):
-    
+class AuthenticateView(View, AuthMixin):
     permission = None
     permission_denied_template = 'error.html'
     
+    @auth
     def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        return super().get(request, *args, **kwargs)
     
-    def other_condition(self, request,*args, **kwargs):
-        return True       
-    
+    @auth
     def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().post(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        return super().post(request, *args, **kwargs)
 
-class AuthenticateDeleteView(DeleteView):
+
+class AuthenticateCreateView(CreateView, AuthMixin):
+
+    @auth
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        return super().get(request, *args, **kwargs)
     
-    permission = None
-    permission_denied_template = 'error.html'
+    @auth
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        return super().post(request, *args, **kwargs)
+
+class AuthenticateDeleteView(DeleteView, AuthMixin):
     form = DeleteSuccessURLForm
     
     
@@ -66,65 +72,35 @@ class AuthenticateDeleteView(DeleteView):
             pass
         return context
 
+    @auth
     def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        self.object = None
+        return super().get(request, *args, **kwargs)
     
-    def other_condition(self, request,*args, **kwargs):
-        return True
-
     def get_form(self):
         return self.form(self.request.POST)
-    
+
+    @auth    
+    @go_back
     def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            form = self.get_form()
-            if form.is_valid():
-                prev_url = form.cleaned_data.get('success_url')
-                if prev_url:
-                    self.success_url = prev_url
-            return super().post(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        return super().post(request, *args, **kwargs)
 
 
-class AuthenticateDetailView(DetailView):
+class AuthenticateDetailView(DetailView, AuthMixin):
     
-    permission = None
-    permission_denied_template = 'error.html'
-    
+    @auth
     def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        self.object = None
+        return super().get(request, *args, **kwargs)
     
-    def other_condition(self, request,*args, **kwargs):
-        return True    
-        
-class AuthenticateListView(ListView):
-    
-    permission = None
-    permission_denied_template = 'error.html'
-    def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-    
-    def other_condition(self, request,*args, **kwargs):
-        return True    
+class AuthenticateListView(ListView, AuthMixin):
 
-class AuthenticateUpdateView(UpdateView):
+    @auth    
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        return super().get(request, *args, **kwargs)
     
-    permission = None
-    permission_denied_template = 'error.html'
+class AuthenticateUpdateView(UpdateView, AuthMixin):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -134,31 +110,16 @@ class AuthenticateUpdateView(UpdateView):
             pass
         return context
     
+    @auth
     def get(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            return super().get(request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
+        self.object = None
+        return super().get(request, *args, **kwargs)
     
-    def other_condition(self, request,*args, **kwargs):
-        return True
-
+    @auth
+    @go_back
     def post(self, request, *args, **kwargs):
-        if request.user.has_perm(self.permission) and self.other_condition(request,*args,**kwargs):
-            self.object = None
-            form = self.get_form()
-            if form.is_valid():
-                prev_url = form.cleaned_data.get('success_url')
-                if prev_url:
-                    self.success_url = prev_url
-            return self._post(self, request, *args, **kwargs)
-        else:
-            return render(request,self.permission_denied_template,{'error':'You dont have authorization for this action'})
-
-    def _post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-        
+
     
 class FilterOrderAuthenticateListView(AuthenticateListView):
 

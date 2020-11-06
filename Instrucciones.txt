@@ -1,0 +1,14 @@
+Instalar los requirements.txt con uno de los comandos dados: 
+- Se puede crear un virtual environment para la instalación
+$ pip3 install -r requirements.txt
+$ python3 -m pip install -r requirements.txt
+
+
+Correr en la consola antes de la primera corrida:
+- Antes en Cubasells/settings.py asegurarse que el valor de AUCTION_TIMER sea 0
+$ ./setup.sh
+
+
+Para correr el proyecto use este comando:
+- Antes en Cubasells/settings.py asegurarse que el valor de AUCTION_TIMER sea mayor que 0
+$ python3 manage.py runserver
