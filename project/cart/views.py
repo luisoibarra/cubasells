@@ -126,7 +126,18 @@ class ShoppingOfferCreateView(AuthenticateCreateView):
             offer = Offer.objects.get(id=kwargs['offer_id'])
             form.instance.Offer = offer
             form.instance.Cart = request.user.myuser.Cart
-            return self.form_valid(form)
+            not_available = []
+            if form.is_valid():
+                for sub_offer in offer.Suboffer.all():
+                    if sub_offer.Product_offer.Store_Amount < form.instance.Amount * sub_offer.Amount:
+                        not_available.append(sub_offer)
+                if not_available:
+                    extra = {'error': "Not enough products in store: " + " ".join([str(x)for x in not_available])}
+                    context = self.get_context_data(**extra)
+                    return render(request, 'error.html', context)
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
         except ObjectDoesNotExist:
             extra = {'error':'Offer doesnt exist'}
             self.update_extra_context(extra)
