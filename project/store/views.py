@@ -175,7 +175,10 @@ class StoreDeleteView(AuthenticateDeleteView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         store = Store.objects.get(id=kwargs['pk'])
-        return store.Owner.id == user.id
+        if store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can delete it"
+        return False
 
 class StoreUpdateView(AuthenticateUpdateView):
     model = Store
@@ -192,7 +195,10 @@ class StoreUpdateView(AuthenticateUpdateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         store = Store.objects.get(id=kwargs['pk'])
-        return store.Owner.id == user.id
+        if store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can update it"
+        return False
 
 class StoreUserCreateView(AuthenticateView):
     
@@ -274,7 +280,10 @@ class StoreUserCreateView(AuthenticateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         store = Store.objects.get(id=kwargs['store_id'])
-        return store.Owner.id == user.id
+        if store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can create an offer"
+        return False
 
 class StoreTagFilterView(TagFilterView):
     model = Store

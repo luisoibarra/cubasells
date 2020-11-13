@@ -70,7 +70,10 @@ class UserDeleteView(AuthenticateDeleteView):
     permission = 'project.delete_myuser'
     
     def other_condition(self, request,*args, **kwargs):
-        return self.kwargs['pk'] == request.user.id
+        if self.kwargs['pk'] == request.user.id:
+            return True
+        self.error_msg += " Only the user can delete it self"
+        return False
 
 class UserUpdateView(AuthenticateUpdateView):
     model = MyUser
@@ -85,4 +88,7 @@ class UserUpdateView(AuthenticateUpdateView):
         return context
     
     def other_condition(self, request,*args, **kwargs):
-        return self.kwargs['pk'] == request.user.id
+        if self.kwargs['pk'] == request.user.id:
+            return True
+        self.error_msg += " Only the user can update it self"
+        return False

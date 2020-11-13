@@ -23,7 +23,11 @@ class AuctionCreateView(AuthenticateCreateView):
         return context
     
     def other_condition(self,request,*args, **kwargs):
-        return 'store_id' in self.kwargs and request.user.id == Store.objects.get(id=self.kwargs['store_id']).Owner.id
+        if 'store_id' in self.kwargs and request.user.id == Store.objects.get(id=self.kwargs['store_id']).Owner.id:
+            return True
+        error = "Only the store owner can create an Auction"
+        self.error_msg += error
+        return False
     
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
@@ -97,6 +101,9 @@ class AuctionDeleteView(AuthenticateDeleteView):
         delete = Auction.objects.get(id=kwargs['pk'])
         from django.utils import timezone
         if delete.Initial_Date < timezone.now() < delete.Final_Date or request.user.id != delete.Offered.Store.Owner.id:
+            error = "Auction already started" if update.Initial_Date < timezone.now() else ""
+            error += "Only the Acution owner can update it" if request.user.id != update.Offered.Store.Owner.id else ""
+            self.error_msg = "Permission Denied: %s" % error
             return False
         return True
         
@@ -111,6 +118,9 @@ class AuctionUpdateView(AuthenticateUpdateView):
         update = Auction.objects.get(id=kwargs['pk'])
         from django.utils import timezone
         if update.Initial_Date < timezone.now() or request.user.id != update.Offered.Store.Owner.id:
+            error = "Auction already started" if update.Initial_Date < timezone.now() else ""
+            error += "Only the Acution owner can update it" if request.user.id != update.Offered.Store.Owner.id else ""
+            self.error_msg = "Permission Denied: %s" % error
             return False
         return True
  

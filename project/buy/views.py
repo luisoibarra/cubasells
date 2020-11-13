@@ -47,7 +47,11 @@ class BankAccountDeleteView(AuthenticateDeleteView):
     permission = 'project.delete_bankaccount'
 
     def other_condition(self, request,*args, **kwargs):
-        return request.user.id == BankAccount.objects.get(id=self.kwargs['pk']).MyUser.id
+        if request.user.id == BankAccount.objects.get(id=self.kwargs['pk']).MyUser.id:
+            return True
+        error = "Only the owner of the bank account can update it"
+        self.error_msg += error
+        return False
   
 class BankAccountUpdateView(AuthenticateUpdateView):
     model = BankAccount
@@ -57,7 +61,11 @@ class BankAccountUpdateView(AuthenticateUpdateView):
     permission = 'project.change_bankaccount'
   
     def other_condition(self, request,*args, **kwargs):
-        return request.user.id == BankAccount.objects.get(id=self.kwargs['pk']).MyUser.id
+        if request.user.id == BankAccount.objects.get(id=self.kwargs['pk']).MyUser.id:
+            return True
+        error = "Only the owner of the bank account can update it"
+        self.error_msg += error
+        return False
 
 class BuyCartView(AuthenticateView):
     permission = 'project.add_buyoffer'

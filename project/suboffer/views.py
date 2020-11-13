@@ -64,7 +64,10 @@ class SubOfferCreateView(AuthenticateCreateView):
         user = request.user
         if 'store_id' in kwargs:
             store = Store.objects.get(id=kwargs['store_id'])
-            return store.Owner.id == user.id
+            if store.Owner.id == user.id:
+                return True
+            self.error_msg += " Only the store owner can create the suboffer"
+            return False
         else:
             return True
 
@@ -122,7 +125,10 @@ class SubOfferDeleteView(AuthenticateDeleteView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         suboffer = SubOffer.objects.get(id=kwargs['pk'])
-        return suboffer.Product_offer.Store.Owner.id == user.id
+        if suboffer.Product_offer.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can delete the suboffer"
+        return False
 
 class SubOfferUpdateView(AuthenticateUpdateView):
     model = SubOffer
@@ -134,4 +140,7 @@ class SubOfferUpdateView(AuthenticateUpdateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         suboffer = SubOffer.objects.get(id=kwargs['pk'])
-        return suboffer.Product_offer.Store.Owner.id == user.id
+        if suboffer.Product_offer.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can update the suboffer"
+        return False

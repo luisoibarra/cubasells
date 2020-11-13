@@ -77,7 +77,10 @@ class OfferCreateView(AuthenticateCreateView):
         if 'store_id' in kwargs:
             user = request.user
             store = Store.objects.get(id=kwargs['store_id'])
-            return store.Owner.id == user.id
+            if store.Owner.id == user.id:
+                return True
+            self.error_msg += " Only the store owner can create an offer"
+            return False
         else:
             return True
 
@@ -163,7 +166,10 @@ class OfferDeleteView(AuthenticateDeleteView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         offer = Offer.objects.get(id=kwargs['pk'])
-        return offer.Store.Owner.id == user.id
+        if offer.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can delete an offer"
+        return False
 
 class OfferUpdateView(AuthenticateUpdateView):
     model = Offer
@@ -182,7 +188,10 @@ class OfferUpdateView(AuthenticateUpdateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         offer = Offer.objects.get(id=kwargs['pk'])
-        return offer.Store.Owner.id == user.id
+        if offer.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can update an offer"
+        return False
 
 class OfferTagFilterView(TagFilterView):
     model = Offer

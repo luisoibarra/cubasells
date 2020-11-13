@@ -130,8 +130,11 @@ class ChatDeleteView(AuthenticateDeleteView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         msg = Chat.objects.get(id=kwargs['pk'])
-        return msg.sender_user.id == user.id
-
+        if msg.sender_user.id == user.id:
+            return True
+        self.error_msg += " Only the creator of the message can delete it"
+        return False
+    
 class ChatUpdateView(AuthenticateUpdateView):
     model = Chat
     form_class = ChatCreateForm
@@ -142,4 +145,7 @@ class ChatUpdateView(AuthenticateUpdateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         msg = Chat.objects.get(id=kwargs['pk'])
-        return msg.sender_user.id == user.id
+        if msg.sender_user.id == user.id:
+            return True
+        self.error_msg += " Only the creator of the message can update it"
+        return False

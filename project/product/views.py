@@ -74,7 +74,10 @@ class ProductCreateView(AuthenticateCreateView):
         if 'store_id' in kwargs:
             user = request.user
             store = Store.objects.get(id=kwargs['store_id'])
-            return store.Owner.id == user.id
+            if store.Owner.id == user.id:
+                return True
+            self.error_msg += " Only the store owner can create a product"
+            return False
         else:
             return True
 
@@ -140,7 +143,10 @@ class ProductDeleteView(AuthenticateDeleteView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         product = Product.objects.get(id=kwargs['pk'])
-        return product.Store.Owner.id == user.id
+        if product.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can delete a product"
+        return False
 
 class ProductUpdateView(AuthenticateUpdateView):
     model = Product
@@ -158,5 +164,8 @@ class ProductUpdateView(AuthenticateUpdateView):
     def other_condition(self, request,*args, **kwargs):
         user = request.user
         product = Product.objects.get(id=kwargs['pk'])
-        return product.Store.Owner.id == user.id
+        if product.Store.Owner.id == user.id:
+            return True
+        self.error_msg += " Only the store owner can update a product"
+        return False
 

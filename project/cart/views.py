@@ -145,10 +145,18 @@ class ShoppingOfferUpdateView(AuthenticateUpdateView):
     success_url = reverse_lazy('cart:cart_list')
     form_class = ShoppingOfferCreateForm
     
-    
+    def other_condition(self, request, *args, **kwargs):
+        if request.user.id == self.model.objects.get(id=kwargs['pk']).Cart.myuser.id:
+            return True
+        self.error_msg += " Only the owner can update the shopping offer"
 
 class ShoppingOfferDeleteView(AuthenticateDeleteView):
     model = ShoppingOffer
     template_name = "delete.html"
     permission = 'project.delete_shoppingoffer'
     success_url = reverse_lazy('project:success')
+    
+    def other_condition(self, request, *args, **kwargs):
+        if request.user.id == self.model.objects.get(id=kwargs['pk']).Cart.myuser.id:
+            return True
+        self.error_msg += " Only the owner can delete the shopping offer"
